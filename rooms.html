@@ -95,10 +95,10 @@
 
     <div class="grid">
       <div>
-        <!-- Camera Deluxe -->
+        <!-- Camera Glicine -->
         <div class="room-card">
-          <h3 data-lang="it">Camera Deluxe con Vista Mare</h3>
-          <h3 class="hidden" data-lang="en">Deluxe Room with Sea View</h3>
+          <h3 data-lang="it">Camera Glicine</h3>
+          <h3 class="hidden" data-lang="en">Glicine Room</h3>
           
           <div class="room-gallery">
             <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80" alt="Camera Deluxe" />
@@ -109,12 +109,12 @@
           <div class="room-amenities">
             <div class="amenity-item">
               <span>🛏️</span>
-              <span data-lang="it">Letto matrimoniale king size</span>
+              <span data-lang="it">Perfetta per coppie</span>
               <span class="hidden" data-lang="en">King size double bed</span>
             </div>
             <div class="amenity-item">
               <span>🌊</span>
-              <span data-lang="it">Vista mare panoramica</span>
+              <span data-lang="it">Frigo Bar</span>
               <span class="hidden" data-lang="en">Panoramic sea view</span>
             </div>
             <div class="amenity-item">
@@ -124,13 +124,69 @@
             </div>
             <div class="amenity-item">
               <span>📺</span>
-              <span data-lang="it">TV Smart 43"</span>
-              <span class="hidden" data-lang="en">43" Smart TV</span>
+              <span data-lang="it">TV</span>
+              <span class="hidden" data-lang="en">TV</span>
             </div>
             <div class="amenity-item">
               <span>🚿</span>
               <span data-lang="it">Bagno privato con doccia</span>
               <span class="hidden" data-lang="en">Private bathroom with shower</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€80</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoom('deluxe', 85)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Seleziona questa camera</span>
+            <span class="hidden" data-lang="en">Select this room</span>
+          </button>
+        </div>
+
+        <!-- Camera Yellow -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Yellow</h3>
+          <h3 class="hidden" data-lang="en">Yellow Room</h3>
+          
+          <div class="room-gallery">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Standard" />
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
+            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=400&q=80" alt="Dettaglio" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>🛏️</span>
+              <span data-lang="it">Perfetta per coppie</span>
+              <span class="hidden" data-lang="en">Perfect for couples</span>
+            </div>
+            <div class="amenity-item">
+              <span>🪟</span>
+              <span data-lang="it">Frigo Bar</span>
+              <span class="hidden" data-lang="en">Fridge bar</span>
+            </div>
+            <div class="amenity-item">
+              <span>❄️</span>
+              <span data-lang="it">Aria condizionata</span>
+              <span class="hidden" data-lang="en">Air conditioning</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV"</span>
+              <span class="hidden" data-lang="en">TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>🚿</span>
+              <span data-lang="it">Bagno privato con vasca/doccia</span>
+              <span class="hidden" data-lang="en">Private bathroom with bath/shower</span>
             </div>
             <div class="amenity-item">
               <span>📶</span>
@@ -145,17 +201,18 @@
             <small class="hidden" data-lang="en">per night</small>
           </div>
 
-          <button onclick="selectRoom('deluxe', 85)" role="button" style="width: 100%; margin-top: 1rem;">
+          <button onclick="selectRoom('standard', 65)" role="button" style="width: 100%; margin-top: 1rem;">
             <span data-lang="it">Seleziona questa camera</span>
             <span class="hidden" data-lang="en">Select this room</span>
           </button>
         </div>
+      </div>
 
-        <!-- Camera Standard -->
+      <!-- Camera Blu -->
         <div class="room-card">
-          <h3 data-lang="it">Camera Standard</h3>
-          <h3 class="hidden" data-lang="en">Standard Room</h3>
-          
+          <h3 data-lang="it">Camera Blu</h3>
+          <h3 class="hidden" data-lang="en">Blue Room</h3>
+
           <div class="room-gallery">
             <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Standard" />
             <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
@@ -165,13 +222,13 @@
           <div class="room-amenities">
             <div class="amenity-item">
               <span>🛏️</span>
-              <span data-lang="it">Letto matrimoniale</span>
-              <span class="hidden" data-lang="en">Double bed</span>
+              <span data-lang="it">Perfetta per Famiglie/Gruppi</span>
+              <span class="hidden" data-lang="en">Perfect for Families/Groups</span>
             </div>
             <div class="amenity-item">
               <span>🪟</span>
-              <span data-lang="it">Vista giardino</span>
-              <span class="hidden" data-lang="en">Garden view</span>
+              <span data-lang="it">Frigo Bar</span>
+              <span class="hidden" data-lang="en">Fridge bar</span>
             </div>
             <div class="amenity-item">
               <span>❄️</span>
@@ -180,8 +237,8 @@
             </div>
             <div class="amenity-item">
               <span>📺</span>
-              <span data-lang="it">TV LED 32"</span>
-              <span class="hidden" data-lang="en">32" LED TV</span>
+              <span data-lang="it">TV"</span>
+              <span class="hidden" data-lang="en">TV</span>
             </div>
             <div class="amenity-item">
               <span>🚿</span>
@@ -193,10 +250,18 @@
               <span data-lang="it">Wi-Fi gratuito</span>
               <span class="hidden" data-lang="en">Free Wi-Fi</span>
             </div>
+            <div class="amenity-item">
+            <span>🚿</span>
+              <span data-lang="it">Balcone con vista panoramica</span>
+              <span class="hidden" data-lang="en">Balcony with panoramic view </span>
+            </div>
+            <div class="amenity-item">
           </div>
-
+          <!-- Prezzo per due: €108 -->
+          <!-- Prezzo per tre: €114 -->
+          <!-- Prezzo per quattro: €120 -->
           <div class="price-section">
-            <div class="price">€65</div>
+            <div class="price">€108</div>
             <small data-lang="it">per notte</small>
             <small class="hidden" data-lang="en">per night</small>
           </div>
@@ -266,11 +331,11 @@
             <h5 data-lang="it">Contatti</h5>
             <h5 class="hidden" data-lang="en">Contact</h5>
             <a href="https://wa.me/393471234567" target="_blank" style="color: #25D366;">
-              📱 WhatsApp: +39 347 123 4567
+              📱 WhatsApp: +39 375 884 3175
             </a>
             <br>
-            <a href="tel:+393471234567">
-              📞 Tel: +39 347 123 4567
+            <a href="tel:+393758843175">
+              📞 Tel: +39 375 884 3175
             </a>
           </div>
         </div>
