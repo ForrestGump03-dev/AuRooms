@@ -38,10 +38,15 @@
       <li><strong>AUROOMS</strong></li>
     </ul>
     <ul>
-      <li><a href="rooms.html">← Torna alle camere</a></li>
+      <li><a href="rooms.html" data-lang="it">← Torna alle camere</a></li>
+      <li><a href="rooms.html" class="hidden" data-lang="en">← Back to rooms</a></li>
       <li><a href="index.html">Home</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
     </ul>
-  </nav>
+  </nav></nav>
 
   <main class="container">
     <hgroup style="text-align: center; margin-bottom: 2rem;">
@@ -58,19 +63,19 @@
           
           <form id="guest-form">
             <div class="grid">
-              <input type="text" id="nome" placeholder="Nome / First Name" required />
-              <input type="text" id="cognome" placeholder="Cognome / Last Name" required />
+              <input type="text" id="nome" placeholder="Nome" data-placeholder-it="Nome" data-placeholder-en="First Name" required />
+              <input type="text" id="cognome" placeholder="Cognome" data-placeholder-it="Cognome" data-placeholder-en="Last Name" required />
             </div>
             
             <input type="email" id="email" placeholder="Email" required />
-            <input type="tel" id="telefono" placeholder="Telefono / Phone" required />
+            <input type="tel" id="telefono" placeholder="Telefono" data-placeholder-it="Telefono" data-placeholder-en="Phone" required />
             
             <div class="grid">
-              <input type="text" id="cittadinanza" placeholder="Cittadinanza / Nationality" required />
-              <input type="date" id="data-nascita" placeholder="Data di nascita / Birth date" required />
+              <input type="text" id="cittadinanza" placeholder="Cittadinanza" data-placeholder-it="Cittadinanza" data-placeholder-en="Nationality" required />
+              <input type="date" id="data-nascita" placeholder="Data di nascita" data-placeholder-it="Data di nascita" data-placeholder-en="Birth date" required />
             </div>
             
-            <textarea id="richieste" placeholder="Richieste speciali / Special requests (opzionale)" rows="3"></textarea>
+            <textarea id="richieste" placeholder="Richieste speciali (opzionale)" data-placeholder-it="Richieste speciali (opzionale)" data-placeholder-en="Special requests (optional)" rows="3"></textarea>
           </form>
         </div>
 

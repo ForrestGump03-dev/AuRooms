@@ -43,93 +43,124 @@
       <li><strong>AUROOMS</strong></li>
     </ul>
     <ul>
-      <li><a href="checkout.html">← Indietro</a></li>
+      <li><a href="checkout.html" data-lang="it">← Indietro</a></li>
+      <li><a href="checkout.html" class="hidden" data-lang="en">← Back</a></li>
       <li><a href="index.html">Home</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
     </ul>
   </nav>
 
   <main class="container">
     <article>
       <hgroup>
-        <h2>Metodo di Pagamento</h2>
-        <h3>Conferma e completa la tua prenotazione</h3>
+        <h2 data-lang="it">Metodo di Pagamento</h2>
+        <h2 class="hidden" data-lang="en">Payment Method</h2>
+        <h3 data-lang="it">Conferma e completa la tua prenotazione</h3>
+        <h3 class="hidden" data-lang="en">Confirm and complete your booking</h3>
       </hgroup>
       
       <!-- Complete Booking Summary -->
       <section class="payment-summary">
-        <h4>Riepilogo Completo Prenotazione</h4>
+        <h4 data-lang="it">Riepilogo Completo Prenotazione</h4>
+        <h4 class="hidden" data-lang="en">Complete Booking Summary</h4>
         <div class="grid">
           <div>
-            <p><strong>Ospite:</strong> <span id="guest-name">—</span></p>
+            <p><strong data-lang="it">Ospite:</strong><strong class="hidden" data-lang="en">Guest:</strong> <span id="guest-name">—</span></p>
             <p><strong>Email:</strong> <span id="guest-email">—</span></p>
-            <p><strong>Telefono:</strong> <span id="guest-phone">—</span></p>
-            <p><strong>Camera:</strong> <span id="room-type">—</span></p>
+            <p><strong data-lang="it">Telefono:</strong><strong class="hidden" data-lang="en">Phone:</strong> <span id="guest-phone">—</span></p>
+            <p><strong data-lang="it">Camera:</strong><strong class="hidden" data-lang="en">Room:</strong> <span id="room-type">—</span></p>
             <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
             <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
           </div>
           <div>
-            <p><strong>Ospiti:</strong> <span id="guests">—</span></p>
-            <p><strong>Camere:</strong> <span id="rooms">—</span></p>
-            <p><strong>Notti:</strong> <span id="nights">—</span></p>
+            <p><strong data-lang="it">Ospiti:</strong><strong class="hidden" data-lang="en">Guests:</strong> <span id="guests">—</span></p>
+            <p><strong data-lang="it">Camere:</strong><strong class="hidden" data-lang="en">Rooms:</strong> <span id="rooms">—</span></p>
+            <p><strong data-lang="it">Notti:</strong><strong class="hidden" data-lang="en">Nights:</strong> <span id="nights">—</span></p>
             <div id="extras-summary"></div>
             <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary); margin-top: 1rem;">
-              <strong>Totale: €<span id="final-total">0</span></strong>
+              <strong data-lang="it">Totale: €<span id="final-total">0</span></strong>
+              <strong class="hidden" data-lang="en">Total: €<span id="final-total-en">0</span></strong>
             </div>
           </div>
         </div>
       </section>
 
       <section>
-        <h4>Scegli il metodo di pagamento</h4>
+        <h4 data-lang="it">Scegli il metodo di pagamento</h4>
+        <h4 class="hidden" data-lang="en">Choose payment method</h4>
         
         <div class="payment-method" onclick="selectPaymentMethod('stripe')" id="stripe-method">
-          <h5>💳 Carta di Credito</h5>
-          <p>Pagamento sicuro con Stripe - Visa, Mastercard, American Express</p>
-          <small>Pagamento immediato - Conferma istantanea</small>
+          <h5>💳 <span data-lang="it">Carta di Credito</span><span class="hidden" data-lang="en">Credit Card</span></h5>
+          <p data-lang="it">Pagamento sicuro con Stripe - Visa, Mastercard, American Express</p>
+          <p class="hidden" data-lang="en">Secure payment with Stripe - Visa, Mastercard, American Express</p>
+          <small data-lang="it">Pagamento immediato - Conferma istantanea</small>
+          <small class="hidden" data-lang="en">Instant payment - Immediate confirmation</small>
         </div>
 
         <div class="payment-method" onclick="selectPaymentMethod('paypal')" id="paypal-method">
           <h5>💰 PayPal</h5>
-          <p>Paga in sicurezza con il tuo account PayPal</p>
-          <small>Pagamento immediato - Protezione acquirente</small>
+          <p data-lang="it">Paga in sicurezza con il tuo account PayPal</p>
+          <p class="hidden" data-lang="en">Pay securely with your PayPal account</p>
+          <small data-lang="it">Pagamento immediato - Protezione acquirente</small>
+          <small class="hidden" data-lang="en">Instant payment - Buyer protection</small>
         </div>
 
         <div class="payment-method" onclick="selectPaymentMethod('bonifico')" id="bonifico-method">
-          <h5>🏦 Bonifico Bancario</h5>
-          <p>Trasferimento bancario tradizionale</p>
-          <small>Conferma prenotazione dopo verifica pagamento (1-2 giorni lavorativi)</small>
+          <h5>🏦 <span data-lang="it">Bonifico Bancario</span><span class="hidden" data-lang="en">Bank Transfer</span></h5>
+          <p data-lang="it">Trasferimento bancario tradizionale</p>
+          <p class="hidden" data-lang="en">Traditional bank transfer</p>
+          <small data-lang="it">Conferma prenotazione dopo verifica pagamento (1-2 giorni lavorativi)</small>
+          <small class="hidden" data-lang="en">Booking confirmation after payment verification (1-2 business days)</small>
         </div>
 
         <div class="security-info">
-          <h6>🔒 I tuoi pagamenti sono sicuri</h6>
-          <p>Utilizziamo crittografia SSL e non memorizziamo i dati della tua carta di credito. 
+          <h6 data-lang="it">🔒 I tuoi pagamenti sono sicuri</h6>
+          <h6 class="hidden" data-lang="en">🔒 Your payments are secure</h6>
+          <p data-lang="it">Utilizziamo crittografia SSL e non memorizziamo i dati della tua carta di credito. 
           Tutti i pagamenti sono elaborati attraverso gateway sicuri certificati.</p>
+          <p class="hidden" data-lang="en">We use SSL encryption and do not store your credit card data. 
+          All payments are processed through certified secure gateways.</p>
         </div>
       </section>
 
       <section id="bonifico-details" class="hidden">
-        <h4>Dati per Bonifico Bancario</h4>
+        <h4 data-lang="it">Dati per Bonifico Bancario</h4>
+        <h4 class="hidden" data-lang="en">Bank Transfer Details</h4>
         <div style="background: var(--card-background-color); padding: 1rem; border-radius: 8px;">
-          <p>
+          <p data-lang="it">
             <strong>Beneficiario:</strong> AUROOMS Guest House<br>
             <strong>IBAN:</strong> IT00A0000000000000000000000<br>
             <strong>BIC/SWIFT:</strong> BPMOIT22XXX<br>
             <strong>Causale:</strong> "Prenotazione <span id="booking-reference">—</span> - <span id="causale">—</span>"<br>
             <strong>Importo:</strong> €<span id="bonifico-amount">0</span>
           </p>
-          <p><small><strong>Importante:</strong> Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione. 
+          <p class="hidden" data-lang="en">
+            <strong>Beneficiary:</strong> AUROOMS Guest House<br>
+            <strong>IBAN:</strong> IT00A0000000000000000000000<br>
+            <strong>BIC/SWIFT:</strong> BPMOIT22XXX<br>
+            <strong>Reference:</strong> "Booking <span id="booking-reference-en">—</span> - <span id="causale-en">—</span>"<br>
+            <strong>Amount:</strong> €<span id="bonifico-amount-en">0</span>
+          </p>
+          <p data-lang="it"><small><strong>Importante:</strong> Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione. 
           La camera sarà riservata per 48 ore in attesa del pagamento.</small></p>
+          <p class="hidden" data-lang="en"><small><strong>Important:</strong> After making the bank transfer, send the receipt via WhatsApp to confirm your booking. 
+          The room will be reserved for 48 hours pending payment.</small></p>
         </div>
       </section>
 
       <section style="text-align: center; margin-top: 2rem;">
         <button onclick="processPayment()" id="payment-btn" disabled class="primary">
-          💳 Completa la Prenotazione
+          <span data-lang="it">💳 Completa la Prenotazione</span>
+          <span class="hidden" data-lang="en">💳 Complete Booking</span>
         </button>
         
         <div style="margin-top: 2rem;">
           <a href="https://wa.me/393471234567" target="_blank" class="whatsapp-link">
-            📲 Contattaci su WhatsApp per assistenza
+            <span data-lang="it">📲 Contattaci su WhatsApp per assistenza</span>
+            <span class="hidden" data-lang="en">📲 Contact us on WhatsApp for assistance</span>
           </a>
         </div>
       </section>
@@ -243,19 +274,13 @@
       // Enable payment button
       document.getElementById('payment-btn').disabled = false;
       
-      // Update button text based on method
-      const button = document.getElementById('payment-btn');
-      switch(method) {
-        case 'stripe':
-          button.textContent = '💳 Paga con Carta di Credito';
-          break;
-        case 'paypal':
-          button.textContent = '💰 Paga con PayPal';
-          break;
-        case 'bonifico':
-          button.textContent = '🏦 Conferma Prenotazione (Bonifico)';
-          break;
-      }
+      // Store selected method globally and update button text
+      window.selectedPaymentMethod = method;
+      updatePaymentButtonText();
+      
+      // Update button text for English as well
+      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+      updatePaymentButtonText(currentLang);
     }
 
     function processPayment() {

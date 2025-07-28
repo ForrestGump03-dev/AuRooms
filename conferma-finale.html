@@ -49,76 +49,100 @@
     </ul>
     <ul>
       <li><a href="index.html">Home</a></li>
-      <li><a href="dashboard.html">La Mia Area</a></li>
+      <li><a href="dashboard.html" data-lang="it">La Mia Area</a></li>
+      <li><a href="dashboard.html" class="hidden" data-lang="en">My Account</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
     </ul>
   </nav>
 
   <main class="container">
     <div class="confirmation-card">
       <div class="success-icon">✅</div>
-      <h1>Prenotazione Confermata!</h1>
-      <h3>Grazie per aver scelto AUROOMS</h3>
+      <h1 data-lang="it">Prenotazione Confermata!</h1>
+      <h1 class="hidden" data-lang="en">Booking Confirmed!</h1>
+      <h3 data-lang="it">Grazie per aver scelto AUROOMS</h3>
+      <h3 class="hidden" data-lang="en">Thank you for choosing AUROOMS</h3>
       
       <div class="booking-details">
-        <h4>Dettagli della Prenotazione</h4>
+        <h4 data-lang="it">Dettagli della Prenotazione</h4>
+        <h4 class="hidden" data-lang="en">Booking Details</h4>
         <div class="grid">
           <div>
-            <p><strong>Codice Prenotazione:</strong> <span id="booking-code">—</span></p>
-            <p><strong>Camera:</strong> <span id="room-details">—</span></p>
-            <p><strong>Ospite:</strong> <span id="guest-name">—</span></p>
+            <p><strong data-lang="it">Codice Prenotazione:</strong><strong class="hidden" data-lang="en">Booking Code:</strong> <span id="booking-code">—</span></p>
+            <p><strong data-lang="it">Camera:</strong><strong class="hidden" data-lang="en">Room:</strong> <span id="room-details">—</span></p>
+            <p><strong data-lang="it">Ospite:</strong><strong class="hidden" data-lang="en">Guest:</strong> <span id="guest-name">—</span></p>
             <p><strong>Email:</strong> <span id="guest-email">—</span></p>
           </div>
           <div>
             <p><strong>Check-in:</strong> <span id="checkin-date">—</span></p>
             <p><strong>Check-out:</strong> <span id="checkout-date">—</span></p>
-            <p><strong>Ospiti:</strong> <span id="guests-count">—</span></p>
-            <p><strong>Totale Pagato:</strong> €<span id="total-amount">—</span></p>
+            <p><strong data-lang="it">Ospiti:</strong><strong class="hidden" data-lang="en">Guests:</strong> <span id="guests-count">—</span></p>
+            <p><strong data-lang="it">Totale Pagato:</strong><strong class="hidden" data-lang="en">Total Paid:</strong> €<span id="total-amount">—</span></p>
           </div>
         </div>
       </div>
 
       <div class="info-section">
-        <h5>📧 Conferma via Email</h5>
-        <p>Abbiamo inviato tutti i dettagli della prenotazione alla tua email. 
+        <h5 data-lang="it">📧 Conferma via Email</h5>
+        <h5 class="hidden" data-lang="en">📧 Email Confirmation</h5>
+        <p data-lang="it">Abbiamo inviato tutti i dettagli della prenotazione alla tua email. 
         Se non ricevi l'email entro 10 minuti, controlla la cartella spam.</p>
+        <p class="hidden" data-lang="en">We have sent all booking details to your email. 
+        If you don't receive the email within 10 minutes, check your spam folder.</p>
       </div>
 
       <div class="action-buttons">
         <a href="#" onclick="downloadConfirmation()" role="button" class="secondary">
-          📄 Scarica Conferma PDF
+          <span data-lang="it">📄 Scarica Conferma PDF</span>
+          <span class="hidden" data-lang="en">📄 Download PDF Confirmation</span>
         </a>
         <a href="https://wa.me/393471234567" target="_blank" role="button" class="secondary">
-          💬 Contattaci su WhatsApp
+          <span data-lang="it">💬 Contattaci su WhatsApp</span>
+          <span class="hidden" data-lang="en">💬 Contact us on WhatsApp</span>
         </a>
         <a href="dashboard.html" role="button">
-          👤 Vai alla Mia Area
+          <span data-lang="it">👤 Vai alla Mia Area</span>
+          <span class="hidden" data-lang="en">👤 Go to My Account</span>
         </a>
       </div>
     </div>
 
     <article>
-      <h3>Informazioni Importanti</h3>
+      <h3 data-lang="it">Informazioni Importanti</h3>
+      <h3 class="hidden" data-lang="en">Important Information</h3>
       
       <div class="grid">
         <div>
-          <h4>🕐 Orari Check-in/Check-out</h4>
-          <p><strong>Check-in:</strong> dalle 15:00 alle 22:00</p>
-          <p><strong>Check-out:</strong> entro le 11:00</p>
-          <p><small>Check-in tardivo disponibile su richiesta (+€20)</small></p>
+          <h4 data-lang="it">🕐 Orari Check-in/Check-out</h4>
+          <h4 class="hidden" data-lang="en">🕐 Check-in/Check-out Times</h4>
+          <p data-lang="it"><strong>Check-in:</strong> dalle 15:00 alle 22:00</p>
+          <p class="hidden" data-lang="en"><strong>Check-in:</strong> from 3:00 PM to 10:00 PM</p>
+          <p data-lang="it"><strong>Check-out:</strong> entro le 11:00</p>
+          <p class="hidden" data-lang="en"><strong>Check-out:</strong> by 11:00 AM</p>
+          <p data-lang="it"><small>Check-in tardivo disponibile su richiesta (+€20)</small></p>
+          <p class="hidden" data-lang="en"><small>Late check-in available on request (+€20)</small></p>
         </div>
         
         <div>
-          <h4>📍 Come Raggiungerci</h4>
-          <p><strong>Indirizzo:</strong> Via Roma 123, Cinisi (PA)</p>
-          <p><strong>Dall'aeroporto:</strong> 10 minuti in auto</p>
-          <p><strong>Transfer disponibile:</strong> +39 347 123 4567</p>
+          <h4 data-lang="it">📍 Come Raggiungerci</h4>
+          <h4 class="hidden" data-lang="en">📍 How to Reach Us</h4>
+          <p data-lang="it"><strong>Indirizzo:</strong> Via Roma 123, Cinisi (PA)</p>
+          <p class="hidden" data-lang="en"><strong>Address:</strong> Via Roma 123, Cinisi (PA)</p>
+          <p data-lang="it"><strong>Dall'aeroporto:</strong> 10 minuti in auto</p>
+          <p class="hidden" data-lang="en"><strong>From airport:</strong> 10 minutes by car</p>
+          <p data-lang="it"><strong>Transfer disponibile:</strong> +39 347 123 4567</p>
+          <p class="hidden" data-lang="en"><strong>Transfer available:</strong> +39 347 123 4567</p>
         </div>
       </div>
 
       <div class="grid">
         <div>
-          <h4>🏠 Servizi Inclusi</h4>
-          <ul>
+          <h4 data-lang="it">🏠 Servizi Inclusi</h4>
+          <h4 class="hidden" data-lang="en">🏠 Included Services</h4>
+          <ul data-lang="it">
             <li>✓ Wi-Fi gratuito</li>
             <li>✓ Aria condizionata</li>
             <li>✓ TV satellitare</li>
@@ -126,40 +150,70 @@
             <li>✓ Asciugacapelli</li>
             <li>✓ Set cortesia</li>
           </ul>
+          <ul class="hidden" data-lang="en">
+            <li>✓ Free Wi-Fi</li>
+            <li>✓ Air conditioning</li>
+            <li>✓ Satellite TV</li>
+            <li>✓ Safe</li>
+            <li>✓ Hair dryer</li>
+            <li>✓ Toiletries</li>
+          </ul>
         </div>
         
         <div>
-          <h4>📞 Contatti</h4>
-          <p><strong>Telefono:</strong> +39 347 123 4567</p>
+          <h4 data-lang="it">📞 Contatti</h4>
+          <h4 class="hidden" data-lang="en">📞 Contacts</h4>
+          <p data-lang="it"><strong>Telefono:</strong> +39 347 123 4567</p>
+          <p class="hidden" data-lang="en"><strong>Phone:</strong> +39 347 123 4567</p>
           <p><strong>WhatsApp:</strong> +39 347 123 4567</p>
           <p><strong>Email:</strong> info@aurooms.it</p>
-          <p><strong>Emergenze 24h:</strong> +39 347 123 4567</p>
+          <p data-lang="it"><strong>Emergenze 24h:</strong> +39 347 123 4567</p>
+          <p class="hidden" data-lang="en"><strong>24h Emergency:</strong> +39 347 123 4567</p>
         </div>
       </div>
 
       <div class="info-section">
-        <h4>🚗 Cosa Visitare Nei Dintorni</h4>
+        <h4 data-lang="it">🚗 Cosa Visitare Nei Dintorni</h4>
+        <h4 class="hidden" data-lang="en">🚗 What to Visit Nearby</h4>
         <div class="grid">
-          <div>
+          <div data-lang="it">
             <p><strong>Palermo:</strong> 30 km (centro storico, mercati)</p>
             <p><strong>Mondello:</strong> 25 km (spiaggia paradisiaca)</p>
             <p><strong>Cefalù:</strong> 70 km (borgo medievale)</p>
           </div>
-          <div>
+          <div class="hidden" data-lang="en">
+            <p><strong>Palermo:</strong> 30 km (historic center, markets)</p>
+            <p><strong>Mondello:</strong> 25 km (paradise beach)</p>
+            <p><strong>Cefalù:</strong> 70 km (medieval town)</p>
+          </div>
+          <div data-lang="it">
             <p><strong>Segesta:</strong> 40 km (tempio greco)</p>
             <p><strong>Monreale:</strong> 35 km (duomo patrimonio UNESCO)</p>
             <p><strong>Riserva dello Zingaro:</strong> 60 km</p>
+          </div>
+          <div class="hidden" data-lang="en">
+            <p><strong>Segesta:</strong> 40 km (Greek temple)</p>
+            <p><strong>Monreale:</strong> 35 km (UNESCO cathedral)</p>
+            <p><strong>Zingaro Reserve:</strong> 60 km</p>
           </div>
         </div>
       </div>
     </article>
 
     <footer style="text-align: center; margin: 3rem 0;">
-      <p>Grazie per aver scelto <strong>AUROOMS Guest House</strong></p>
-      <p>Non vediamo l'ora di accogliervi!</p>
+      <p data-lang="it">Grazie per aver scelto <strong>AUROOMS Guest House</strong></p>
+      <p class="hidden" data-lang="en">Thank you for choosing <strong>AUROOMS Guest House</strong></p>
+      <p data-lang="it">Non vediamo l'ora di accogliervi!</p>
+      <p class="hidden" data-lang="en">We look forward to welcoming you!</p>
       <div style="margin-top: 2rem;">
-        <a href="index.html" role="button" class="secondary">← Torna alla Home</a>
-        <a href="rooms.html" role="button">Prenota un Altro Soggiorno</a>
+        <a href="index.html" role="button" class="secondary">
+          <span data-lang="it">← Torna alla Home</span>
+          <span class="hidden" data-lang="en">← Back to Home</span>
+        </a>
+        <a href="rooms.html" role="button">
+          <span data-lang="it">Prenota un Altro Soggiorno</span>
+          <span class="hidden" data-lang="en">Book Another Stay</span>
+        </a>
       </div>
     </footer>
   </main>

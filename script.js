@@ -5,6 +5,63 @@ function switchLang(lang) {
     el.classList.add('hidden');
     if (el.getAttribute('data-lang') === lang) el.classList.remove('hidden');
   });
+  
+  // Update placeholders for form inputs
+  document.querySelectorAll('input[data-placeholder-' + lang + '], textarea[data-placeholder-' + lang + ']').forEach(el => {
+    el.placeholder = el.getAttribute('data-placeholder-' + lang);
+  });
+  
+  // Update payment button text based on selected method and language
+  updatePaymentButtonText(lang);
+  
+  // Update final total display in payment page
+  const finalTotal = document.getElementById('final-total');
+  const finalTotalEn = document.getElementById('final-total-en');
+  if (finalTotal && finalTotalEn) {
+    const amount = finalTotal.textContent;
+    finalTotalEn.textContent = amount;
+  }
+  
+  // Update booking reference for bank transfer in both languages
+  const bookingRef = document.getElementById('booking-reference');
+  const bookingRefEn = document.getElementById('booking-reference-en');
+  const causale = document.getElementById('causale');
+  const causaleEn = document.getElementById('causale-en');
+  const bonifico = document.getElementById('bonifico-amount');
+  const bonificoEn = document.getElementById('bonifico-amount-en');
+  
+  if (bookingRef && bookingRefEn) {
+    bookingRefEn.textContent = bookingRef.textContent;
+  }
+  if (causale && causaleEn) {
+    causaleEn.textContent = causale.textContent;
+  }
+  if (bonifico && bonificoEn) {
+    bonificoEn.textContent = bonifico.textContent;
+  }
+}
+
+function updatePaymentButtonText(lang = 'it') {
+  const button = document.getElementById('payment-btn');
+  if (!button || !window.selectedPaymentMethod) return;
+  
+  const buttonTexts = {
+    it: {
+      stripe: '💳 Paga con Carta di Credito',
+      paypal: '💰 Paga con PayPal',
+      bonifico: '🏦 Conferma Prenotazione (Bonifico)'
+    },
+    en: {
+      stripe: '💳 Pay with Credit Card',
+      paypal: '💰 Pay with PayPal',
+      bonifico: '🏦 Confirm Booking (Bank Transfer)'
+    }
+  };
+  
+  const text = buttonTexts[lang][window.selectedPaymentMethod];
+  if (text) {
+    button.innerHTML = `<span data-lang="${lang}">${text}</span>`;
+  }
 }
 
 // Booking form handler
