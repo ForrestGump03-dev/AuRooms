@@ -29,6 +29,16 @@
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       text-decoration: none;
     }
+    nav a:focus, nav a:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+    .swiper-slide img {
+      transition: transform 0.4s ease;
+    }
+    .swiper-slide img:hover {
+      transform: scale(1.03);
+    }
     @media (max-width: 768px) {
       .whatsapp-button {
         bottom: 15px;
@@ -109,6 +119,24 @@
     </div>
   </section>
 
+  <section class="container" data-aos="fade-up" style="text-align: center; margin-top: 2rem;">
+    <h3 data-lang="it">Ci trovi anche su</h3>
+    <h3 class="hidden" data-lang="en">Also available on</h3>
+    <a href="https://www.booking.com" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Booking.com_logo.svg" alt="Booking.com" style="height: 40px; margin: 10px;">
+    </a>
+    <a href="https://www.tripadvisor.it" target="_blank">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Tripadvisor_Logo_circle-green_horizontal-lockup_registered_RGB.svg" alt="TripAdvisor" style="height: 40px; margin: 10px;">
+    </a>
+  </section>
+
+  <section class="container" data-aos="fade-up" style="margin-top: 2rem;">
+    <h3 data-lang="it">Cosa dicono i nostri ospiti</h3>
+    <h3 class="hidden" data-lang="en">What our guests say</h3>
+    <blockquote>"Esperienza fantastica! A due passi dall'aeroporto e camere super pulite." – Maria R.</blockquote>
+    <blockquote>"Clean, cozy and the perfect location to explore western Sicily!" – John T.</blockquote>
+  </section>
+
   <footer class="container" data-aos="fade-up" style="margin-bottom: 80px;">
     <small>
       <strong>Telefono:</strong> <a href="tel:+393471234567">+39 347 123 4567</a><br>
@@ -118,6 +146,18 @@
 
   <!-- WhatsApp Floating Button -->
   <a class="whatsapp-button" href="https://wa.me/393471234567" target="_blank" title="Contattaci su WhatsApp">💬</a>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const section = document.querySelector(this.getAttribute('href'));
+          if (section) section.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+    });
+  </script>
 
   <!-- JS Libraries -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>

@@ -9,15 +9,25 @@ function switchLang(lang) {
 
 // Initialize libraries when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
-  // Initialize AOS (Animate On Scroll) with delay to ensure library loads
+  // Initialize AOS (Animate On Scroll) with longer delay to ensure library loads
   setTimeout(() => {
     if (typeof AOS !== 'undefined') {
       AOS.init({
         duration: 800,
         once: true
       });
+    } else {
+      console.log('AOS library not loaded yet, retrying...');
+      setTimeout(() => {
+        if (typeof AOS !== 'undefined') {
+          AOS.init({
+            duration: 800,
+            once: true
+          });
+        }
+      }, 500);
     }
-  }, 100);
+  }, 200);
   
   // Initialize Swiper
   if (typeof Swiper !== 'undefined') {
