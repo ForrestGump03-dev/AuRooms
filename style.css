@@ -1,4 +1,95 @@
+
 html {
   height: 100%;
   width: 100%;
+}
+
+body { 
+  scroll-behavior: smooth; 
+}
+
+.flag { 
+  cursor: pointer; 
+  width: 24px; 
+  margin-left: 10px; 
+}
+
+.hidden { 
+  display: none; 
+}
+
+.hero-img { 
+  width: 100%; 
+  border-radius: 12px; 
+}
+
+.lang-toggle { 
+  float: right; 
+}
+
+.swiper { 
+  width: 100%; 
+  padding: 1rem 0; 
+}
+
+.swiper-slide img { 
+  width: 100%; 
+  border-radius: 8px; 
+  transition: transform 0.4s ease;
+}
+
+.swiper-slide img:hover {
+  transform: scale(1.03);
+}
+
+.whatsapp-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #25D366;
+  color: white;
+  padding: 12px;
+  border-radius: 50%;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+}
+
+.whatsapp-link {
+  display: inline-block;
+  background-color: #25D366;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.whatsapp-link:hover {
+  background-color: #128C7E;
+  color: white;
+}
+
+nav a:focus, nav a:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+@media (max-width: 768px) {
+  .whatsapp-button {
+    bottom: 15px;
+    right: 15px;
+    width: 48px;
+    height: 48px;
+    padding: 10px;
+  }
+  .whatsapp-button img {
+    width: 24px !important;
+    height: 24px !important;
+  }
 }

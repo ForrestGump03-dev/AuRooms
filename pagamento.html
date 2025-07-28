@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Metodo di Pagamento - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="conferma.html">← Indietro</a></li>
+      <li><a href="index.html">Home</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <article>
+      <hgroup>
+        <h2>Metodo di Pagamento</h2>
+        <h3>Scegli come completare la prenotazione</h3>
+      </hgroup>
+      
+      <section>
+        <h4>Riepilogo Prenotazione</h4>
+        <p><strong>Nome:</strong> <span id="nome">—</span></p>
+        <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
+        <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
+      </section>
+
+      <section>
+        <h4>Metodi di Pagamento</h4>
+        <div class="grid">
+          <a href="https://buy.stripe.com/test_4gwg1BgUO6P4a7a3cc" target="_blank" role="button">
+            💳 Carta di Credito (Stripe)
+          </a>
+          <a href="https://www.paypal.me/aurooms/150" target="_blank" role="button" class="secondary">
+            💰 PayPal
+          </a>
+          <a href="#bonifico" role="button" class="contrast" onclick="toggleBonifico()">
+            🏦 Bonifico Bancario
+          </a>
+        </div>
+      </section>
+
+      <section id="bonifico" class="hidden">
+        <h4>Dati per Bonifico Bancario</h4>
+        <div style="background: var(--card-background-color); padding: 1rem; border-radius: 8px;">
+          <p>
+            <strong>Intestazione:</strong> AUROOMS Guest House<br>
+            <strong>IBAN:</strong> IT00A0000000000000000000000<br>
+            <strong>Causale:</strong> "Prenotazione soggiorno – <span id="causale">—</span>"
+          </p>
+          <p><small>Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione.</small></p>
+        </div>
+      </section>
+
+      <section style="text-align: center; margin-top: 2rem;">
+        <a href="https://wa.me/393471234567" target="_blank" class="whatsapp-link">
+          📲 Contattaci su WhatsApp per assistenza
+        </a>
+      </section>
+    </article>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    function toggleBonifico() {
+      const bonifico = document.getElementById('bonifico');
+      bonifico.classList.toggle('hidden');
+    }
+
+    // Load booking data from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const nome = localStorage.getItem('nome');
+      const checkin = localStorage.getItem('checkin');
+      const checkout = localStorage.getItem('checkout');
+
+      if (!nome || !checkin || !checkout) {
+        alert('Dati prenotazione mancanti. Verrai reindirizzato alla home.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('nome').innerText = nome;
+      document.getElementById('checkin').innerText = checkin;
+      document.getElementById('checkout').innerText = checkout;
+      document.getElementById('causale').innerText = nome;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conferma Prenotazione - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">← Torna alla Home</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <article>
+      <hgroup>
+        <h2>Conferma Prenotazione</h2>
+        <h3>Verifica i dettagli del tuo soggiorno</h3>
+      </hgroup>
+      
+      <div class="grid">
+        <div>
+          <p><strong>Nome:</strong> <span id="nome">—</span></p>
+          <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
+          <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
+        </div>
+      </div>
+
+      <footer>
+        <a href="pagamento.html" role="button">Procedi al Pagamento</a>
+        <a href="index.html" role="button" class="secondary">Modifica Prenotazione</a>
+      </footer>
+    </article>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    // Load booking data from localStorage
+    document.addEventListener('DOMContentLoaded', function() {
+      const nome = localStorage.getItem('nome');
+      const checkin = localStorage.getItem('checkin');
+      const checkout = localStorage.getItem('checkout');
+
+      if (!nome || !checkin || !checkout) {
+        alert('Dati prenotazione mancanti. Verrai reindirizzato alla home.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('nome').innerText = nome;
+      document.getElementById('checkin').innerText = checkin;
+      document.getElementById('checkout').innerText = checkout;
+    });
+  </script>
+</body>
+</html>
