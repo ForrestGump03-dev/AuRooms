@@ -1,0 +1,101 @@
+Ottimo lavoro finora — il codice è **pulito, moderno e ben strutturato**. Ora ti propongo **5 modifiche migliorative** che puoi incollare direttamente su Replit per rendere il sito ancora più professionale, coinvolgente e usabile.
+
+---
+
+## ✅ 1. **Highlight per pulsante attivo nella navbar**
+
+Aggiungi questo CSS per far capire su che sezione si trova l’utente:
+
+### 🔧 Aggiungi dentro lo `<style>`:
+
+```css
+nav a:focus, nav a:hover {
+  background-color: var(--primary);
+  color: white;
+}
+```
+
+---
+
+## ✅ 2. **Scroll morbido e autochiusura del menu su mobile**
+
+Evita salti bruschi quando si clicca un link della navbar.
+
+### 🔧 Aggiungi nello `<head>` subito dopo lo `<script>`:
+
+```html
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const section = document.querySelector(this.getAttribute('href'));
+      if (section) section.scrollIntoView({ behavior: 'smooth' });
+    });
+  });
+</script>
+```
+
+---
+
+## ✅ 3. **Aggiungi un badge per TripAdvisor o Booking**
+
+Molto utile per aumentare fiducia e conversioni.
+
+### 🔧 Incolla questo prima del footer:
+
+```html
+<section class="container" data-aos="fade-up" style="text-align: center; margin-top: 2rem;">
+  <h3 data-lang="it">Ci trovi anche su</h3>
+  <h3 class="hidden" data-lang="en">Also available on</h3>
+  <a href="https://www.booking.com" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/72/Booking.com_logo.svg" alt="Booking.com" style="height: 40px; margin: 10px;">
+  </a>
+  <a href="https://www.tripadvisor.it" target="_blank">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7b/Tripadvisor_Logo_circle-green_horizontal-lockup_registered_RGB.svg" alt="TripAdvisor" style="height: 40px; margin: 10px;">
+  </a>
+</section>
+```
+
+---
+
+## ✅ 4. **Aggiungi testimonianze / recensioni**
+
+Può aumentare conversioni anche del 30–40%.
+
+### 🔧 Inserisci prima della sezione `#booking`:
+
+```html
+<section class="container" data-aos="fade-up" style="margin-top: 2rem;">
+  <h3 data-lang="it">Cosa dicono i nostri ospiti</h3>
+  <h3 class="hidden" data-lang="en">What our guests say</h3>
+  <blockquote>“Esperienza fantastica! A due passi dall'aeroporto e camere super pulite.” – Maria R.</blockquote>
+  <blockquote>“Clean, cozy and the perfect location to explore western Sicily!” – John T.</blockquote>
+</section>
+```
+
+---
+
+## ✅ 5. **Effetto zoom on hover sulle immagini camere**
+
+Rende la galleria visivamente più dinamica.
+
+### 🔧 Aggiungi nel tuo `<style>`:
+
+```css
+.swiper-slide img {
+  transition: transform 0.4s ease;
+}
+.swiper-slide img:hover {
+  transform: scale(1.03);
+}
+```
+
+---
+
+## 🟢 Vuoi anche:
+
+* Dark mode automatica?
+* Bottone "torna su" in basso a destra?
+* Integrazione con Google Maps per la posizione?
+
+Fammi sapere e ti guido passo passo anche su quelli!
