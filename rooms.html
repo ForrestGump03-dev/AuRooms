@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
@@ -99,7 +98,7 @@
         <div class="room-card">
           <h3 data-lang="it">Camera Glicine</h3>
           <h3 class="hidden" data-lang="en">Glicine Room</h3>
-          
+
           <div class="room-gallery">
             <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80" alt="Camera Deluxe" />
             <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
@@ -160,7 +159,7 @@
         <div class="room-card">
           <h3 data-lang="it">Camera Yellow</h3>
           <h3 class="hidden" data-lang="en">Yellow Room</h3>
-          
+
           <div class="room-gallery">
             <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Yellow" />
             <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
@@ -174,7 +173,7 @@
               <span class="hidden" data-lang="en">Perfect for couples</span>
             </div>
             <div class="amenity-item">
-              <span>🪟</span>
+              <span>🧊</span>
               <span data-lang="it">Frigo Bar</span>
               <span class="hidden" data-lang="en">Fridge bar</span>
             </div>
@@ -235,7 +234,7 @@
               <span class="hidden" data-lang="en">Perfect for Families/Groups</span>
             </div>
             <div class="amenity-item">
-              <span>🪟</span>
+              <span>🧊</span>
               <span data-lang="it">Frigo Bar</span>
               <span class="hidden" data-lang="en">Fridge bar</span>
             </div>
@@ -290,7 +289,7 @@
         <div class="booking-form">
           <h4 data-lang="it">Prenota la tua camera</h4>
           <h4 class="hidden" data-lang="en">Book your room</h4>
-          
+
           <form id="booking-form">
             <div class="grid">
               <div>
@@ -304,7 +303,7 @@
                 <input type="date" id="checkout" required />
               </div>
             </div>
-            
+
             <div class="grid">
               <div>
                 <label data-lang="it">Ospiti</label>
@@ -371,7 +370,7 @@
         <button type="submit" data-lang="it">Accedi</button>
         <button type="submit" class="hidden" data-lang="en">Login</button>
       </form>
-      <footer>
+      <footer>>
         <small>
           <span data-lang="it">Non hai un account? </span>
           <span class="hidden" data-lang="en">Don't have an account? </span>
@@ -390,20 +389,20 @@
     function selectRoom(type, price) {
       selectedRoomType = type;
       selectedRoomPrice = price;
-      
+
       const roomInfo = document.getElementById('room-info');
       const selectedRoomDiv = document.getElementById('selected-room');
       const bookBtn = document.getElementById('book-btn');
-      
+
       const roomNames = {
         'glicine': {'it': 'Camera Glicine', 'en': 'Glicine Room'},
         'yellow': {'it': 'Camera Yellow', 'en': 'Yellow Room'},
         'blu': {'it': 'Camera Blu', 'en': 'Blue Room'}
       };
-      
+
       const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
       roomInfo.textContent = roomNames[type][currentLang] + ' - €' + price + (currentLang === 'it' ? ' per notte' : ' per night');
-      
+
       selectedRoomDiv.style.display = 'block';
       bookBtn.disabled = false;
       calculateTotal();
@@ -413,7 +412,7 @@
       const checkin = document.getElementById('checkin').value;
       const checkout = document.getElementById('checkout').value;
       const rooms = parseInt(document.getElementById('rooms').value);
-      
+
       if (checkin && checkout && selectedRoomPrice) {
         const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
         if (nights > 0) {
@@ -430,17 +429,17 @@
         alert('Seleziona prima una camera');
         return;
       }
-      
+
       const checkin = document.getElementById('checkin').value;
       const checkout = document.getElementById('checkout').value;
       const guests = document.getElementById('guests').value;
       const rooms = document.getElementById('rooms').value;
-      
+
       if (!checkin || !checkout) {
         alert('Seleziona le date di check-in e check-out');
         return;
       }
-      
+
       // Store booking data
       localStorage.setItem('selectedRoom', selectedRoomType);
       localStorage.setItem('roomPrice', selectedRoomPrice);
@@ -448,7 +447,7 @@
       localStorage.setItem('checkout', checkout);
       localStorage.setItem('guests', guests);
       localStorage.setItem('rooms', rooms);
-      
+
       window.location.href = 'checkout.html';
     }
 
@@ -469,14 +468,14 @@
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('checkin').min = today;
       document.getElementById('checkout').min = today;
-      
+
       document.getElementById('checkin').addEventListener('change', function() {
         const checkinDate = new Date(this.value);
         checkinDate.setDate(checkinDate.getDate() + 1);
         document.getElementById('checkout').min = checkinDate.toISOString().split('T')[0];
         calculateTotal();
       });
-      
+
       document.getElementById('checkout').addEventListener('change', calculateTotal);
       document.getElementById('rooms').addEventListener('change', calculateTotal);
     });
