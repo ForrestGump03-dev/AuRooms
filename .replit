@@ -14,7 +14,7 @@ runButton = "Serve static"
 
 [[workflows.workflow]]
 name = "Serve static"
-mode = "parallel"
+mode = "sequential"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"

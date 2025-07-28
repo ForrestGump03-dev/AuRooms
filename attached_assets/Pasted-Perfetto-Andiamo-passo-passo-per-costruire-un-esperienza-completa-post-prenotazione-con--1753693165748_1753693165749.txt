@@ -1,0 +1,148 @@
+Perfetto! Andiamo passo passo per **costruire un’esperienza completa post-prenotazione**, con:
+
+---
+
+### 🧩 1. **Pagina di conferma/riepilogo prenotazione**
+
+📄 Mostra nome, date selezionate e pulsante “procedi al pagamento”
+
+### 💳 2. **Pagina metodi di pagamento**
+
+✅ Scelta tra carta (Stripe), PayPal.me o bonifico
+
+### ✅ 3. **Integrazioni intelligenti**
+
+⚙️ Passaggio automatico dei dati tra le pagine via `localStorage`
+📲 WhatsApp + redirect + sicurezza
+
+---
+
+## 🧾 FASE 1: Pagina **post-prenotazione** con riepilogo
+
+📁 Crea un file chiamato `conferma.html`
+👉 Questo file **legge i dati inseriti nel modulo e li mostra**
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Conferma Prenotazione</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Conferma Prenotazione</h2>
+    <p><strong>Nome:</strong> <span id="nome"></span></p>
+    <p><strong>Check-in:</strong> <span id="checkin"></span></p>
+    <p><strong>Check-out:</strong> <span id="checkout"></span></p>
+
+    <a href="pagamento.html" role="button">Procedi al Pagamento</a>
+  </main>
+
+  <script>
+    // Recupero dati da localStorage
+    document.getElementById('nome').innerText = localStorage.getItem('nome') || '—';
+    document.getElementById('checkin').innerText = localStorage.getItem('checkin') || '—';
+    document.getElementById('checkout').innerText = localStorage.getItem('checkout') || '—';
+  </script>
+</body>
+</html>
+```
+
+---
+
+## 🧾 FASE 2: Aggiorna il tuo modulo di prenotazione (index.html)
+
+🔄 Modifica il form per **salvare i dati nel localStorage** e **reindirizzare alla conferma**
+
+```html
+<form class="grid" onsubmit="salvaPrenotazione(event)">
+  <input type="text" id="nome" placeholder="Nome / Name" required />
+  <input type="date" id="checkin" required />
+  <input type="date" id="checkout" required />
+  <button type="submit">Procedi</button>
+</form>
+
+<script>
+  function salvaPrenotazione(e) {
+    e.preventDefault();
+    localStorage.setItem('nome', document.getElementById('nome').value);
+    localStorage.setItem('checkin', document.getElementById('checkin').value);
+    localStorage.setItem('checkout', document.getElementById('checkout').value);
+    window.location.href = "conferma.html";
+  }
+</script>
+```
+
+---
+
+## 💳 FASE 3: Pagina **pagamento.html** con metodi di pagamento
+
+📁 Crea un nuovo file chiamato `pagamento.html`
+
+```html
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scegli il Metodo di Pagamento</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+</head>
+<body>
+  <main class="container">
+    <h2>Metodo di Pagamento</h2>
+    <p><strong>Nome:</strong> <span id="nome"></span></p>
+    <p><strong>Check-in:</strong> <span id="checkin"></span></p>
+    <p><strong>Check-out:</strong> <span id="checkout"></span></p>
+
+    <div class="grid">
+      <a href="https://buy.stripe.com/test_4gwg1BgUO6P4a7a3cc" target="_blank" role="button">💳 Carta (Stripe)</a>
+      <a href="https://www.paypal.me/tuonome/150" target="_blank" role="button" class="secondary">💰 PayPal</a>
+      <a href="#bonifico" role="button" class="contrast">🏦 Bonifico</a>
+    </div>
+
+    <section id="bonifico" style="margin-top: 2rem;">
+      <h4>Dati per Bonifico Bancario</h4>
+      <p>
+        Intestazione: AUROOMS Guest House<br>
+        IBAN: IT00A0000000000000000000000<br>
+        Causale: “Prenotazione soggiorno – <span id='causale'></span>”
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const nome = localStorage.getItem('nome') || '—';
+    document.getElementById('nome').innerText = nome;
+    document.getElementById('checkin').innerText = localStorage.getItem('checkin') || '—';
+    document.getElementById('checkout').innerText = localStorage.getItem('checkout') || '—';
+    document.getElementById('causale').innerText = nome;
+  </script>
+</body>
+</html>
+```
+
+---
+
+## ✅ RISULTATO
+
+1. L’utente **compila il form su `index.html`**
+2. Viene reindirizzato a **`conferma.html`** con riepilogo
+3. Clicca su “Procedi al pagamento” → **`pagamento.html`**
+4. Sceglie come pagare (Stripe, PayPal.me, Bonifico)
+
+---
+
+## 🔐 Prossimi step che posso aggiungerti:
+
+* ✅ Pulsante “torna alla home” su ogni pagina
+* ✅ Integrazione email di conferma
+* ✅ Salvataggio delle prenotazioni in Firebase
+* ✅ PDF riepilogo della prenotazione
+
+---
+
+Vuoi che ti invii questi 3 file già pronti `.zip` o ti serve che ti integri i link reali (Stripe e PayPal)?
