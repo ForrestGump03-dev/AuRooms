@@ -1,0 +1,311 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Accedi - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .auth-container {
+      max-width: 500px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: var(--card-background-color);
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .auth-tab {
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      background: var(--secondary-background);
+      border: none;
+      transition: all 0.3s ease;
+    }
+    .auth-tab.active {
+      background: var(--primary);
+      color: white;
+    }
+    .auth-form {
+      display: none;
+    }
+    .auth-form.active {
+      display: block;
+    }
+    .social-login {
+      margin: 1.5rem 0;
+      text-align: center;
+    }
+    .social-btn {
+      display: block;
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: white;
+      color: #333;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    .social-btn:hover {
+      background: var(--secondary-background);
+      color: #333;
+    }
+    .divider {
+      text-align: center;
+      margin: 1.5rem 0;
+      position: relative;
+    }
+    .divider::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--border-color);
+    }
+    .divider span {
+      background: var(--card-background-color);
+      padding: 0 1rem;
+      color: var(--muted-color);
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">← Torna alla Home</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="auth-container">
+      <hgroup style="text-align: center; margin-bottom: 2rem;">
+        <h2>Accedi al tuo account</h2>
+        <h3>Gestisci le tue prenotazioni e molto altro</h3>
+      </hgroup>
+
+      <!-- Auth Tabs -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Accedi</button>
+        <button class="auth-tab" onclick="switchTab('register')">Registrati</button>
+      </div>
+
+      <!-- Login Form -->
+      <div id="login-form" class="auth-form active">
+        <form onsubmit="handleLogin(event)">
+          <input type="email" placeholder="Email" required />
+          <input type="password" placeholder="Password" required />
+          
+          <label>
+            <input type="checkbox" />
+            Ricordami
+          </label>
+
+          <button type="submit" style="width: 100%;">Accedi</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1rem;">
+          <a href="#" onclick="showPasswordReset()" style="color: var(--primary);">
+            Password dimenticata?
+          </a>
+        </div>
+      </div>
+
+      <!-- Register Form -->
+      <div id="register-form" class="auth-form">
+        <form onsubmit="handleRegister(event)">
+          <div class="grid">
+            <input type="text" placeholder="Nome" required />
+            <input type="text" placeholder="Cognome" required />
+          </div>
+          
+          <input type="email" placeholder="Email" required />
+          <input type="tel" placeholder="Telefono" required />
+          <input type="password" placeholder="Password (min. 8 caratteri)" required minlength="8" />
+          <input type="password" placeholder="Conferma Password" required />
+          
+          <div class="grid">
+            <input type="date" placeholder="Data di nascita" required />
+            <input type="text" placeholder="Cittadinanza" required />
+          </div>
+
+          <label>
+            <input type="checkbox" required />
+            Accetto i <a href="#" target="_blank">Termini e Condizioni</a>
+          </label>
+
+          <label>
+            <input type="checkbox" required />
+            Accetto l'<a href="#" target="_blank">Informativa Privacy</a>
+          </label>
+
+          <label>
+            <input type="checkbox" />
+            Desidero ricevere offerte e aggiornamenti via email
+          </label>
+
+          <button type="submit" style="width: 100%;">Registrati</button>
+        </form>
+      </div>
+
+      <!-- Social Login -->
+      <div class="social-login">
+        <div class="divider">
+          <span>oppure</span>
+        </div>
+
+        <a href="#" class="social-btn" onclick="socialLogin('google')">
+          🔍 Continua con Google
+        </a>
+        
+        <a href="#" class="social-btn" onclick="socialLogin('facebook')">
+          📘 Continua con Facebook
+        </a>
+      </div>
+
+      <!-- Benefits -->
+      <div style="margin-top: 2rem; padding: 1rem; background: var(--primary-background); border-radius: 8px;">
+        <h5>Perché creare un account?</h5>
+        <ul style="margin: 0; padding-left: 1.2rem;">
+          <li>✓ Gestisci tutte le tue prenotazioni in un posto</li>
+          <li>✓ Check-in più veloce con dati salvati</li>
+          <li>✓ Accesso esclusivo a offerte speciali</li>
+          <li>✓ Programma fedeltà con sconti progressivi</li>
+          <li>✓ Assistenza prioritaria</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+
+  <!-- Password Reset Modal -->
+  <dialog id="password-reset-modal">
+    <article>
+      <header>
+        <a href="#close" aria-label="Close" class="close" onclick="closePasswordReset()"></a>
+        <p><strong>Recupera Password</strong></p>
+      </header>
+      <form onsubmit="handlePasswordReset(event)">
+        <p>Inserisci la tua email per ricevere il link di reset della password.</p>
+        <input type="email" placeholder="La tua email" required />
+        <button type="submit">Invia Link</button>
+      </form>
+    </article>
+  </dialog>
+
+  <script src="script.js"></script>
+  <script>
+    function switchTab(tab) {
+      // Update tab buttons
+      document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+      
+      // Update forms
+      document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
+      document.getElementById(tab + '-form').classList.add('active');
+    }
+
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      // In production, this would authenticate with backend
+      const email = event.target.querySelector('input[type="email"]').value;
+      const password = event.target.querySelector('input[type="password"]').value;
+      
+      // Simulate login
+      if (email && password) {
+        const userData = {
+          nome: email.split('@')[0],
+          email: email
+        };
+        
+        localStorage.setItem('userLoggedIn', 'true');
+        localStorage.setItem('userData', JSON.stringify(userData));
+        
+        alert('Login effettuato con successo!');
+        
+        // Redirect to dashboard or original page
+        const redirectTo = new URLSearchParams(window.location.search).get('redirect') || 'dashboard.html';
+        window.location.href = redirectTo;
+      }
+    }
+
+    function handleRegister(event) {
+      event.preventDefault();
+      
+      const formData = new FormData(event.target);
+      const inputs = event.target.querySelectorAll('input');
+      
+      // Basic validation
+      const password = inputs[4].value;
+      const confirmPassword = inputs[5].value;
+      
+      if (password !== confirmPassword) {
+        alert('Le password non coincidono');
+        return;
+      }
+      
+      // Simulate registration
+      const userData = {
+        nome: inputs[0].value,
+        cognome: inputs[1].value,
+        email: inputs[2].value,
+        telefono: inputs[3].value
+      };
+      
+      localStorage.setItem('userLoggedIn', 'true');
+      localStorage.setItem('userData', JSON.stringify(userData));
+      
+      alert('Registrazione completata con successo! Benvenuto in AUROOMS!');
+      
+      // Send welcome email (simulate)
+      console.log('Welcome email would be sent to:', userData.email);
+      
+      window.location.href = 'dashboard.html';
+    }
+
+    function socialLogin(provider) {
+      alert(`Login con ${provider} in sviluppo. Per ora usa email e password.`);
+      // In production, integrate with OAuth providers
+    }
+
+    function showPasswordReset() {
+      document.getElementById('password-reset-modal').showModal();
+    }
+
+    function closePasswordReset() {
+      document.getElementById('password-reset-modal').close();
+    }
+
+    function handlePasswordReset(event) {
+      event.preventDefault();
+      const email = event.target.querySelector('input[type="email"]').value;
+      
+      // Simulate password reset
+      alert(`Link di reset inviato a ${email}. Controlla la tua casella email.`);
+      closePasswordReset();
+    }
+
+    // Auto-focus on email field
+    document.addEventListener('DOMContentLoaded', function() {
+      document.querySelector('#login-form input[type="email"]').focus();
+    });
+  </script>
+</body>
+</html>

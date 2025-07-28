@@ -32,16 +32,26 @@ document.addEventListener('DOMContentLoaded', function() {
           once: true
         });
       } else {
-        // Retry after a short delay
-        setTimeout(initAOS, 200);
+        // If AOS is not loaded, just add a fallback fade-in effect
+        setTimeout(() => {
+          document.querySelectorAll('[data-aos]').forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'translateY(0)';
+          });
+        }, 100);
       }
     } catch (error) {
-      console.warn('AOS initialization failed:', error);
+      console.warn('AOS initialization failed, using fallback:', error);
+      // Fallback animation
+      document.querySelectorAll('[data-aos]').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
     }
   }
   
-  // Start AOS initialization
-  initAOS();
+  // Start AOS initialization with delay to ensure library is loaded
+  setTimeout(initAOS, 100);
   
   // Initialize Swiper
   try {

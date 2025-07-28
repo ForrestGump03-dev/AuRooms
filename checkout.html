@@ -1,0 +1,307 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .checkout-summary {
+      background: var(--card-background-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      position: sticky;
+      top: 2rem;
+    }
+    .form-section {
+      background: var(--card-background-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .total-price {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: var(--primary);
+      text-align: center;
+      padding: 1rem;
+      background: var(--primary-background);
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="rooms.html">← Torna alle camere</a></li>
+      <li><a href="index.html">Home</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <hgroup style="text-align: center; margin-bottom: 2rem;">
+      <h1 data-lang="it">Completa la prenotazione</h1>
+      <h1 class="hidden" data-lang="en">Complete your booking</h1>
+    </hgroup>
+
+    <div class="grid">
+      <div>
+        <!-- Guest Information -->
+        <div class="form-section">
+          <h3 data-lang="it">Informazioni dell'ospite</h3>
+          <h3 class="hidden" data-lang="en">Guest information</h3>
+          
+          <form id="guest-form">
+            <div class="grid">
+              <input type="text" id="nome" placeholder="Nome / First Name" required />
+              <input type="text" id="cognome" placeholder="Cognome / Last Name" required />
+            </div>
+            
+            <input type="email" id="email" placeholder="Email" required />
+            <input type="tel" id="telefono" placeholder="Telefono / Phone" required />
+            
+            <div class="grid">
+              <input type="text" id="cittadinanza" placeholder="Cittadinanza / Nationality" required />
+              <input type="date" id="data-nascita" placeholder="Data di nascita / Birth date" required />
+            </div>
+            
+            <textarea id="richieste" placeholder="Richieste speciali / Special requests (opzionale)" rows="3"></textarea>
+          </form>
+        </div>
+
+        <!-- Additional Services -->
+        <div class="form-section">
+          <h3 data-lang="it">Servizi aggiuntivi</h3>
+          <h3 class="hidden" data-lang="en">Additional services</h3>
+          
+          <label>
+            <input type="checkbox" id="colazione" value="15" onchange="calculateTotal()">
+            <span data-lang="it">Colazione continentale (+€15/giorno)</span>
+            <span class="hidden" data-lang="en">Continental breakfast (+€15/day)</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" id="transfer" value="25" onchange="calculateTotal()">
+            <span data-lang="it">Transfer aeroporto (+€25)</span>
+            <span class="hidden" data-lang="en">Airport transfer (+€25)</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" id="late-checkin" value="20" onchange="calculateTotal()">
+            <span data-lang="it">Check-in tardivo dopo le 22:00 (+€20)</span>
+            <span class="hidden" data-lang="en">Late check-in after 10 PM (+€20)</span>
+          </label>
+        </div>
+
+        <!-- Terms and Conditions -->
+        <div class="form-section">
+          <h3 data-lang="it">Termini e condizioni</h3>
+          <h3 class="hidden" data-lang="en">Terms and conditions</h3>
+          
+          <label>
+            <input type="checkbox" id="privacy" required>
+            <span data-lang="it">Accetto l'informativa sulla privacy e il trattamento dei dati personali</span>
+            <span class="hidden" data-lang="en">I accept the privacy policy and personal data processing</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" id="terms" required>
+            <span data-lang="it">Accetto i termini e le condizioni di prenotazione</span>
+            <span class="hidden" data-lang="en">I accept the booking terms and conditions</span>
+          </label>
+          
+          <small data-lang="it">
+            <strong>Politica di cancellazione:</strong> Cancellazione gratuita fino a 24 ore prima dell'arrivo. 
+            Cancellazioni tardive comportano l'addebito della prima notte.
+          </small>
+          <small class="hidden" data-lang="en">
+            <strong>Cancellation policy:</strong> Free cancellation up to 24 hours before arrival. 
+            Late cancellations will be charged for the first night.
+          </small>
+        </div>
+      </div>
+
+      <!-- Booking Summary -->
+      <div>
+        <div class="checkout-summary">
+          <h3 data-lang="it">Riepilogo prenotazione</h3>
+          <h3 class="hidden" data-lang="en">Booking summary</h3>
+          
+          <div id="booking-details">
+            <p><strong data-lang="it">Camera:</strong><strong class="hidden" data-lang="en">Room:</strong> <span id="room-type">—</span></p>
+            <p><strong>Check-in:</strong> <span id="checkin-date">—</span></p>
+            <p><strong>Check-out:</strong> <span id="checkout-date">—</span></p>
+            <p><strong data-lang="it">Ospiti:</strong><strong class="hidden" data-lang="en">Guests:</strong> <span id="guests-count">—</span></p>
+            <p><strong data-lang="it">Camere:</strong><strong class="hidden" data-lang="en">Rooms:</strong> <span id="rooms-count">—</span></p>
+            <p><strong data-lang="it">Notti:</strong><strong class="hidden" data-lang="en">Nights:</strong> <span id="nights-count">—</span></p>
+            
+            <hr>
+            
+            <div id="price-breakdown">
+              <p data-lang="it">Camera: €<span id="room-total">0</span></p>
+              <p class="hidden" data-lang="en">Room: €<span id="room-total-en">0</span></p>
+              <div id="extras-list"></div>
+            </div>
+            
+            <div class="total-price" id="final-total">
+              <span data-lang="it">Totale: €0</span>
+              <span class="hidden" data-lang="en">Total: €0</span>
+            </div>
+          </div>
+
+          <button onclick="proceedToPayment()" id="payment-btn" disabled style="width: 100%; margin-top: 1.5rem;">
+            <span data-lang="it">Procedi al pagamento</span>
+            <span class="hidden" data-lang="en">Proceed to payment</span>
+          </button>
+          
+          <div style="margin-top: 2rem; text-align: center;">
+            <h5 data-lang="it">Hai bisogno di aiuto?</h5>
+            <h5 class="hidden" data-lang="en">Need help?</h5>
+            <a href="https://wa.me/393471234567" target="_blank" style="color: #25D366;">
+              📱 WhatsApp: +39 347 123 4567
+            </a>
+            <br>
+            <a href="tel:+393471234567">
+              📞 Tel: +39 347 123 4567
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    let baseTotal = 0;
+    let nights = 0;
+    let roomPrice = 0;
+    let roomsCount = 1;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      loadBookingData();
+      setupFormValidation();
+    });
+
+    function loadBookingData() {
+      const selectedRoom = localStorage.getItem('selectedRoom');
+      roomPrice = parseInt(localStorage.getItem('roomPrice')) || 0;
+      const checkin = localStorage.getItem('checkin');
+      const checkout = localStorage.getItem('checkout');
+      const guests = localStorage.getItem('guests');
+      roomsCount = parseInt(localStorage.getItem('rooms')) || 1;
+
+      if (!selectedRoom || !checkin || !checkout) {
+        alert('Dati prenotazione mancanti. Verrai reindirizzato alla selezione camere.');
+        window.location.href = 'rooms.html';
+        return;
+      }
+
+      // Calculate nights
+      nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+      baseTotal = nights * roomPrice * roomsCount;
+
+      // Room type translation
+      const roomNames = {
+        'deluxe': {'it': 'Camera Deluxe con Vista Mare', 'en': 'Deluxe Room with Sea View'},
+        'standard': {'it': 'Camera Standard', 'en': 'Standard Room'}
+      };
+
+      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+      
+      // Update summary
+      document.getElementById('room-type').textContent = roomNames[selectedRoom][currentLang];
+      document.getElementById('checkin-date').textContent = new Date(checkin).toLocaleDateString('it-IT');
+      document.getElementById('checkout-date').textContent = new Date(checkout).toLocaleDateString('it-IT');
+      document.getElementById('guests-count').textContent = guests;
+      document.getElementById('rooms-count').textContent = roomsCount;
+      document.getElementById('nights-count').textContent = nights;
+
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      let extrasTotal = 0;
+      const extrasList = document.getElementById('extras-list');
+      extrasList.innerHTML = '';
+
+      // Calculate extras
+      const colazione = document.getElementById('colazione');
+      const transfer = document.getElementById('transfer');
+      const lateCheckin = document.getElementById('late-checkin');
+
+      if (colazione && colazione.checked) {
+        const colazioneTotal = parseInt(colazione.value) * nights * roomsCount;
+        extrasTotal += colazioneTotal;
+        extrasList.innerHTML += `<p>Colazione: €${colazioneTotal}</p>`;
+      }
+
+      if (transfer && transfer.checked) {
+        extrasTotal += parseInt(transfer.value);
+        extrasList.innerHTML += `<p>Transfer: €${transfer.value}</p>`;
+      }
+
+      if (lateCheckin && lateCheckin.checked) {
+        extrasTotal += parseInt(lateCheckin.value);
+        extrasList.innerHTML += `<p>Check-in tardivo: €${lateCheckin.value}</p>`;
+      }
+
+      // Update totals
+      document.getElementById('room-total').textContent = baseTotal;
+      document.getElementById('room-total-en').textContent = baseTotal;
+      
+      const finalTotal = baseTotal + extrasTotal;
+      document.getElementById('final-total').innerHTML = `
+        <span data-lang="it">Totale: €${finalTotal}</span>
+        <span class="hidden" data-lang="en">Total: €${finalTotal}</span>
+      `;
+
+      // Store updated total
+      localStorage.setItem('finalTotal', finalTotal);
+    }
+
+    function setupFormValidation() {
+      const requiredFields = ['nome', 'cognome', 'email', 'telefono', 'cittadinanza', 'data-nascita'];
+      const paymentBtn = document.getElementById('payment-btn');
+      
+      function checkFormValidity() {
+        const allFilled = requiredFields.every(id => document.getElementById(id).value.trim() !== '');
+        const privacyChecked = document.getElementById('privacy').checked;
+        const termsChecked = document.getElementById('terms').checked;
+        
+        paymentBtn.disabled = !(allFilled && privacyChecked && termsChecked);
+      }
+
+      requiredFields.forEach(id => {
+        document.getElementById(id).addEventListener('input', checkFormValidity);
+      });
+      
+      document.getElementById('privacy').addEventListener('change', checkFormValidity);
+      document.getElementById('terms').addEventListener('change', checkFormValidity);
+    }
+
+    function proceedToPayment() {
+      // Save guest information
+      const guestData = {
+        nome: document.getElementById('nome').value,
+        cognome: document.getElementById('cognome').value,
+        email: document.getElementById('email').value,
+        telefono: document.getElementById('telefono').value,
+        cittadinanza: document.getElementById('cittadinanza').value,
+        dataNascita: document.getElementById('data-nascita').value,
+        richieste: document.getElementById('richieste').value,
+        colazione: document.getElementById('colazione').checked,
+        transfer: document.getElementById('transfer').checked,
+        lateCheckin: document.getElementById('late-checkin').checked
+      };
+
+      localStorage.setItem('guestData', JSON.stringify(guestData));
+      window.location.href = 'pagamento.html';
+    }
+  </script>
+</body>
+</html>

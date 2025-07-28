@@ -1,0 +1,272 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Prenotazione Confermata - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .confirmation-card {
+      background: var(--card-background-color);
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin: 2rem 0;
+      border: 2px solid var(--primary);
+    }
+    .success-icon {
+      font-size: 4rem;
+      color: var(--primary);
+      margin-bottom: 1rem;
+    }
+    .booking-details {
+      background: var(--secondary-background);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      text-align: left;
+    }
+    .action-buttons {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .info-section {
+      background: var(--primary-background);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="dashboard.html">La Mia Area</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <div class="confirmation-card">
+      <div class="success-icon">✅</div>
+      <h1>Prenotazione Confermata!</h1>
+      <h3>Grazie per aver scelto AUROOMS</h3>
+      
+      <div class="booking-details">
+        <h4>Dettagli della Prenotazione</h4>
+        <div class="grid">
+          <div>
+            <p><strong>Codice Prenotazione:</strong> <span id="booking-code">—</span></p>
+            <p><strong>Camera:</strong> <span id="room-details">—</span></p>
+            <p><strong>Ospite:</strong> <span id="guest-name">—</span></p>
+            <p><strong>Email:</strong> <span id="guest-email">—</span></p>
+          </div>
+          <div>
+            <p><strong>Check-in:</strong> <span id="checkin-date">—</span></p>
+            <p><strong>Check-out:</strong> <span id="checkout-date">—</span></p>
+            <p><strong>Ospiti:</strong> <span id="guests-count">—</span></p>
+            <p><strong>Totale Pagato:</strong> €<span id="total-amount">—</span></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h5>📧 Conferma via Email</h5>
+        <p>Abbiamo inviato tutti i dettagli della prenotazione alla tua email. 
+        Se non ricevi l'email entro 10 minuti, controlla la cartella spam.</p>
+      </div>
+
+      <div class="action-buttons">
+        <a href="#" onclick="downloadConfirmation()" role="button" class="secondary">
+          📄 Scarica Conferma PDF
+        </a>
+        <a href="https://wa.me/393471234567" target="_blank" role="button" class="secondary">
+          💬 Contattaci su WhatsApp
+        </a>
+        <a href="dashboard.html" role="button">
+          👤 Vai alla Mia Area
+        </a>
+      </div>
+    </div>
+
+    <article>
+      <h3>Informazioni Importanti</h3>
+      
+      <div class="grid">
+        <div>
+          <h4>🕐 Orari Check-in/Check-out</h4>
+          <p><strong>Check-in:</strong> dalle 15:00 alle 22:00</p>
+          <p><strong>Check-out:</strong> entro le 11:00</p>
+          <p><small>Check-in tardivo disponibile su richiesta (+€20)</small></p>
+        </div>
+        
+        <div>
+          <h4>📍 Come Raggiungerci</h4>
+          <p><strong>Indirizzo:</strong> Via Roma 123, Cinisi (PA)</p>
+          <p><strong>Dall'aeroporto:</strong> 10 minuti in auto</p>
+          <p><strong>Transfer disponibile:</strong> +39 347 123 4567</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <div>
+          <h4>🏠 Servizi Inclusi</h4>
+          <ul>
+            <li>✓ Wi-Fi gratuito</li>
+            <li>✓ Aria condizionata</li>
+            <li>✓ TV satellitare</li>
+            <li>✓ Cassaforte</li>
+            <li>✓ Asciugacapelli</li>
+            <li>✓ Set cortesia</li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4>📞 Contatti</h4>
+          <p><strong>Telefono:</strong> +39 347 123 4567</p>
+          <p><strong>WhatsApp:</strong> +39 347 123 4567</p>
+          <p><strong>Email:</strong> info@aurooms.it</p>
+          <p><strong>Emergenze 24h:</strong> +39 347 123 4567</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <h4>🚗 Cosa Visitare Nei Dintorni</h4>
+        <div class="grid">
+          <div>
+            <p><strong>Palermo:</strong> 30 km (centro storico, mercati)</p>
+            <p><strong>Mondello:</strong> 25 km (spiaggia paradisiaca)</p>
+            <p><strong>Cefalù:</strong> 70 km (borgo medievale)</p>
+          </div>
+          <div>
+            <p><strong>Segesta:</strong> 40 km (tempio greco)</p>
+            <p><strong>Monreale:</strong> 35 km (duomo patrimonio UNESCO)</p>
+            <p><strong>Riserva dello Zingaro:</strong> 60 km</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <footer style="text-align: center; margin: 3rem 0;">
+      <p>Grazie per aver scelto <strong>AUROOMS Guest House</strong></p>
+      <p>Non vediamo l'ora di accogliervi!</p>
+      <div style="margin-top: 2rem;">
+        <a href="index.html" role="button" class="secondary">← Torna alla Home</a>
+        <a href="rooms.html" role="button">Prenota un Altro Soggiorno</a>
+      </div>
+    </footer>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      loadBookingConfirmation();
+      
+      // Send confirmation data to hotel (simulate)
+      sendBookingNotification();
+    });
+
+    function loadBookingConfirmation() {
+      // Load completed booking data
+      const completedBooking = localStorage.getItem('completedBooking');
+      
+      if (!completedBooking) {
+        alert('Nessuna prenotazione trovata. Verrai reindirizzato alla home.');
+        window.location.href = 'index.html';
+        return;
+      }
+
+      const booking = JSON.parse(completedBooking);
+      
+      // Update page with booking details
+      document.getElementById('booking-code').textContent = booking.bookingReference;
+      document.getElementById('room-details').textContent = booking.room.name;
+      document.getElementById('guest-name').textContent = `${booking.guest.nome} ${booking.guest.cognome}`;
+      document.getElementById('guest-email').textContent = booking.guest.email;
+      document.getElementById('checkin-date').textContent = new Date(booking.dates.checkin).toLocaleDateString('it-IT');
+      document.getElementById('checkout-date').textContent = new Date(booking.dates.checkout).toLocaleDateString('it-IT');
+      document.getElementById('guests-count').textContent = booking.details.guests;
+      document.getElementById('total-amount').textContent = booking.total;
+    }
+
+    function sendBookingNotification() {
+      const booking = JSON.parse(localStorage.getItem('completedBooking'));
+      
+      // Simulate sending confirmation email to guest
+      console.log('Confirmation email sent to:', booking.guest.email);
+      
+      // Simulate WhatsApp notification to hotel owner
+      const hotelMessage = `🏨 PRENOTAZIONE COMPLETATA - AUROOMS
+
+📋 Codice: ${booking.bookingReference}
+👤 Ospite: ${booking.guest.nome} ${booking.guest.cognome}
+📧 Email: ${booking.guest.email}
+📱 Tel: ${booking.guest.telefono}
+
+🏠 Camera: ${booking.room.name}
+📅 Arrivo: ${new Date(booking.dates.checkin).toLocaleDateString('it-IT')}
+📅 Partenza: ${new Date(booking.dates.checkout).toLocaleDateString('it-IT')}
+🌙 Notti: ${booking.dates.nights}
+👥 Ospiti: ${booking.details.guests}
+
+💰 Totale: €${booking.total}
+✅ PAGAMENTO COMPLETATO
+
+${booking.guest.richieste ? '💬 Richieste: ' + booking.guest.richieste : ''}
+
+🔗 Link prenotazione: https://aurooms.com/booking/${booking.bookingReference}`;
+
+      console.log('WhatsApp notification to hotel:', hotelMessage);
+    }
+
+    function downloadConfirmation() {
+      // In production, this would generate and download a PDF
+      alert('Download PDF in sviluppo. Per ora salva questa pagina o fai screenshot.');
+    }
+
+    // Add some confetti effect (simple)
+    function createConfetti() {
+      const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#96ceb4', '#ffeaa7'];
+      
+      for (let i = 0; i < 50; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.style.position = 'fixed';
+          confetti.style.top = '-10px';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.width = '10px';
+          confetti.style.height = '10px';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.pointerEvents = 'none';
+          confetti.style.zIndex = '9999';
+          confetti.style.borderRadius = '50%';
+          
+          document.body.appendChild(confetti);
+          
+          let pos = -10;
+          const fall = setInterval(() => {
+            pos += 3;
+            confetti.style.top = pos + 'px';
+            confetti.style.transform = `rotate(${pos * 2}deg)`;
+            
+            if (pos > window.innerHeight) {
+              clearInterval(fall);
+              confetti.remove();
+            }
+          }, 20);
+        }, i * 100);
+      }
+    }
+
+    // Show confetti on page load
+    setTimeout(createConfetti, 500);
+  </script>
+</body>
+</html>

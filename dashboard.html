@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>La Mia Area - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .dashboard-card {
+      background: var(--card-background-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 1.5rem;
+    }
+    .booking-card {
+      border: 1px solid var(--border-color);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+    .booking-status {
+      display: inline-block;
+      padding: 0.2rem 0.8rem;
+      border-radius: 15px;
+      font-size: 0.8rem;
+      font-weight: bold;
+    }
+    .status-confirmed { background: #d4edda; color: #155724; }
+    .status-pending { background: #fff3cd; color: #856404; }
+    .status-cancelled { background: #f8d7da; color: #721c24; }
+    .profile-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    @media (max-width: 768px) {
+      .profile-section { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="rooms.html">Camere</a></li>
+      <li><a href="#" onclick="logout()">Logout</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <hgroup style="margin-bottom: 2rem;">
+      <h1>La Mia Area</h1>
+      <h3>Benvenuto, <span id="user-name">—</span></h3>
+    </hgroup>
+
+    <div class="grid">
+      <div>
+        <!-- My Bookings -->
+        <div class="dashboard-card">
+          <h3>Le Mie Prenotazioni</h3>
+          <div id="bookings-list">
+            <div class="booking-card">
+              <div class="grid">
+                <div>
+                  <h5>Camera Deluxe con Vista Mare</h5>
+                  <p>📅 15/02/2024 - 18/02/2024 (3 notti)</p>
+                  <p>👥 2 ospiti • 🛏️ 1 camera</p>
+                  <p>📧 Conferma: AU123456</p>
+                </div>
+                <div style="text-align: right;">
+                  <span class="booking-status status-confirmed">Confermata</span>
+                  <p style="margin-top: 0.5rem;"><strong>€255</strong></p>
+                  <small>
+                    <a href="#" onclick="viewBookingDetails('AU123456')">Dettagli</a> |
+                    <a href="#" onclick="cancelBooking('AU123456')">Cancella</a>
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <div class="booking-card">
+              <div class="grid">
+                <div>
+                  <h5>Camera Standard</h5>
+                  <p>📅 25/03/2024 - 27/03/2024 (2 notti)</p>
+                  <p>👥 1 ospite • 🛏️ 1 camera</p>
+                  <p>📧 Conferma: AU789012</p>
+                </div>
+                <div style="text-align: right;">
+                  <span class="booking-status status-pending">In attesa pagamento</span>
+                  <p style="margin-top: 0.5rem;"><strong>€130</strong></p>
+                  <small>
+                    <a href="#" onclick="payBooking('AU789012')">Paga ora</a> |
+                    <a href="#" onclick="cancelBooking('AU789012')">Cancella</a>
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="rooms.html" role="button">Nuova Prenotazione</a>
+          </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="dashboard-card">
+          <h3>Azioni Rapide</h3>
+          <div class="grid">
+            <a href="rooms.html" role="button" class="secondary">🏠 Prenota Camera</a>
+            <a href="https://wa.me/393471234567" target="_blank" role="button" class="secondary">💬 Contattaci</a>
+            <a href="#" onclick="downloadInvoices()" role="button" class="secondary">📄 Fatture</a>
+            <a href="#" onclick="requestSupport()" role="button" class="secondary">🆘 Assistenza</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile Section -->
+      <div>
+        <div class="dashboard-card">
+          <h3>Il Mio Profilo</h3>
+          <form id="profile-form">
+            <div class="profile-section">
+              <div>
+                <label>Nome</label>
+                <input type="text" id="profile-nome" value="Mario" />
+              </div>
+              <div>
+                <label>Cognome</label>
+                <input type="text" id="profile-cognome" value="Rossi" />
+              </div>
+            </div>
+            
+            <label>Email</label>
+            <input type="email" id="profile-email" value="mario.rossi@email.com" />
+            
+            <label>Telefono</label>
+            <input type="tel" id="profile-telefono" value="+39 333 123 4567" />
+            
+            <label>Data di nascita</label>
+            <input type="date" id="profile-data-nascita" value="1985-05-15" />
+            
+            <label>Cittadinanza</label>
+            <input type="text" id="profile-cittadinanza" value="Italiana" />
+            
+            <button type="button" onclick="saveProfile()">Salva Modifiche</button>
+          </form>
+        </div>
+
+        <!-- Preferences -->
+        <div class="dashboard-card">
+          <h3>Preferenze</h3>
+          
+          <label>
+            <input type="checkbox" checked />
+            Email per nuove offerte
+          </label>
+          
+          <label>
+            <input type="checkbox" checked />
+            Promemoria prenotazioni
+          </label>
+          
+          <label>
+            <input type="checkbox" />
+            SMS di conferma
+          </label>
+          
+          <div style="margin-top: 1rem;">
+            <button type="button" onclick="savePreferences()" class="secondary">Salva Preferenze</button>
+          </div>
+        </div>
+
+        <!-- Loyalty Program -->
+        <div class="dashboard-card">
+          <h3>Programma Fedeltà</h3>
+          <div style="text-align: center;">
+            <div style="font-size: 2rem; color: var(--primary);">⭐ BRONZE</div>
+            <p>Livello attuale</p>
+            <div style="background: var(--primary-background); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+              <p><strong>3/5 soggiorni</strong> per raggiungere il livello Silver</p>
+              <div style="background: var(--border-color); height: 8px; border-radius: 4px;">
+                <div style="background: var(--primary); height: 8px; width: 60%; border-radius: 4px;"></div>
+              </div>
+            </div>
+            <small>Vantaggi Bronze: 5% sconto, Check-in prioritario</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Check if user is logged in (in production, verify with backend)
+      const userLoggedIn = localStorage.getItem('userLoggedIn');
+      if (!userLoggedIn) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Load user data
+      const userData = JSON.parse(localStorage.getItem('userData') || '{"nome": "Utente"}');
+      document.getElementById('user-name').textContent = userData.nome;
+      
+      // Load user bookings from localStorage (in production, fetch from backend)
+      loadUserBookings();
+    });
+
+    function loadUserBookings() {
+      // This would fetch real bookings from backend in production
+      const completedBooking = localStorage.getItem('completedBooking');
+      if (completedBooking) {
+        const booking = JSON.parse(completedBooking);
+        // Add the completed booking to the list
+        console.log('User has completed booking:', booking);
+      }
+    }
+
+    function viewBookingDetails(bookingId) {
+      alert(`Visualizzazione dettagli prenotazione ${bookingId}`);
+      // In production, open modal or redirect to details page
+    }
+
+    function cancelBooking(bookingId) {
+      if (confirm('Sei sicuro di voler cancellare questa prenotazione?')) {
+        alert(`Prenotazione ${bookingId} cancellata. Ti contatteremo per confermare il rimborso.`);
+        // In production, send cancellation request to backend
+      }
+    }
+
+    function payBooking(bookingId) {
+      alert(`Reindirizzamento al pagamento per ${bookingId}`);
+      // In production, redirect to payment page
+    }
+
+    function saveProfile() {
+      const profileData = {
+        nome: document.getElementById('profile-nome').value,
+        cognome: document.getElementById('profile-cognome').value,
+        email: document.getElementById('profile-email').value,
+        telefono: document.getElementById('profile-telefono').value,
+        dataNascita: document.getElementById('profile-data-nascita').value,
+        cittadinanza: document.getElementById('profile-cittadinanza').value
+      };
+      
+      localStorage.setItem('userData', JSON.stringify(profileData));
+      alert('Profilo aggiornato con successo!');
+    }
+
+    function savePreferences() {
+      alert('Preferenze salvate!');
+    }
+
+    function downloadInvoices() {
+      alert('Download fatture in sviluppo');
+    }
+
+    function requestSupport() {
+      const message = "Ciao! Ho bisogno di assistenza per il mio account AUROOMS.";
+      window.open(`https://wa.me/393471234567?text=${encodeURIComponent(message)}`, '_blank');
+    }
+
+    function logout() {
+      localStorage.removeItem('userLoggedIn');
+      localStorage.removeItem('userData');
+      window.location.href = 'index.html';
+    }
+  </script>
+</body>
+</html>

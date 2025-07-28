@@ -7,6 +7,35 @@
   <title>Metodo di Pagamento - AUROOMS</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .payment-summary {
+      background: var(--card-background-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .payment-method {
+      border: 2px solid transparent;
+      padding: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 1rem;
+    }
+    .payment-method:hover {
+      border-color: var(--primary);
+    }
+    .payment-method.selected {
+      border-color: var(--primary);
+      background: var(--primary-background);
+    }
+    .security-info {
+      background: var(--secondary-background);
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+  </style>
 </head>
 <body>
   <nav class="container-fluid">
@@ -14,7 +43,7 @@
       <li><strong>AUROOMS</strong></li>
     </ul>
     <ul>
-      <li><a href="conferma.html">← Indietro</a></li>
+      <li><a href="checkout.html">← Indietro</a></li>
       <li><a href="index.html">Home</a></li>
     </ul>
   </nav>
@@ -23,75 +52,273 @@
     <article>
       <hgroup>
         <h2>Metodo di Pagamento</h2>
-        <h3>Scegli come completare la prenotazione</h3>
+        <h3>Conferma e completa la tua prenotazione</h3>
       </hgroup>
       
-      <section>
-        <h4>Riepilogo Prenotazione</h4>
-        <p><strong>Nome:</strong> <span id="nome">—</span></p>
-        <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
-        <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
-      </section>
-
-      <section>
-        <h4>Metodi di Pagamento</h4>
+      <!-- Complete Booking Summary -->
+      <section class="payment-summary">
+        <h4>Riepilogo Completo Prenotazione</h4>
         <div class="grid">
-          <a href="https://buy.stripe.com/test_4gwg1BgUO6P4a7a3cc" target="_blank" role="button">
-            💳 Carta di Credito (Stripe)
-          </a>
-          <a href="https://www.paypal.me/aurooms/150" target="_blank" role="button" class="secondary">
-            💰 PayPal
-          </a>
-          <a href="#bonifico" role="button" class="contrast" onclick="toggleBonifico()">
-            🏦 Bonifico Bancario
-          </a>
+          <div>
+            <p><strong>Ospite:</strong> <span id="guest-name">—</span></p>
+            <p><strong>Email:</strong> <span id="guest-email">—</span></p>
+            <p><strong>Telefono:</strong> <span id="guest-phone">—</span></p>
+            <p><strong>Camera:</strong> <span id="room-type">—</span></p>
+            <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
+            <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
+          </div>
+          <div>
+            <p><strong>Ospiti:</strong> <span id="guests">—</span></p>
+            <p><strong>Camere:</strong> <span id="rooms">—</span></p>
+            <p><strong>Notti:</strong> <span id="nights">—</span></p>
+            <div id="extras-summary"></div>
+            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary); margin-top: 1rem;">
+              <strong>Totale: €<span id="final-total">0</span></strong>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section id="bonifico" class="hidden">
+      <section>
+        <h4>Scegli il metodo di pagamento</h4>
+        
+        <div class="payment-method" onclick="selectPaymentMethod('stripe')" id="stripe-method">
+          <h5>💳 Carta di Credito</h5>
+          <p>Pagamento sicuro con Stripe - Visa, Mastercard, American Express</p>
+          <small>Pagamento immediato - Conferma istantanea</small>
+        </div>
+
+        <div class="payment-method" onclick="selectPaymentMethod('paypal')" id="paypal-method">
+          <h5>💰 PayPal</h5>
+          <p>Paga in sicurezza con il tuo account PayPal</p>
+          <small>Pagamento immediato - Protezione acquirente</small>
+        </div>
+
+        <div class="payment-method" onclick="selectPaymentMethod('bonifico')" id="bonifico-method">
+          <h5>🏦 Bonifico Bancario</h5>
+          <p>Trasferimento bancario tradizionale</p>
+          <small>Conferma prenotazione dopo verifica pagamento (1-2 giorni lavorativi)</small>
+        </div>
+
+        <div class="security-info">
+          <h6>🔒 I tuoi pagamenti sono sicuri</h6>
+          <p>Utilizziamo crittografia SSL e non memorizziamo i dati della tua carta di credito. 
+          Tutti i pagamenti sono elaborati attraverso gateway sicuri certificati.</p>
+        </div>
+      </section>
+
+      <section id="bonifico-details" class="hidden">
         <h4>Dati per Bonifico Bancario</h4>
         <div style="background: var(--card-background-color); padding: 1rem; border-radius: 8px;">
           <p>
-            <strong>Intestazione:</strong> AUROOMS Guest House<br>
+            <strong>Beneficiario:</strong> AUROOMS Guest House<br>
             <strong>IBAN:</strong> IT00A0000000000000000000000<br>
-            <strong>Causale:</strong> "Prenotazione soggiorno – <span id="causale">—</span>"
+            <strong>BIC/SWIFT:</strong> BPMOIT22XXX<br>
+            <strong>Causale:</strong> "Prenotazione <span id="booking-reference">—</span> - <span id="causale">—</span>"<br>
+            <strong>Importo:</strong> €<span id="bonifico-amount">0</span>
           </p>
-          <p><small>Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione.</small></p>
+          <p><small><strong>Importante:</strong> Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione. 
+          La camera sarà riservata per 48 ore in attesa del pagamento.</small></p>
         </div>
       </section>
 
       <section style="text-align: center; margin-top: 2rem;">
-        <a href="https://wa.me/393471234567" target="_blank" class="whatsapp-link">
-          📲 Contattaci su WhatsApp per assistenza
-        </a>
+        <button onclick="processPayment()" id="payment-btn" disabled class="primary">
+          💳 Completa la Prenotazione
+        </button>
+        
+        <div style="margin-top: 2rem;">
+          <a href="https://wa.me/393471234567" target="_blank" class="whatsapp-link">
+            📲 Contattaci su WhatsApp per assistenza
+          </a>
+        </div>
       </section>
     </article>
   </main>
 
   <script src="script.js"></script>
   <script>
-    function toggleBonifico() {
-      const bonifico = document.getElementById('bonifico');
-      bonifico.classList.toggle('hidden');
-    }
+    let selectedPaymentMethod = null;
+    let bookingData = {};
 
-    // Load booking data from localStorage
     document.addEventListener('DOMContentLoaded', function() {
-      const nome = localStorage.getItem('nome');
+      loadAllBookingData();
+    });
+
+    function loadAllBookingData() {
+      // Load basic booking data
+      const selectedRoom = localStorage.getItem('selectedRoom');
+      const roomPrice = localStorage.getItem('roomPrice');
       const checkin = localStorage.getItem('checkin');
       const checkout = localStorage.getItem('checkout');
+      const guests = localStorage.getItem('guests');
+      const rooms = localStorage.getItem('rooms');
+      const finalTotal = localStorage.getItem('finalTotal');
+      
+      // Load guest data
+      const guestDataString = localStorage.getItem('guestData');
+      const guestData = guestDataString ? JSON.parse(guestDataString) : {};
 
-      if (!nome || !checkin || !checkout) {
-        alert('Dati prenotazione mancanti. Verrai reindirizzato alla home.');
-        window.location.href = 'index.html';
+      if (!selectedRoom || !checkin || !checkout || !guestData.nome) {
+        alert('Dati prenotazione incompleti. Verrai reindirizzato al checkout.');
+        window.location.href = 'checkout.html';
         return;
       }
 
-      document.getElementById('nome').innerText = nome;
-      document.getElementById('checkin').innerText = checkin;
-      document.getElementById('checkout').innerText = checkout;
-      document.getElementById('causale').innerText = nome;
-    });
+      // Calculate nights
+      const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+
+      // Room type translation
+      const roomNames = {
+        'deluxe': 'Camera Deluxe con Vista Mare',
+        'standard': 'Camera Standard'
+      };
+
+      // Update display
+      document.getElementById('guest-name').textContent = `${guestData.nome} ${guestData.cognome}`;
+      document.getElementById('guest-email').textContent = guestData.email;
+      document.getElementById('guest-phone').textContent = guestData.telefono;
+      document.getElementById('room-type').textContent = roomNames[selectedRoom];
+      document.getElementById('checkin').textContent = new Date(checkin).toLocaleDateString('it-IT');
+      document.getElementById('checkout').textContent = new Date(checkout).toLocaleDateString('it-IT');
+      document.getElementById('guests').textContent = guests;
+      document.getElementById('rooms').textContent = rooms;
+      document.getElementById('nights').textContent = nights;
+      document.getElementById('final-total').textContent = finalTotal;
+      document.getElementById('bonifico-amount').textContent = finalTotal;
+
+      // Generate booking reference
+      const bookingRef = 'AU' + Date.now().toString().slice(-6);
+      document.getElementById('booking-reference').textContent = bookingRef;
+      document.getElementById('causale').textContent = `${guestData.nome} ${guestData.cognome}`;
+
+      // Show extras
+      const extrasDiv = document.getElementById('extras-summary');
+      let extrasHtml = '';
+      if (guestData.colazione) extrasHtml += '<p><small>✓ Colazione inclusa</small></p>';
+      if (guestData.transfer) extrasHtml += '<p><small>✓ Transfer aeroporto</small></p>';
+      if (guestData.lateCheckin) extrasHtml += '<p><small>✓ Check-in tardivo</small></p>';
+      extrasDiv.innerHTML = extrasHtml;
+
+      // Store complete booking data for submission
+      bookingData = {
+        bookingReference: bookingRef,
+        guest: guestData,
+        room: {
+          type: selectedRoom,
+          name: roomNames[selectedRoom],
+          price: roomPrice
+        },
+        dates: {
+          checkin: checkin,
+          checkout: checkout,
+          nights: nights
+        },
+        details: {
+          guests: guests,
+          rooms: rooms
+        },
+        total: finalTotal,
+        timestamp: new Date().toISOString()
+      };
+    }
+
+    function selectPaymentMethod(method) {
+      // Remove previous selection
+      document.querySelectorAll('.payment-method').forEach(el => {
+        el.classList.remove('selected');
+      });
+      
+      // Add selection to clicked method
+      document.getElementById(method + '-method').classList.add('selected');
+      selectedPaymentMethod = method;
+      
+      // Show/hide bonifico details
+      if (method === 'bonifico') {
+        document.getElementById('bonifico-details').classList.remove('hidden');
+      } else {
+        document.getElementById('bonifico-details').classList.add('hidden');
+      }
+      
+      // Enable payment button
+      document.getElementById('payment-btn').disabled = false;
+      
+      // Update button text based on method
+      const button = document.getElementById('payment-btn');
+      switch(method) {
+        case 'stripe':
+          button.textContent = '💳 Paga con Carta di Credito';
+          break;
+        case 'paypal':
+          button.textContent = '💰 Paga con PayPal';
+          break;
+        case 'bonifico':
+          button.textContent = '🏦 Conferma Prenotazione (Bonifico)';
+          break;
+      }
+    }
+
+    function processPayment() {
+      if (!selectedPaymentMethod) {
+        alert('Seleziona un metodo di pagamento');
+        return;
+      }
+
+      // Send booking data to backend (simulate)
+      sendBookingToBackend();
+
+      switch(selectedPaymentMethod) {
+        case 'stripe':
+          // Redirect to Stripe with booking data
+          const stripeUrl = `https://buy.stripe.com/test_4gwg1BgUO6P4a7a3cc?client_reference_id=${bookingData.bookingReference}`;
+          window.open(stripeUrl, '_blank');
+          break;
+          
+        case 'paypal':
+          // Redirect to PayPal with booking data
+          const paypalUrl = `https://www.paypal.me/aurooms/${bookingData.total}`;
+          window.open(paypalUrl, '_blank');
+          break;
+          
+        case 'bonifico':
+          // For bonifico, just show confirmation
+          alert('Prenotazione confermata! Ti abbiamo inviato i dettagli per il bonifico via email. La camera è riservata per 48 ore.');
+          window.location.href = 'conferma-finale.html';
+          break;
+      }
+    }
+
+    function sendBookingToBackend() {
+      // In a real implementation, this would send data to your backend
+      console.log('Sending booking data to backend:', bookingData);
+      
+      // Store in localStorage for now (in production, use proper backend)
+      localStorage.setItem('completedBooking', JSON.stringify(bookingData));
+      
+      // Simulate WhatsApp message to hotel owner
+      const whatsappMessage = `🏨 NUOVA PRENOTAZIONE AUROOMS
+      
+📋 Riferimento: ${bookingData.bookingReference}
+👤 Ospite: ${bookingData.guest.nome} ${bookingData.guest.cognome}
+📧 Email: ${bookingData.guest.email}
+📱 Telefono: ${bookingData.guest.telefono}
+
+🏠 Camera: ${bookingData.room.name}
+📅 Check-in: ${new Date(bookingData.dates.checkin).toLocaleDateString('it-IT')}
+📅 Check-out: ${new Date(bookingData.dates.checkout).toLocaleDateString('it-IT')}
+🌙 Notti: ${bookingData.dates.nights}
+👥 Ospiti: ${bookingData.details.guests}
+🛏️ Camere: ${bookingData.details.rooms}
+
+💰 Totale: €${bookingData.total}
+💳 Metodo pagamento: ${selectedPaymentMethod}
+
+${bookingData.guest.richieste ? '💬 Richieste: ' + bookingData.guest.richieste : ''}`;
+
+      console.log('WhatsApp message that would be sent:', whatsappMessage);
+      
+      // In production, you would integrate with WhatsApp Business API or email service
+    }
   </script>
 </body>
 </html>

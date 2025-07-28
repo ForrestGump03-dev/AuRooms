@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Le Nostre Camere - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .room-card {
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      background: var(--card-background-color);
+    }
+    .room-gallery {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .room-gallery img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+    .room-gallery img:first-child {
+      height: 100%;
+      grid-row: span 2;
+    }
+    .room-amenities {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+    .amenity-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .price-section {
+      background: var(--primary-background);
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .booking-form {
+      background: var(--card-background-color);
+      padding: 1.5rem;
+      border-radius: 12px;
+      position: sticky;
+      top: 2rem;
+    }
+    @media (max-width: 768px) {
+      .room-gallery {
+        grid-template-columns: 1fr;
+      }
+      .room-gallery img:first-child {
+        grid-row: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="#" onclick="showLogin()">Accedi</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    <hgroup style="text-align: center; margin-bottom: 2rem;">
+      <h1 data-lang="it">Le Nostre Camere</h1>
+      <h1 class="hidden" data-lang="en">Our Rooms</h1>
+      <h3 data-lang="it">Scegli la camera perfetta per il tuo soggiorno</h3>
+      <h3 class="hidden" data-lang="en">Choose the perfect room for your stay</h3>
+    </hgroup>
+
+    <div class="grid">
+      <div>
+        <!-- Camera Deluxe -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Deluxe con Vista Mare</h3>
+          <h3 class="hidden" data-lang="en">Deluxe Room with Sea View</h3>
+          
+          <div class="room-gallery">
+            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80" alt="Camera Deluxe" />
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
+            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80" alt="Vista" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>🛏️</span>
+              <span data-lang="it">Letto matrimoniale king size</span>
+              <span class="hidden" data-lang="en">King size double bed</span>
+            </div>
+            <div class="amenity-item">
+              <span>🌊</span>
+              <span data-lang="it">Vista mare panoramica</span>
+              <span class="hidden" data-lang="en">Panoramic sea view</span>
+            </div>
+            <div class="amenity-item">
+              <span>❄️</span>
+              <span data-lang="it">Aria condizionata</span>
+              <span class="hidden" data-lang="en">Air conditioning</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV Smart 43"</span>
+              <span class="hidden" data-lang="en">43" Smart TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>🚿</span>
+              <span data-lang="it">Bagno privato con doccia</span>
+              <span class="hidden" data-lang="en">Private bathroom with shower</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€85</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoom('deluxe', 85)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Seleziona questa camera</span>
+            <span class="hidden" data-lang="en">Select this room</span>
+          </button>
+        </div>
+
+        <!-- Camera Standard -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Standard</h3>
+          <h3 class="hidden" data-lang="en">Standard Room</h3>
+          
+          <div class="room-gallery">
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Standard" />
+            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
+            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=400&q=80" alt="Dettaglio" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>🛏️</span>
+              <span data-lang="it">Letto matrimoniale</span>
+              <span class="hidden" data-lang="en">Double bed</span>
+            </div>
+            <div class="amenity-item">
+              <span>🪟</span>
+              <span data-lang="it">Vista giardino</span>
+              <span class="hidden" data-lang="en">Garden view</span>
+            </div>
+            <div class="amenity-item">
+              <span>❄️</span>
+              <span data-lang="it">Aria condizionata</span>
+              <span class="hidden" data-lang="en">Air conditioning</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV LED 32"</span>
+              <span class="hidden" data-lang="en">32" LED TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>🚿</span>
+              <span data-lang="it">Bagno privato con doccia</span>
+              <span class="hidden" data-lang="en">Private bathroom with shower</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€65</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoom('standard', 65)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Seleziona questa camera</span>
+            <span class="hidden" data-lang="en">Select this room</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Booking Form Sidebar -->
+      <div>
+        <div class="booking-form">
+          <h4 data-lang="it">Prenota la tua camera</h4>
+          <h4 class="hidden" data-lang="en">Book your room</h4>
+          
+          <form id="booking-form">
+            <div class="grid">
+              <div>
+                <label data-lang="it">Check-in</label>
+                <label class="hidden" data-lang="en">Check-in</label>
+                <input type="date" id="checkin" required />
+              </div>
+              <div>
+                <label data-lang="it">Check-out</label>
+                <label class="hidden" data-lang="en">Check-out</label>
+                <input type="date" id="checkout" required />
+              </div>
+            </div>
+            
+            <div class="grid">
+              <div>
+                <label data-lang="it">Ospiti</label>
+                <label class="hidden" data-lang="en">Guests</label>
+                <select id="guests">
+                  <option value="1">1</option>
+                  <option value="2" selected>2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+              <div>
+                <label data-lang="it">Camere</label>
+                <label class="hidden" data-lang="en">Rooms</label>
+                <select id="rooms">
+                  <option value="1" selected>1</option>
+                  <option value="2">2</option>
+                </select>
+              </div>
+            </div>
+
+            <div id="selected-room" style="display: none;">
+              <h5 data-lang="it">Camera selezionata:</h5>
+              <h5 class="hidden" data-lang="en">Selected room:</h5>
+              <p id="room-info"></p>
+              <div id="total-price" style="font-size: 1.2rem; font-weight: bold; color: var(--primary);"></div>
+            </div>
+
+            <button type="button" onclick="proceedToBooking()" disabled id="book-btn" style="width: 100%; margin-top: 1rem;">
+              <span data-lang="it">Continua con la prenotazione</span>
+              <span class="hidden" data-lang="en">Continue with booking</span>
+            </button>
+          </form>
+
+          <div style="margin-top: 2rem; text-align: center;">
+            <h5 data-lang="it">Contatti</h5>
+            <h5 class="hidden" data-lang="en">Contact</h5>
+            <a href="https://wa.me/393471234567" target="_blank" style="color: #25D366;">
+              📱 WhatsApp: +39 347 123 4567
+            </a>
+            <br>
+            <a href="tel:+393471234567">
+              📞 Tel: +39 347 123 4567
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Login Modal -->
+  <dialog id="login-modal">
+    <article>
+      <header>
+        <a href="#close" aria-label="Close" class="close" onclick="closeLogin()"></a>
+        <p>
+          <strong data-lang="it">Accedi al tuo account</strong>
+          <strong class="hidden" data-lang="en">Login to your account</strong>
+        </p>
+      </header>
+      <form id="login-form">
+        <input type="email" placeholder="Email" required />
+        <input type="password" placeholder="Password" required />
+        <button type="submit" data-lang="it">Accedi</button>
+        <button type="submit" class="hidden" data-lang="en">Login</button>
+      </form>
+      <footer>
+        <small>
+          <span data-lang="it">Non hai un account? </span>
+          <span class="hidden" data-lang="en">Don't have an account? </span>
+          <a href="#" onclick="showRegister()" data-lang="it">Registrati</a>
+          <a href="#" onclick="showRegister()" class="hidden" data-lang="en">Register</a>
+        </small>
+      </footer>
+    </article>
+  </dialog>
+
+  <script src="script.js"></script>
+  <script>
+    let selectedRoomType = null;
+    let selectedRoomPrice = 0;
+
+    function selectRoom(type, price) {
+      selectedRoomType = type;
+      selectedRoomPrice = price;
+      
+      const roomInfo = document.getElementById('room-info');
+      const selectedRoomDiv = document.getElementById('selected-room');
+      const bookBtn = document.getElementById('book-btn');
+      
+      const roomNames = {
+        'deluxe': {'it': 'Camera Deluxe con Vista Mare', 'en': 'Deluxe Room with Sea View'},
+        'standard': {'it': 'Camera Standard', 'en': 'Standard Room'}
+      };
+      
+      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+      roomInfo.textContent = roomNames[type][currentLang] + ' - €' + price + (currentLang === 'it' ? ' per notte' : ' per night');
+      
+      selectedRoomDiv.style.display = 'block';
+      bookBtn.disabled = false;
+      calculateTotal();
+    }
+
+    function calculateTotal() {
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const rooms = parseInt(document.getElementById('rooms').value);
+      
+      if (checkin && checkout && selectedRoomPrice) {
+        const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+        if (nights > 0) {
+          const total = nights * selectedRoomPrice * rooms;
+          const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+          document.getElementById('total-price').textContent = 
+            `${currentLang === 'it' ? 'Totale' : 'Total'}: €${total} (${nights} ${currentLang === 'it' ? 'notti' : 'nights'})`;
+        }
+      }
+    }
+
+    function proceedToBooking() {
+      if (!selectedRoomType) {
+        alert('Seleziona prima una camera');
+        return;
+      }
+      
+      const checkin = document.getElementById('checkin').value;
+      const checkout = document.getElementById('checkout').value;
+      const guests = document.getElementById('guests').value;
+      const rooms = document.getElementById('rooms').value;
+      
+      if (!checkin || !checkout) {
+        alert('Seleziona le date di check-in e check-out');
+        return;
+      }
+      
+      // Store booking data
+      localStorage.setItem('selectedRoom', selectedRoomType);
+      localStorage.setItem('roomPrice', selectedRoomPrice);
+      localStorage.setItem('checkin', checkin);
+      localStorage.setItem('checkout', checkout);
+      localStorage.setItem('guests', guests);
+      localStorage.setItem('rooms', rooms);
+      
+      window.location.href = 'checkout.html';
+    }
+
+    function showLogin() {
+      document.getElementById('login-modal').showModal();
+    }
+
+    function closeLogin() {
+      document.getElementById('login-modal').close();
+    }
+
+    function showRegister() {
+      alert('Funzione di registrazione in sviluppo');
+    }
+
+    // Set minimum date to today
+    document.addEventListener('DOMContentLoaded', function() {
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('checkin').min = today;
+      document.getElementById('checkout').min = today;
+      
+      document.getElementById('checkin').addEventListener('change', function() {
+        const checkinDate = new Date(this.value);
+        checkinDate.setDate(checkinDate.getDate() + 1);
+        document.getElementById('checkout').min = checkinDate.toISOString().split('T')[0];
+        calculateTotal();
+      });
+      
+      document.getElementById('checkout').addEventListener('change', calculateTotal);
+      document.getElementById('rooms').addEventListener('change', calculateTotal);
+    });
+  </script>
+</body>
+</html>
