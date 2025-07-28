@@ -22,12 +22,16 @@
       right: 20px;
       background-color: #25D366;
       color: white;
-      padding: 12px 14px;
+      padding: 12px;
       border-radius: 50%;
-      font-size: 24px;
       z-index: 1000;
       box-shadow: 0 2px 6px rgba(0,0,0,0.2);
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 56px;
+      height: 56px;
     }
     nav a:focus, nav a:hover {
       background-color: var(--primary);
@@ -43,8 +47,13 @@
       .whatsapp-button {
         bottom: 15px;
         right: 15px;
-        padding: 10px 12px;
-        font-size: 20px;
+        width: 48px;
+        height: 48px;
+        padding: 10px;
+      }
+      .whatsapp-button img {
+        width: 24px !important;
+        height: 24px !important;
       }
     }
   </style>
@@ -145,7 +154,9 @@
   </footer>
 
   <!-- WhatsApp Floating Button -->
-  <a class="whatsapp-button" href="https://wa.me/393471234567" target="_blank" title="Contattaci su WhatsApp"></a>
+  <a class="whatsapp-button" href="https://wa.me/393471234567" target="_blank" title="Contattaci su WhatsApp">
+    <img src="./attached_assets/whatsapplogo_1753691477533.png" alt="WhatsApp" style="width: 28px; height: 28px;">
+  </a>
 
   <script>
     document.addEventListener('DOMContentLoaded', function() {
