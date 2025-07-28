@@ -1,16 +1,133 @@
+<!-- INIZIO CODICE FUNZIONANTE SU REPLIT -->
 <!DOCTYPE html>
-<html>
-
+<html lang="it">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width">
-  <title>replit</title>
-  <link href="style.css" rel="stylesheet" type="text/css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AUROOMS Guest House</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
+  <style>
+    body { scroll-behavior: smooth; }
+    .flag { cursor: pointer; width: 24px; margin-left: 10px; }
+    .hidden { display: none; }
+    .hero-img { width: 100%; border-radius: 12px; }
+    .lang-toggle { float: right; }
+    .swiper { width: 100%; padding: 1rem 0; }
+    .swiper-slide img { width: 100%; border-radius: 8px; }
+    .whatsapp-button {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #25D366;
+      color: white;
+      padding: 12px 14px;
+      border-radius: 50%;
+      font-size: 24px;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-decoration: none;
+    }
+  </style>
+  <script>
+    function switchLang(lang) {
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        el.classList.add('hidden');
+        if (el.getAttribute('data-lang') === lang) el.classList.remove('hidden');
+      });
+    }
+  </script>
 </head>
-
 <body>
-  Hello world
-  <script src="script.js"></script>
-</body>
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>AUROOMS</strong></li>
+    </ul>
+    <ul>
+      <li><a href="#rooms">Camere</a></li>
+      <li><a href="#attractions">Attrazioni</a></li>
+      <li><a href="#booking" role="button">Prenota</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
+    </ul>
+  </nav>
 
+  <main class="container">
+    <div class="grid">
+      <section data-aos="fade-up">
+        <hgroup>
+          <h2 data-lang="it">Benvenuti da AUROOMS</h2>
+          <h2 class="hidden" data-lang="en">Welcome to AUROOMS</h2>
+          <h3 data-lang="it">Guest House a Cinisi, vicino Palermo</h3>
+          <h3 class="hidden" data-lang="en">Guest House in Cinisi, near Palermo</h3>
+        </hgroup>
+        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
+      </section>
+
+      <section id="rooms" data-aos="fade-up">
+        <h3 data-lang="it">Le Camere</h3>
+        <h3 class="hidden" data-lang="en">Our Rooms</h3>
+        <p data-lang="it">Camere moderne e confortevoli per un soggiorno perfetto in Sicilia.</p>
+        <p class="hidden" data-lang="en">Modern and comfortable rooms for a perfect stay in Sicily.</p>
+        <div class="swiper">
+          <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80" alt="Camera 1" /></div>
+            <div class="swiper-slide"><img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" alt="Camera 2" /></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="attractions" data-aos="fade-up">
+        <h3 data-lang="it">Cosa Visitare</h3>
+        <h3 class="hidden" data-lang="en">What to Visit</h3>
+        <p data-lang="it">Palermo, Mondello, Cefalù e molto altro a pochi km.</p>
+        <p class="hidden" data-lang="en">Palermo, Mondello, Cefalù and much more nearby.</p>
+        <img src="https://images.unsplash.com/photo-1585241936934-88d9e5bbf4d4?auto=format&fit=crop&w=1200&q=80" alt="Spiaggia" />
+      </section>
+    </div>
+  </main>
+
+  <section id="booking" aria-label="Prenotazione" data-aos="fade-up">
+    <div class="container">
+      <article>
+        <hgroup>
+          <h2 data-lang="it">Prenota Ora</h2>
+          <h2 class="hidden" data-lang="en">Book Now</h2>
+          <h3 data-lang="it">Contattaci su WhatsApp per verificare la disponibilità</h3>
+          <h3 class="hidden" data-lang="en">Contact us on WhatsApp to check availability</h3>
+        </hgroup>
+        <form class="grid">
+          <input type="text" placeholder="Nome / Name" required />
+          <input type="date" required />
+          <input type="date" required />
+          <a href="https://wa.me/393471234567" target="_blank" role="button">Prenota via WhatsApp</a>
+        </form>
+      </article>
+    </div>
+  </section>
+
+  <footer class="container" data-aos="fade-up">
+    <small>
+      <strong>Telefono:</strong> <a href="tel:+393471234567">+39 347 123 4567</a><br>
+      <a href="#">Privacy</a> • <a href="#">Contatti</a>
+    </small>
+  </footer>
+
+  <!-- WhatsApp Floating Button -->
+  <a class="whatsapp-button" href="https://wa.me/393471234567" target="_blank" title="Contattaci su WhatsApp">💬</a>
+
+  <!-- JS Libraries -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
+  <script>
+    AOS.init();
+    new Swiper('.swiper', {
+      loop: true,
+      autoplay: { delay: 3000 },
+    });
+  </script>
+</body>
 </html>
