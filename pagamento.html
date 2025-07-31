@@ -159,10 +159,10 @@
       <!-- Success Animation (Hidden by default) -->
       <div id="success-animation" class="success-animation">
         <div class="checkmark"></div>
-        <h2 data-lang="it">Pagamento Completato!</h2>
-        <h2 class="hidden" data-lang="en">Payment Completed!</h2>
-        <p data-lang="it">La tua prenotazione è stata confermata. Riceverai una email di conferma a breve.</p>
-        <p class="hidden" data-lang="en">Your booking has been confirmed. You will receive a confirmation email shortly.</p>
+        <h2 id="success-title" data-lang="it">Pagamento Completato!</h2>
+        <h2 id="success-title-en" class="hidden" data-lang="en">Payment Completed!</h2>
+        <p id="success-message" data-lang="it">La tua prenotazione è stata confermata. Riceverai una email di conferma a breve.</p>
+        <p id="success-message-en" class="hidden" data-lang="en">Your booking has been confirmed. You will receive a confirmation email shortly.</p>
         <button onclick="window.location.href='index.html'" class="primary">
           <span data-lang="it">Torna alla Home</span>
           <span class="hidden" data-lang="en">Back to Home</span>
@@ -538,8 +538,54 @@
     }
     
     function showPaymentSuccess() {
-      // Invia email di conferma
-      sendConfirmationEmail(selectedPaymentMethod);
+      // Per bonifico bancario NON inviare subito conferma pagamento
+      if (selectedPaymentMethod !== 'transfer') {
+        // Solo per carta e PayPal invia conferma immediata
+        sendConfirmationEmail(selectedPaymentMethod);
+        
+        // Messaggio standard per pagamenti immediati
+        document.getElementById('success-title').textContent = 
+          getCurrentLanguage() === 'it' ? 'Pagamento Completato!' : 'Payment Completed!';
+        document.getElementById('success-title-en').textContent = 'Payment Completed!';
+        document.getElementById('success-message').textContent = 
+          getCurrentLanguage() === 'it' ? 
+          'La tua prenotazione è stata confermata. Riceverai una email di conferma a breve.' :
+          'Your booking has been confirmed. You will receive a confirmation email shortly.';
+        document.getElementById('success-message-en').textContent = 
+          'Your booking has been confirmed. You will receive a confirmation email shortly.';
+          
+      } else {
+        // Per bonifico, salva prenotazione come "pending"
+        const bookingData = JSON.parse(sessionStorage.getItem('pending_booking'));
+        const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+        
+        const pendingBooking = {
+          ...bookingData,
+          status: 'pending_payment',
+          paymentMethod: 'transfer',
+          customerEmail: currentUser.email,
+          bookingDate: new Date().toISOString(),
+          bookingReference: `BOOK-${Date.now()}`
+        };
+        
+        // Salva in localStorage per gestione amministrativa
+        let pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+        pendingBookings.push(pendingBooking);
+        localStorage.setItem('aurooms_pending_bookings', JSON.stringify(pendingBookings));
+        
+        // Messaggio specifico per bonifico bancario
+        document.getElementById('success-title').textContent = 
+          getCurrentLanguage() === 'it' ? 'Richiesta Bonifico Inviata!' : 'Bank Transfer Request Sent!';
+        document.getElementById('success-title-en').textContent = 'Bank Transfer Request Sent!';
+        document.getElementById('success-message').textContent = 
+          getCurrentLanguage() === 'it' ? 
+          'Hai ricevuto le coordinate bancarie via email. La prenotazione sarà confermata dopo aver ricevuto il pagamento.' :
+          'You received bank details via email. The booking will be confirmed after receiving payment.';
+        document.getElementById('success-message-en').textContent = 
+          'You received bank details via email. The booking will be confirmed after receiving payment.';
+        
+        console.log('💼 Prenotazione salvata come pending:', pendingBooking.bookingReference);
+      }
       
       // Hide payment form and show success
       document.getElementById('payment-form-container').style.display = 'none';
@@ -551,6 +597,87 @@
       // Log successful payment
       console.log('✅ Pagamento completato con metodo:', selectedPaymentMethod);
     }
+    
+    // ========== GESTIONE ADMIN BONIFICI ==========
+    
+    function confirmBankTransfer(bookingReference) {
+      // Funzione per confermare manualmente un bonifico (uso amministrativo)
+      let pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      const bookingIndex = pendingBookings.findIndex(b => b.bookingReference === bookingReference);
+      
+      if (bookingIndex === -1) {
+        console.error('❌ Prenotazione non trovata:', bookingReference);
+        return false;
+      }
+      
+      const booking = pendingBookings[bookingIndex];
+      
+      // Invia email di conferma pagamento
+      const templateParams = {
+        to_name: booking.customerEmail.split('@')[0], // Usa parte email come nome se manca
+        to_email: booking.customerEmail,
+        customer_name: booking.customerEmail.split('@')[0],
+        room_name: booking.roomName,
+        checkin_date: new Date(booking.checkin).toLocaleDateString('it-IT'),
+        checkout_date: new Date(booking.checkout).toLocaleDateString('it-IT'),
+        nights: booking.nights,
+        guests: booking.guests,
+        total_amount: booking.totalPrice,
+        payment_method: 'Bonifico Bancario',
+        booking_reference: booking.bookingReference
+      };
+      
+      emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
+        .then(function(response) {
+          console.log('✅ Conferma bonifico inviata!', response.status);
+          
+          // Rimuovi dalla lista pending
+          pendingBookings.splice(bookingIndex, 1);
+          localStorage.setItem('aurooms_pending_bookings', JSON.stringify(pendingBookings));
+          
+          // Aggiungi alla lista confermati
+          let confirmedBookings = JSON.parse(localStorage.getItem('aurooms_confirmed_bookings') || '[]');
+          confirmedBookings.push({
+            ...booking,
+            status: 'confirmed',
+            confirmationDate: new Date().toISOString()
+          });
+          localStorage.setItem('aurooms_confirmed_bookings', JSON.stringify(confirmedBookings));
+          
+          alert(`✅ Bonifico confermato per prenotazione ${bookingReference}\n📧 Email di conferma inviata a ${booking.customerEmail}`);
+          
+        }, function(error) {
+          console.error('❌ Errore invio conferma bonifico:', error);
+          alert(`❌ Errore nell'invio della conferma per ${bookingReference}`);
+        });
+      
+      return true;
+    }
+    
+    function listPendingTransfers() {
+      // Funzione per visualizzare bonifici in attesa (uso amministrativo)
+      const pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      
+      if (pendingBookings.length === 0) {
+        console.log('📋 Nessun bonifico in attesa');
+        return;
+      }
+      
+      console.log('📋 BONIFICI IN ATTESA:');
+      pendingBookings.forEach(booking => {
+        console.log(`
+🔷 ${booking.bookingReference}
+   📧 Cliente: ${booking.customerEmail}
+   🏠 Camera: ${booking.roomName}
+   📅 ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(booking.checkout).toLocaleDateString('it-IT')}
+   💰 Importo: €${booking.totalPrice}
+   ⏰ Richiesto: ${new Date(booking.bookingDate).toLocaleString('it-IT')}
+   ▶️ Per confermare: confirmBankTransfer('${booking.bookingReference}')
+        `);
+      });
+    }
+    
+    // ========== FINE GESTIONE ADMIN ==========
     
     function getCurrentLanguage() {
       return localStorage.getItem('aurooms_language') || 'it';
