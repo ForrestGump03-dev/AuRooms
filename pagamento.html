@@ -1,51 +1,151 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Metodo di Pagamento - AUROOMS</title>
+  <title>Pagamento - AUROOMS Guest House</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <!-- EmailJS per invio email reali -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
   <style>
-    .payment-summary {
-      background: var(--card-background-color);
+    .payment-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    
+    .booking-summary {
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      border-radius: 8px;
       padding: 1.5rem;
-      border-radius: 12px;
+      margin-bottom: 2rem;
+      color: #ffffff;
+    }
+    
+    .payment-methods {
+      display: grid;
+      gap: 1rem;
       margin-bottom: 2rem;
     }
+    
     .payment-method {
-      border: 2px solid transparent;
-      padding: 1rem;
+      border: 2px solid #e9ecef;
       border-radius: 8px;
+      padding: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .payment-method:hover {
+      border-color: #007bff;
+      background-color: #f8f9ff;
+    }
+    
+    .payment-method.selected {
+      border-color: #007bff;
+      background-color: #e7f3ff;
+    }
+    
+    .payment-method input[type="radio"] {
+      margin: 0;
+    }
+    
+    .payment-icon {
+      font-size: 2rem;
+      width: 60px;
+      text-align: center;
+    }
+    
+    .payment-details {
+      flex: 1;
+    }
+    
+    .payment-form {
+      display: none;
+      background: #2d3748;
+      border: 1px solid #4a5568;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      color: #ffffff;
+    }
+    
+    .payment-form.active {
+      display: block;
+    }
+    
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    
+    .form-group {
       margin-bottom: 1rem;
     }
-    .payment-method:hover {
-      border-color: var(--primary);
-    }
-    .payment-method.selected {
-      border-color: var(--primary);
-      background: var(--primary-background);
-    }
-    .security-info {
-      background: var(--secondary-background);
-      padding: 1rem;
+    
+    .total-section {
+      background: #007bff;
+      color: white;
+      padding: 1.5rem;
       border-radius: 8px;
-      margin: 1rem 0;
+      margin-bottom: 2rem;
+      text-align: center;
+    }
+    
+    .secure-payment {
+      text-align: center;
+      color: #6c757d;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    
+    .success-animation {
+      display: none;
+      text-align: center;
+      padding: 3rem;
+    }
+    
+    .success-animation.show {
+      display: block;
+    }
+    
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #28a745;
+      position: relative;
+      margin: 0 auto 2rem;
+    }
+    
+    .checkmark::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      font-size: 3rem;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
     </ul>
     <ul>
-      <li><a href="checkout.html" data-lang="it">← Indietro</a></li>
-      <li><a href="checkout.html" class="hidden" data-lang="en">← Back</a></li>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html#rooms" data-lang="it">Camere</a></li>
+      <li><a href="index.html#rooms" class="hidden" data-lang="en">Rooms</a></li>
+      <li><a href="rooms.html" role="button" data-lang="it">Prenota</a></li>
+      <li><a href="rooms.html" role="button" class="hidden" data-lang="en">Book Now</a></li>
       <li class="lang-toggle">
         <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
         <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
@@ -54,296 +154,567 @@
   </nav>
 
   <main class="container">
-    <article>
-      <hgroup>
-        <h2 data-lang="it">Metodo di Pagamento</h2>
-        <h2 class="hidden" data-lang="en">Payment Method</h2>
-        <h3 data-lang="it">Conferma e completa la tua prenotazione</h3>
-        <h3 class="hidden" data-lang="en">Confirm and complete your booking</h3>
-      </hgroup>
+    <div class="payment-container">
       
-      <!-- Complete Booking Summary -->
-      <section class="payment-summary">
-        <h4 data-lang="it">Riepilogo Completo Prenotazione</h4>
-        <h4 class="hidden" data-lang="en">Complete Booking Summary</h4>
-        <div class="grid">
-          <div>
-            <p><strong data-lang="it">Ospite:</strong><strong class="hidden" data-lang="en">Guest:</strong> <span id="guest-name">—</span></p>
-            <p><strong>Email:</strong> <span id="guest-email">—</span></p>
-            <p><strong data-lang="it">Telefono:</strong><strong class="hidden" data-lang="en">Phone:</strong> <span id="guest-phone">—</span></p>
-            <p><strong data-lang="it">Camera:</strong><strong class="hidden" data-lang="en">Room:</strong> <span id="room-type">—</span></p>
-            <p><strong>Check-in:</strong> <span id="checkin">—</span></p>
-            <p><strong>Check-out:</strong> <span id="checkout">—</span></p>
+      <!-- Success Animation (Hidden by default) -->
+      <div id="success-animation" class="success-animation">
+        <div class="checkmark"></div>
+        <h2 data-lang="it">Pagamento Completato!</h2>
+        <h2 class="hidden" data-lang="en">Payment Completed!</h2>
+        <p data-lang="it">La tua prenotazione è stata confermata. Riceverai una email di conferma a breve.</p>
+        <p class="hidden" data-lang="en">Your booking has been confirmed. You will receive a confirmation email shortly.</p>
+        <button onclick="window.location.href='index.html'" class="primary">
+          <span data-lang="it">Torna alla Home</span>
+          <span class="hidden" data-lang="en">Back to Home</span>
+        </button>
+      </div>
+
+      <!-- Payment Form (Visible by default) -->
+      <div id="payment-form-container">
+        <hgroup style="text-align: center; margin-bottom: 2rem;">
+          <h1 data-lang="it">Completa il Pagamento</h1>
+          <h1 class="hidden" data-lang="en">Complete Payment</h1>
+          <p data-lang="it">Scegli il metodo di pagamento preferito</p>
+          <p class="hidden" data-lang="en">Choose your preferred payment method</p>
+        </hgroup>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+          <h3 data-lang="it">Riepilogo Prenotazione</h3>
+          <h3 class="hidden" data-lang="en">Booking Summary</h3>
+          <div id="booking-details">
+            <!-- Will be populated by JavaScript -->
           </div>
-          <div>
-            <p><strong data-lang="it">Ospiti:</strong><strong class="hidden" data-lang="en">Guests:</strong> <span id="guests">—</span></p>
-            <p><strong data-lang="it">Camere:</strong><strong class="hidden" data-lang="en">Rooms:</strong> <span id="rooms">—</span></p>
-            <p><strong data-lang="it">Notti:</strong><strong class="hidden" data-lang="en">Nights:</strong> <span id="nights">—</span></p>
-            <div id="extras-summary"></div>
-            <div style="font-size: 1.2rem; font-weight: bold; color: var(--primary); margin-top: 1rem;">
-              <strong data-lang="it">Totale: €<span id="final-total">0</span></strong>
-              <strong class="hidden" data-lang="en">Total: €<span id="final-total-en">0</span></strong>
+        </div>
+
+        <!-- Total Section -->
+        <div class="total-section">
+          <h2 data-lang="it">Totale da Pagare</h2>
+          <h2 class="hidden" data-lang="en">Total Amount</h2>
+          <div id="total-amount" style="font-size: 1.8rem; font-weight: bold;">€0</div>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="payment-methods">
+          <!-- Credit Card -->
+          <div class="payment-method" onclick="selectPaymentMethod('card')">
+            <input type="radio" name="payment-method" value="card" id="payment-card">
+            <div class="payment-icon">💳</div>
+            <div class="payment-details">
+              <h4 data-lang="it">Carta di Credito/Debito</h4>
+              <h4 class="hidden" data-lang="en">Credit/Debit Card</h4>
+              <p data-lang="it">Visa, Mastercard, American Express</p>
+              <p class="hidden" data-lang="en">Visa, Mastercard, American Express</p>
+            </div>
+          </div>
+
+          <!-- PayPal -->
+          <div class="payment-method" onclick="selectPaymentMethod('paypal')">
+            <input type="radio" name="payment-method" value="paypal" id="payment-paypal">
+            <div class="payment-icon">🅿️</div>
+            <div class="payment-details">
+              <h4>PayPal</h4>
+              <p data-lang="it">Paga in modo sicuro con il tuo account PayPal</p>
+              <p class="hidden" data-lang="en">Pay securely with your PayPal account</p>
+            </div>
+          </div>
+
+          <!-- Bank Transfer -->
+          <div class="payment-method" onclick="selectPaymentMethod('transfer')">
+            <input type="radio" name="payment-method" value="transfer" id="payment-transfer">
+            <div class="payment-icon">🏦</div>
+            <div class="payment-details">
+              <h4 data-lang="it">Bonifico Bancario</h4>
+              <h4 class="hidden" data-lang="en">Bank Transfer</h4>
+              <p data-lang="it">Riceverai le coordinate bancarie via email</p>
+              <p class="hidden" data-lang="en">You will receive bank details via email</p>
             </div>
           </div>
         </div>
-      </section>
 
-      <section>
-        <h4 data-lang="it">Scegli il metodo di pagamento</h4>
-        <h4 class="hidden" data-lang="en">Choose payment method</h4>
-        
-        <div class="payment-method" onclick="selectPaymentMethod('stripe')" id="stripe-method">
-          <h5>💳 <span data-lang="it">Carta di Credito</span><span class="hidden" data-lang="en">Credit Card</span></h5>
-          <p data-lang="it">Pagamento sicuro con Stripe - Visa, Mastercard, American Express</p>
-          <p class="hidden" data-lang="en">Secure payment with Stripe - Visa, Mastercard, American Express</p>
-          <small data-lang="it">Pagamento immediato - Conferma istantanea</small>
-          <small class="hidden" data-lang="en">Instant payment - Immediate confirmation</small>
+        <!-- Credit Card Form -->
+        <div id="card-form" class="payment-form">
+          <h4 data-lang="it">Dettagli Carta di Credito</h4>
+          <h4 class="hidden" data-lang="en">Credit Card Details</h4>
+          <form id="creditCardForm">
+            <div class="form-group">
+              <label for="cardNumber" data-lang="it">Numero Carta</label>
+              <label for="cardNumber" class="hidden" data-lang="en">Card Number</label>
+              <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="expiryDate" data-lang="it">Data Scadenza</label>
+                <label for="expiryDate" class="hidden" data-lang="en">Expiry Date</label>
+                <input type="text" id="expiryDate" placeholder="MM/YY" maxlength="5" required>
+              </div>
+              <div class="form-group">
+                <label for="cvv" data-lang="it">CVV</label>
+                <label for="cvv" class="hidden" data-lang="en">CVV</label>
+                <input type="text" id="cvv" placeholder="123" maxlength="3" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="cardName" data-lang="it">Nome sulla Carta</label>
+              <label for="cardName" class="hidden" data-lang="en">Name on Card</label>
+              <input type="text" id="cardName" placeholder="Mario Rossi" required>
+            </div>
+          </form>
         </div>
 
-        <div class="payment-method" onclick="selectPaymentMethod('paypal')" id="paypal-method">
-          <h5>💰 PayPal</h5>
-          <p data-lang="it">Paga in sicurezza con il tuo account PayPal</p>
-          <p class="hidden" data-lang="en">Pay securely with your PayPal account</p>
-          <small data-lang="it">Pagamento immediato - Protezione acquirente</small>
-          <small class="hidden" data-lang="en">Instant payment - Buyer protection</small>
+        <!-- PayPal Form -->
+        <div id="paypal-form" class="payment-form">
+          <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🅿️</div>
+            <h4>PayPal</h4>
+            <p data-lang="it">Sarai reindirizzato a PayPal per completare il pagamento</p>
+            <p class="hidden" data-lang="en">You will be redirected to PayPal to complete the payment</p>
+          </div>
         </div>
 
-        <div class="payment-method" onclick="selectPaymentMethod('bonifico')" id="bonifico-method">
-          <h5>🏦 <span data-lang="it">Bonifico Bancario</span><span class="hidden" data-lang="en">Bank Transfer</span></h5>
-          <p data-lang="it">Trasferimento bancario tradizionale</p>
-          <p class="hidden" data-lang="en">Traditional bank transfer</p>
-          <small data-lang="it">Conferma prenotazione dopo verifica pagamento (1-2 giorni lavorativi)</small>
-          <small class="hidden" data-lang="en">Booking confirmation after payment verification (1-2 business days)</small>
+        <!-- Bank Transfer Form -->
+        <div id="transfer-form" class="payment-form">
+          <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">🏦</div>
+            <h4 data-lang="it">Bonifico Bancario</h4>
+            <h4 class="hidden" data-lang="en">Bank Transfer</h4>
+            <p data-lang="it">Riceverai via email le coordinate bancarie per effettuare il bonifico. La prenotazione sarà confermata al ricevimento del pagamento.</p>
+            <p class="hidden" data-lang="en">You will receive bank details via email to make the transfer. The booking will be confirmed upon receipt of payment.</p>
+          </div>
         </div>
 
-        <div class="security-info">
-          <h6 data-lang="it">🔒 I tuoi pagamenti sono sicuri</h6>
-          <h6 class="hidden" data-lang="en">🔒 Your payments are secure</h6>
-          <p data-lang="it">Utilizziamo crittografia SSL e non memorizziamo i dati della tua carta di credito. 
-          Tutti i pagamenti sono elaborati attraverso gateway sicuri certificati.</p>
-          <p class="hidden" data-lang="en">We use SSL encryption and do not store your credit card data. 
-          All payments are processed through certified secure gateways.</p>
+        <!-- Payment Button -->
+        <div style="text-align: center; margin-top: 2rem;">
+          <button id="pay-button" onclick="processPayment()" disabled class="primary" style="font-size: 1.2rem; padding: 1rem 2rem;">
+            <span data-lang="it">Seleziona Metodo di Pagamento</span>
+            <span class="hidden" data-lang="en">Select Payment Method</span>
+          </button>
         </div>
-      </section>
 
-      <section id="bonifico-details" class="hidden">
-        <h4 data-lang="it">Dati per Bonifico Bancario</h4>
-        <h4 class="hidden" data-lang="en">Bank Transfer Details</h4>
-        <div style="background: var(--card-background-color); padding: 1rem; border-radius: 8px;">
-          <p data-lang="it">
-            <strong>Beneficiario:</strong> AUROOMS Guest House<br>
-            <strong>IBAN:</strong> IT00A0000000000000000000000<br>
-            <strong>BIC/SWIFT:</strong> BPMOIT22XXX<br>
-            <strong>Causale:</strong> "Prenotazione <span id="booking-reference">—</span> - <span id="causale">—</span>"<br>
-            <strong>Importo:</strong> €<span id="bonifico-amount">0</span>
-          </p>
-          <p class="hidden" data-lang="en">
-            <strong>Beneficiary:</strong> AUROOMS Guest House<br>
-            <strong>IBAN:</strong> IT00A0000000000000000000000<br>
-            <strong>BIC/SWIFT:</strong> BPMOIT22XXX<br>
-            <strong>Reference:</strong> "Booking <span id="booking-reference-en">—</span> - <span id="causale-en">—</span>"<br>
-            <strong>Amount:</strong> €<span id="bonifico-amount-en">0</span>
-          </p>
-          <p data-lang="it"><small><strong>Importante:</strong> Dopo aver effettuato il bonifico, invia la ricevuta su WhatsApp per confermare la prenotazione. 
-          La camera sarà riservata per 48 ore in attesa del pagamento.</small></p>
-          <p class="hidden" data-lang="en"><small><strong>Important:</strong> After making the bank transfer, send the receipt via WhatsApp to confirm your booking. 
-          The room will be reserved for 48 hours pending payment.</small></p>
+        <div class="secure-payment">
+          <span data-lang="it">🔒 Pagamento sicuro e crittografato</span>
+          <span class="hidden" data-lang="en">🔒 Secure and encrypted payment</span>
         </div>
-      </section>
-
-      <section style="text-align: center; margin-top: 2rem;">
-        <button onclick="processPayment()" id="payment-btn" disabled class="primary">
-          <span data-lang="it">💳 Completa la Prenotazione</span>
-          <span class="hidden" data-lang="en">💳 Complete Booking</span>
-        </button>
-        
-        <div style="margin-top: 2rem;">
-          <a href="https://wa.me/393471234567" target="_blank" class="whatsapp-link">
-            <span data-lang="it">📲 Contattaci su WhatsApp per assistenza</span>
-            <span class="hidden" data-lang="en">📲 Contact us on WhatsApp for assistance</span>
-          </a>
-        </div>
-      </section>
-    </article>
+      </div>
+    </div>
   </main>
+
+  <!-- WhatsApp Floating Button -->
+  <a class="whatsapp-button" href="https://wa.me/393758843175" target="_blank" title="Contattaci su WhatsApp">
+    <img src="./attached_assets/whatsapplogo_1753691477533.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+  </a>
 
   <script src="script.js"></script>
   <script>
+    // Inizializza EmailJS
+    (function(){
+      emailjs.init("JdlaY1LThC-wKEczu"); // La tua chiave pubblica EmailJS
+    })();
+    
     let selectedPaymentMethod = null;
-    let bookingData = {};
-
-    document.addEventListener('DOMContentLoaded', function() {
-      loadAllBookingData();
-    });
-
-    function loadAllBookingData() {
-      // Load basic booking data
-      const selectedRoom = localStorage.getItem('selectedRoom');
-      const roomPrice = localStorage.getItem('roomPrice');
-      const checkin = localStorage.getItem('checkin');
-      const checkout = localStorage.getItem('checkout');
-      const guests = localStorage.getItem('guests');
-      const rooms = localStorage.getItem('rooms');
-      const finalTotal = localStorage.getItem('finalTotal');
-      
-      // Load guest data
-      const guestDataString = localStorage.getItem('guestData');
-      const guestData = guestDataString ? JSON.parse(guestDataString) : {};
-
-      if (!selectedRoom || !checkin || !checkout || !guestData.nome) {
-        alert('Dati prenotazione incompleti. Verrai reindirizzato al checkout.');
-        window.location.href = 'checkout.html';
-        return;
-      }
-
-      // Calculate nights
-      const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-
-      // Room type translation
-      const roomNames = {
-        'deluxe': 'Camera Deluxe con Vista Mare',
-        'standard': 'Camera Standard'
-      };
-
-      // Update display
-      document.getElementById('guest-name').textContent = `${guestData.nome} ${guestData.cognome}`;
-      document.getElementById('guest-email').textContent = guestData.email;
-      document.getElementById('guest-phone').textContent = guestData.telefono;
-      document.getElementById('room-type').textContent = roomNames[selectedRoom];
-      document.getElementById('checkin').textContent = new Date(checkin).toLocaleDateString('it-IT');
-      document.getElementById('checkout').textContent = new Date(checkout).toLocaleDateString('it-IT');
-      document.getElementById('guests').textContent = guests;
-      document.getElementById('rooms').textContent = rooms;
-      document.getElementById('nights').textContent = nights;
-      document.getElementById('final-total').textContent = finalTotal;
-      document.getElementById('bonifico-amount').textContent = finalTotal;
-
-      // Generate booking reference
-      const bookingRef = 'AU' + Date.now().toString().slice(-6);
-      document.getElementById('booking-reference').textContent = bookingRef;
-      document.getElementById('causale').textContent = `${guestData.nome} ${guestData.cognome}`;
-
-      // Show extras
-      const extrasDiv = document.getElementById('extras-summary');
-      let extrasHtml = '';
-      if (guestData.colazione) extrasHtml += '<p><small>✓ Colazione inclusa</small></p>';
-      if (guestData.transfer) extrasHtml += '<p><small>✓ Transfer aeroporto</small></p>';
-      if (guestData.lateCheckin) extrasHtml += '<p><small>✓ Check-in tardivo</small></p>';
-      extrasDiv.innerHTML = extrasHtml;
-
-      // Store complete booking data for submission
-      bookingData = {
-        bookingReference: bookingRef,
-        guest: guestData,
-        room: {
-          type: selectedRoom,
-          name: roomNames[selectedRoom],
-          price: roomPrice
-        },
-        dates: {
-          checkin: checkin,
-          checkout: checkout,
-          nights: nights
-        },
-        details: {
-          guests: guests,
-          rooms: rooms
-        },
-        total: finalTotal,
-        timestamp: new Date().toISOString()
-      };
-    }
-
+    
     function selectPaymentMethod(method) {
-      // Remove previous selection
+      selectedPaymentMethod = method;
+      
+      // Update radio buttons
+      document.querySelectorAll('.payment-method input[type="radio"]').forEach(radio => {
+        radio.checked = radio.value === method;
+      });
+      
+      // Update visual selection
       document.querySelectorAll('.payment-method').forEach(el => {
         el.classList.remove('selected');
       });
+      document.querySelector(`#payment-${method}`).closest('.payment-method').classList.add('selected');
       
-      // Add selection to clicked method
-      document.getElementById(method + '-method').classList.add('selected');
-      selectedPaymentMethod = method;
+      // Show appropriate form
+      document.querySelectorAll('.payment-form').forEach(form => {
+        form.classList.remove('active');
+      });
+      document.getElementById(`${method}-form`).classList.add('active');
       
-      // Show/hide bonifico details
-      if (method === 'bonifico') {
-        document.getElementById('bonifico-details').classList.remove('hidden');
-      } else {
-        document.getElementById('bonifico-details').classList.add('hidden');
-      }
-      
-      // Enable payment button
-      document.getElementById('payment-btn').disabled = false;
-      
-      // Store selected method globally and update button text
-      window.selectedPaymentMethod = method;
-      updatePaymentButtonText();
-      
-      // Update button text for English as well
-      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
-      updatePaymentButtonText(currentLang);
+      // Update button
+      updatePaymentButton();
     }
-
+    
+    function updatePaymentButton() {
+      const button = document.getElementById('pay-button');
+      if (selectedPaymentMethod) {
+        button.disabled = false;
+        
+        if (selectedPaymentMethod === 'card') {
+          button.innerHTML = getCurrentLanguage() === 'it' ? 
+            '💳 Paga con Carta' : '💳 Pay with Card';
+        } else if (selectedPaymentMethod === 'paypal') {
+          button.innerHTML = '🅿️ Paga con PayPal';
+        } else if (selectedPaymentMethod === 'transfer') {
+          button.innerHTML = getCurrentLanguage() === 'it' ? 
+            '🏦 Conferma Bonifico' : '🏦 Confirm Transfer';
+        }
+      } else {
+        button.disabled = true;
+        button.innerHTML = getCurrentLanguage() === 'it' ? 
+          'Seleziona Metodo di Pagamento' : 'Select Payment Method';
+      }
+    }
+    
     function processPayment() {
       if (!selectedPaymentMethod) {
-        alert('Seleziona un metodo di pagamento');
+        alert(getCurrentLanguage() === 'it' ? 
+          'Seleziona un metodo di pagamento' : 'Please select a payment method');
         return;
       }
-
-      // Send booking data to backend (simulate)
-      sendBookingToBackend();
-
-      switch(selectedPaymentMethod) {
-        case 'stripe':
-          // Redirect to Stripe with booking data
-          const stripeUrl = `https://buy.stripe.com/test_4gwg1BgUO6P4a7a3cc?client_reference_id=${bookingData.bookingReference}`;
-          window.open(stripeUrl, '_blank');
-          break;
-          
-        case 'paypal':
-          // Redirect to PayPal with booking data
-          const paypalUrl = `https://www.paypal.me/aurooms/${bookingData.total}`;
+      
+      const button = document.getElementById('pay-button');
+      button.disabled = true;
+      
+      // Handle different payment methods
+      if (selectedPaymentMethod === 'paypal') {
+        // PayPal redirect
+        button.innerHTML = getCurrentLanguage() === 'it' ? 
+          '🅿️ Reindirizzamento a PayPal...' : '🅿️ Redirecting to PayPal...';
+        
+        setTimeout(() => {
+          // Simulate PayPal redirect
+          const paypalUrl = `https://www.paypal.com/checkout?amount=${getBookingTotal()}&currency=EUR&item_name=AUROOMS%20Booking`;
           window.open(paypalUrl, '_blank');
-          break;
           
-        case 'bonifico':
-          // For bonifico, just show confirmation
-          alert('Prenotazione confermata! Ti abbiamo inviato i dettagli per il bonifico via email. La camera è riservata per 48 ore.');
-          window.location.href = 'conferma-finale.html';
-          break;
+          // Show success after redirect
+          setTimeout(() => {
+            showPaymentSuccess();
+          }, 3000);
+        }, 1500);
+        
+      } else if (selectedPaymentMethod === 'transfer') {
+        // Bank transfer with email
+        button.innerHTML = getCurrentLanguage() === 'it' ? 
+          '📧 Invio istruzioni...' : '📧 Sending instructions...';
+        
+        setTimeout(() => {
+          sendBankTransferEmail();
+          showPaymentSuccess();
+        }, 2000);
+        
+      } else if (selectedPaymentMethod === 'card') {
+        // Credit card validation and processing
+        if (!validateCreditCard()) {
+          button.disabled = false;
+          updatePaymentButton();
+          return;
+        }
+        
+        button.innerHTML = getCurrentLanguage() === 'it' ? 
+          '💳 Elaborazione pagamento...' : '💳 Processing payment...';
+        
+        setTimeout(() => {
+          showPaymentSuccess();
+        }, 3000);
       }
     }
-
-    function sendBookingToBackend() {
-      // In a real implementation, this would send data to your backend
-      console.log('Sending booking data to backend:', bookingData);
+    
+    function validateCreditCard() {
+      const cardNumber = document.getElementById('cardNumber').value.replace(/\s/g, '');
+      const expiryDate = document.getElementById('expiryDate').value;
+      const cvv = document.getElementById('cvv').value;
+      const cardName = document.getElementById('cardName').value;
       
-      // Store in localStorage for now (in production, use proper backend)
-      localStorage.setItem('completedBooking', JSON.stringify(bookingData));
+      if (!cardNumber || cardNumber.length < 13) {
+        alert(getCurrentLanguage() === 'it' ? 
+          'Inserisci un numero di carta valido' : 'Please enter a valid card number');
+        return false;
+      }
       
-      // Simulate WhatsApp message to hotel owner
-      const whatsappMessage = `🏨 NUOVA PRENOTAZIONE AUROOMS
+      if (!expiryDate || expiryDate.length !== 5) {
+        alert(getCurrentLanguage() === 'it' ? 
+          'Inserisci una data di scadenza valida (MM/YY)' : 'Please enter a valid expiry date (MM/YY)');
+        return false;
+      }
       
-📋 Riferimento: ${bookingData.bookingReference}
-👤 Ospite: ${bookingData.guest.nome} ${bookingData.guest.cognome}
-📧 Email: ${bookingData.guest.email}
-📱 Telefono: ${bookingData.guest.telefono}
-
-🏠 Camera: ${bookingData.room.name}
-📅 Check-in: ${new Date(bookingData.dates.checkin).toLocaleDateString('it-IT')}
-📅 Check-out: ${new Date(bookingData.dates.checkout).toLocaleDateString('it-IT')}
-🌙 Notti: ${bookingData.dates.nights}
-👥 Ospiti: ${bookingData.details.guests}
-🛏️ Camere: ${bookingData.details.rooms}
-
-💰 Totale: €${bookingData.total}
-💳 Metodo pagamento: ${selectedPaymentMethod}
-
-${bookingData.guest.richieste ? '💬 Richieste: ' + bookingData.guest.richieste : ''}`;
-
-      console.log('WhatsApp message that would be sent:', whatsappMessage);
+      if (!cvv || cvv.length < 3) {
+        alert(getCurrentLanguage() === 'it' ? 
+          'Inserisci un CVV valido' : 'Please enter a valid CVV');
+        return false;
+      }
       
-      // In production, you would integrate with WhatsApp Business API or email service
+      if (!cardName.trim()) {
+        alert(getCurrentLanguage() === 'it' ? 
+          'Inserisci il nome sulla carta' : 'Please enter the name on card');
+        return false;
+      }
+      
+      return true;
     }
+    
+    function sendBankTransferEmail() {
+      const bookingData = JSON.parse(sessionStorage.getItem('pending_booking'));
+      const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+      
+      // Parametri per l'email
+      const templateParams = {
+        to_name: currentUser.name,
+        to_email: currentUser.email,
+        customer_name: currentUser.name,
+        room_name: bookingData.roomName,
+        checkin_date: new Date(bookingData.checkin).toLocaleDateString('it-IT'),
+        checkout_date: new Date(bookingData.checkout).toLocaleDateString('it-IT'),
+        nights: bookingData.nights,
+        guests: bookingData.guests,
+        price_per_night: bookingData.pricePerNight,
+        total_amount: bookingData.totalPrice,
+        iban: "IT60 X054 2811 1010 0000 0123 456",
+        bic: "BPMOIT22XXX",
+        account_holder: "AUROOMS Guest House",
+        booking_reference: `BOOK-${Date.now()}`
+      };
+      
+      console.log('� Invio email reale a:', currentUser.email);
+      
+      // Invio email tramite EmailJS (con destinatario forzato)
+      emailjs.send('service_oiuox5y', 'bank_transfer_template', {
+        ...templateParams,
+        to: currentUser.email,
+        reply_to: currentUser.email
+      })
+        .then(function(response) {
+          console.log('✅ Email inviata con successo!', response.status, response.text);
+          
+          // Mostra conferma successo
+          alert(getCurrentLanguage() === 'it' ? 
+            `✅ Email inviata con successo a ${currentUser.email}!\n\n🏦 Le coordinate bancarie sono state inviate.\n📧 Controlla la tua casella di posta.\n\n💰 Importo da pagare: €${bookingData.totalPrice}\n🔢 Riferimento: ${templateParams.booking_reference}` :
+            `✅ Email sent successfully to ${currentUser.email}!\n\n🏦 Bank details have been sent.\n📧 Please check your email.\n\n💰 Amount to pay: €${bookingData.totalPrice}\n🔢 Reference: ${templateParams.booking_reference}`
+          );
+          
+        }, function(error) {
+          console.error('❌ Errore invio email:', error);
+          
+          // Fallback con alert se l'invio fallisce
+          alert(getCurrentLanguage() === 'it' ? 
+            `⚠️ Problema nell'invio automatico dell'email.\n\nEcco le coordinate bancarie:\n\n🏦 IBAN: IT60 X054 2811 1010 0000 0123 456\n🏦 BIC: BPMOIT22XXX\n🏦 Intestatario: AUROOMS Guest House\n💰 Importo: €${bookingData.totalPrice}\n📝 Causale: Prenotazione ${bookingData.roomName}\n🔢 Riferimento: ${templateParams.booking_reference}\n\n📧 Ti contatteremo via email a breve.` :
+            `⚠️ Problem sending automatic email.\n\nHere are the bank details:\n\n🏦 IBAN: IT60 X054 2811 1010 0000 0123 456\n🏦 BIC: BPMOIT22XXX\n🏦 Account holder: AUROOMS Guest House\n💰 Amount: €${bookingData.totalPrice}\n📝 Reference: Booking ${bookingData.roomName}\n🔢 Booking ref: ${templateParams.booking_reference}\n\n📧 We will contact you via email shortly.`
+          );
+        });
+    }
+    
+    function sendConfirmationEmail(paymentMethod) {
+      const bookingData = JSON.parse(sessionStorage.getItem('pending_booking'));
+      const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+      
+      if (!currentUser || !currentUser.email) {
+        console.log('📧 Nessun utente o email trovata per l\'invio della conferma');
+        return;
+      }
+      
+      const templateParams = {
+        to_name: currentUser.name,
+        to_email: currentUser.email,
+        customer_name: currentUser.name,
+        room_name: bookingData.roomName,
+        checkin_date: new Date(bookingData.checkin).toLocaleDateString('it-IT'),
+        checkout_date: new Date(bookingData.checkout).toLocaleDateString('it-IT'),
+        nights: bookingData.nights,
+        guests: bookingData.guests,
+        total_amount: bookingData.totalPrice,
+        payment_method: paymentMethod === 'card' ? 'Carta di Credito' : 
+                      paymentMethod === 'paypal' ? 'PayPal' : 'Bonifico Bancario',
+        booking_reference: `CONF-${Date.now()}`
+      };
+      
+      // Invio email di conferma
+      emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
+        .then(function(response) {
+          console.log('✅ Email di conferma inviata!', response.status);
+        }, function(error) {
+          console.error('❌ Errore invio email conferma:', error);
+        });
+    }
+    
+    function getBookingTotal() {
+      const bookingData = sessionStorage.getItem('pending_booking');
+      if (bookingData) {
+        const booking = JSON.parse(bookingData);
+        return booking.totalPrice || 0;
+      }
+      return 0;
+    }
+    
+    function showPaymentSuccess() {
+      // Invia email di conferma
+      sendConfirmationEmail(selectedPaymentMethod);
+      
+      // Hide payment form and show success
+      document.getElementById('payment-form-container').style.display = 'none';
+      document.getElementById('success-animation').classList.add('show');
+      
+      // Clear session data
+      sessionStorage.removeItem('pending_booking');
+      
+      // Log successful payment
+      console.log('✅ Pagamento completato con metodo:', selectedPaymentMethod);
+    }
+    
+    function getCurrentLanguage() {
+      return localStorage.getItem('aurooms_language') || 'it';
+    }
+    
+    function switchLang(lang) {
+      localStorage.setItem('aurooms_language', lang);
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        if (el.getAttribute('data-lang') === lang) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+      updatePaymentButton();
+    }
+    
+    function loadBookingDetails() {
+      const bookingData = sessionStorage.getItem('pending_booking');
+      
+      // Se non ci sono dati di prenotazione, crea dati di test
+      if (!bookingData) {
+        console.warn('Nessun dato di prenotazione trovato, creazione dati di test...');
+        
+        // Crea una prenotazione di test
+        const testBooking = {
+          roomName: "Camera Familiare",
+          checkin: new Date().toISOString().split('T')[0],
+          checkout: new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0], // +2 days
+          guests: 2,
+          nights: 2,
+          pricePerNight: 110
+          // totalPrice verrà calcolato automaticamente
+        };
+        
+        sessionStorage.setItem('pending_booking', JSON.stringify(testBooking));
+        console.log('📋 Dati di test creati:', testBooking);
+      }
+      
+      // Ricarica i dati (ora dovrebbero esserci)
+      const booking = JSON.parse(sessionStorage.getItem('pending_booking'));
+      const bookingDetails = document.getElementById('booking-details');
+      const totalAmount = document.getElementById('total-amount');
+      
+      // Assicurati che i dati essenziali esistano
+      if (!booking.roomName) booking.roomName = "Camera Familiare";
+      if (!booking.pricePerNight) booking.pricePerNight = 110;
+      if (!booking.guests) booking.guests = 2;
+      if (!booking.checkin) booking.checkin = new Date().toISOString().split('T')[0];
+      if (!booking.checkout) booking.checkout = new Date(Date.now() + 2 * 86400000).toISOString().split('T')[0];
+      
+      // CALCOLA LE NOTTI SE MANCANTI
+      if (!booking.nights && booking.checkin && booking.checkout) {
+        const checkinDate = new Date(booking.checkin);
+        const checkoutDate = new Date(booking.checkout);
+        const timeDiff = checkoutDate.getTime() - checkinDate.getTime();
+        booking.nights = Math.max(1, Math.ceil(timeDiff / (1000 * 3600 * 24)));
+      }
+      if (!booking.nights) booking.nights = 2; // fallback
+      
+      // CALCOLA IL TOTALE DINAMICAMENTE
+      booking.totalPrice = booking.pricePerNight * booking.nights;
+      
+      // Salva i dati aggiornati
+      sessionStorage.setItem('pending_booking', JSON.stringify(booking));
+      
+      // Format dates
+      const checkinDate = new Date(booking.checkin).toLocaleDateString('it-IT');
+      const checkoutDate = new Date(booking.checkout).toLocaleDateString('it-IT');
+      
+      bookingDetails.innerHTML = `
+        <div style="display: grid; gap: 0.5rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <strong data-lang="it">Camera:</strong>
+            <strong class="hidden" data-lang="en">Room:</strong>
+            <span>${booking.roomName}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span data-lang="it">Check-in:</span>
+            <span class="hidden" data-lang="en">Check-in:</span>
+            <span>${checkinDate}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span data-lang="it">Check-out:</span>
+            <span class="hidden" data-lang="en">Check-out:</span>
+            <span>${checkoutDate}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span data-lang="it">Ospiti:</span>
+            <span class="hidden" data-lang="en">Guests:</span>
+            <span>${booking.guests}</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span data-lang="it">Notti:</span>
+            <span class="hidden" data-lang="en">Nights:</span>
+            <span>${booking.nights}</span>
+          </div>
+          <hr style="border-color: #4a5568;">
+          <div style="display: flex; justify-content: space-between;">
+            <span data-lang="it">Prezzo per notte:</span>
+            <span class="hidden" data-lang="en">Price per night:</span>
+            <span>€${booking.pricePerNight}</span>
+          </div>
+        </div>
+      `;
+      
+      // Set total amount with proper formatting
+      totalAmount.textContent = `€${booking.totalPrice}`;
+      
+      console.log('📋 Dati prenotazione caricati:', booking);
+    }
+    
+    // Format card number with spaces
+    document.addEventListener('DOMContentLoaded', function() {
+      const currentLang = getCurrentLanguage();
+      switchLang(currentLang);
+      
+      // Aggiungi utente di test se non esiste
+      const currentUser = localStorage.getItem('aurooms_current_user');
+      if (!currentUser) {
+        const testUser = {
+          firstName: "Mario",
+          lastName: "Rossi", 
+          name: "Mario Rossi",
+          email: "mario.rossi@email.com",
+          phone: "+39 123 456 7890"
+        };
+        localStorage.setItem('aurooms_current_user', JSON.stringify(testUser));
+        console.log('👤 Utente di test creato:', testUser);
+      }
+      
+      loadBookingDetails();
+      
+      // Format card number input
+      const cardNumberInput = document.getElementById('cardNumber');
+      if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\s/g, '');
+          let formattedValue = value.replace(/(.{4})/g, '$1 ').trim();
+          if (formattedValue.length > 19) formattedValue = formattedValue.substring(0, 19);
+          e.target.value = formattedValue;
+        });
+      }
+      
+      // Format expiry date
+      const expiryInput = document.getElementById('expiryDate');
+      if (expiryInput) {
+        expiryInput.addEventListener('input', function(e) {
+          let value = e.target.value.replace(/\D/g, '');
+          if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2, 4);
+          }
+          e.target.value = value;
+        });
+      }
+      
+      // CVV only numbers
+      const cvvInput = document.getElementById('cvv');
+      if (cvvInput) {
+        cvvInput.addEventListener('input', function(e) {
+          e.target.value = e.target.value.replace(/\D/g, '');
+        });
+      }
+    });
   </script>
 </body>
 </html>

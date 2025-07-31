@@ -1,3 +1,190 @@
+// Room booking system
+const roomsData = [
+  {
+    id: 1,
+    name: { it: "Camera Doppia Comfort", en: "Comfort Double Room" },
+    image: "./attached_assets/Glicine1.jpg",
+    price: 65,
+    maxGuests: 2,
+    features: { 
+      it: ["Wi-Fi", "TV", "Bagno Privato", "Balcone"], 
+      en: ["Wi-Fi", "TV", "Private Bathroom", "Balcony"] 
+    },
+    available: true
+  },
+  {
+    id: 2,
+    name: { it: "Camera Matrimoniale Deluxe", en: "Deluxe Queen Room" },
+    image: "./attached_assets/Balcone.jpg",
+    price: 85,
+    maxGuests: 2,
+    features: { 
+      it: ["Wi-Fi", "TV", "Bagno con Vasca", "Vista Mare"], 
+      en: ["Wi-Fi", "TV", "Bathroom with Tub", "Sea View"] 
+    },
+    available: true
+  },
+  {
+    id: 3,
+    name: { it: "Camera Familiare", en: "Family Room" },
+    image: "./attached_assets/Bagno.jpg",
+    price: 110,
+    maxGuests: 4,
+    features: { 
+      it: ["Wi-Fi", "TV", "2 Bagni", "Frigorifero"], 
+      en: ["Wi-Fi", "TV", "2 Bathrooms", "Refrigerator"] 
+    },
+    available: true
+  }
+];
+
+// Enhanced booking form handler
+function handleBookingSearch(e) {
+  e.preventDefault();
+  
+  const checkin = document.getElementById('checkin').value;
+  const checkout = document.getElementById('checkout').value;
+  const guests = parseInt(document.getElementById('guests').value);
+  
+  if (!checkin || !checkout) {
+    alert('Seleziona le date di check-in e check-out');
+    return;
+  }
+  
+  if (new Date(checkin) >= new Date(checkout)) {
+    alert('La data di check-out deve essere successiva al check-in');
+    return;
+  }
+  
+  // Calculate nights
+  const checkinDate = new Date(checkin);
+  const checkoutDate = new Date(checkout);
+  const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+  
+  // Filter available rooms based on guests
+  const availableRooms = roomsData.filter(room => 
+    room.available && room.maxGuests >= guests
+  );
+  
+  displaySearchResults(availableRooms, nights, checkin, checkout, guests);
+}
+
+function displaySearchResults(rooms, nights, checkin, checkout, guests) {
+  const resultsSection = document.getElementById('search-results');
+  const roomsList = document.getElementById('rooms-list');
+  const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+  
+  // Clear previous results
+  roomsList.innerHTML = '';
+  
+  if (rooms.length === 0) {
+    roomsList.innerHTML = `
+      <div style="text-align: center; padding: 2rem;">
+        <p>${currentLang === 'it' ? 'Nessuna camera disponibile per le date selezionate.' : 'No rooms available for selected dates.'}</p>
+        <p>${currentLang === 'it' ? 'Contattaci su WhatsApp per altre opzioni.' : 'Contact us on WhatsApp for other options.'}</p>
+      </div>
+    `;
+  } else {
+    rooms.forEach(room => {
+      const totalPrice = room.price * nights;
+      const roomCard = createRoomCard(room, totalPrice, nights, checkin, checkout, guests, currentLang);
+      roomsList.appendChild(roomCard);
+    });
+  }
+  
+  // Show results
+  resultsSection.classList.remove('hidden');
+  resultsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+function createRoomCard(room, totalPrice, nights, checkin, checkout, guests, lang) {
+  const card = document.createElement('div');
+  card.className = 'room-card';
+  
+  const featuresText = room.features[lang].join(' • ');
+  const nightsText = lang === 'it' ? 
+    `${nights} ${nights > 1 ? 'notti' : 'notte'}` : 
+    `${nights} ${nights > 1 ? 'nights' : 'night'}`;
+  
+  card.innerHTML = `
+    <img src="${room.image}" alt="${room.name[lang]}" class="room-image">
+    <div class="room-info">
+      <h4>${room.name[lang]}</h4>
+      <div class="room-features">${featuresText}</div>
+      <p style="font-size: 0.9rem; color: var(--muted-color);">
+        ${lang === 'it' ? 'Fino a' : 'Up to'} ${room.maxGuests} ${lang === 'it' ? 'ospiti' : 'guests'}
+      </p>
+    </div>
+    <div class="room-price">
+      <span class="price-amount">€${totalPrice}</span>
+      <span class="price-unit">${nightsText}</span>
+      <button class="book-room-btn" onclick="bookRoom(${room.id}, '${checkin}', '${checkout}', ${guests})">
+        ${lang === 'it' ? 'Prenota' : 'Book Now'}
+      </button>
+    </div>
+  `;
+  
+  return card;
+}
+
+function bookRoom(roomId, checkin, checkout, guests) {
+  // Check if user is logged in
+  const currentUser = localStorage.getItem('aurooms_current_user');
+  if (!currentUser) {
+    // Store the booking attempt and redirect to login
+    sessionStorage.setItem('pending_booking', JSON.stringify({
+      roomId, checkin, checkout, guests,
+      roomName: roomsData.find(r => r.id === roomId).name.it,
+      pricePerNight: roomsData.find(r => r.id === roomId).price,
+      nights: Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24))
+    }));
+    sessionStorage.setItem('returnUrl', 'pagamento.html');
+    window.location.href = 'login.html';
+    return;
+  }
+
+  const room = roomsData.find(r => r.id === roomId);
+  const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+  
+  // Store booking data and go to payment
+  sessionStorage.setItem('pending_booking', JSON.stringify({
+    roomId, checkin, checkout, guests,
+    roomName: room.name[currentLang],
+    pricePerNight: room.price,
+    nights: Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24))
+  }));
+  
+  window.location.href = 'pagamento.html';
+}
+
+// Set minimum date to today
+function setMinDate() {
+  const today = new Date().toISOString().split('T')[0];
+  const checkinInput = document.getElementById('checkin');
+  const checkoutInput = document.getElementById('checkout');
+  
+  if (checkinInput) checkinInput.min = today;
+  if (checkoutInput) checkoutInput.min = today;
+}
+
+// Update checkout min date when checkin changes
+function updateCheckoutMinDate() {
+  const checkinInput = document.getElementById('checkin');
+  const checkoutInput = document.getElementById('checkout');
+  
+  if (checkinInput && checkoutInput) {
+    checkinInput.addEventListener('change', function() {
+      const checkinDate = new Date(this.value);
+      checkinDate.setDate(checkinDate.getDate() + 1); // Minimum 1 night
+      checkoutInput.min = checkinDate.toISOString().split('T')[0];
+      
+      // Clear checkout if it's before new minimum
+      if (checkoutInput.value && new Date(checkoutInput.value) <= new Date(this.value)) {
+        checkoutInput.value = '';
+      }
+    });
+  }
+}
 
 // Language switching function
 function switchLang(lang) {
@@ -80,6 +267,9 @@ function salvaPrenotazione(e) {
 
 // Initialize libraries when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
+  // Check authentication and update UI
+  updateAuthUI();
+  
   // Initialize AOS (Animate On Scroll) with better error handling
   function initAOS() {
     try {
@@ -138,6 +328,45 @@ document.addEventListener('DOMContentLoaded', function() {
   // Booking form event listener
   const bookingForm = document.getElementById('booking-form');
   if (bookingForm) {
-    bookingForm.addEventListener('submit', salvaPrenotazione);
+    bookingForm.addEventListener('submit', handleBookingSearch);
   }
+  
+  // Initialize date constraints
+  setMinDate();
+  updateCheckoutMinDate();
 });
+
+// Authentication functions
+function updateAuthUI() {
+  const currentUser = localStorage.getItem('aurooms_current_user');
+  const authContainer = document.querySelector('.auth-links');
+  
+  if (authContainer) {
+    if (currentUser) {
+      const user = JSON.parse(currentUser);
+      authContainer.innerHTML = `
+        <span style="margin-right: 1rem;">Ciao, ${user.firstName}!</span>
+        <a href="#" onclick="logout()" style="color: var(--del-color);">Logout</a>
+      `;
+    } else {
+      authContainer.innerHTML = `
+        <a href="login.html">
+          <span data-lang="it">Accedi</span>
+          <span class="hidden" data-lang="en">Login</span>
+        </a>
+      `;
+    }
+  }
+}
+
+function logout() {
+  localStorage.removeItem('aurooms_current_user');
+  sessionStorage.clear();
+  updateAuthUI();
+  
+  // Redirect to home if on a protected page
+  if (window.location.pathname.includes('dashboard') || 
+      window.location.pathname.includes('pagamento')) {
+    window.location.href = 'index.html';
+  }
+}

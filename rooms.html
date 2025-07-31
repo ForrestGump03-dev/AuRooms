@@ -7,6 +7,12 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
+    .rooms-container {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
     .room-card {
       border: 1px solid var(--border-color);
       border-radius: 12px;
@@ -48,6 +54,272 @@
       text-align: center;
     }
     .price {
+      font-size: 2rem;
+      font-weight: bold;
+      color: var(--primary);
+    }
+    .booking-sidebar {
+      background: var(--card-background-color);
+      padding: 2rem;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+    @media (max-width: 768px) {
+      .rooms-container {
+        grid-template-columns: 1fr;
+      }
+      .room-gallery {
+        grid-template-columns: 1fr;
+      }
+      .room-gallery img:first-child {
+        grid-row: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <nav class="sticky-nav">
+    <div class="nav-content">
+      <a href="index.html">
+        <h2 style="margin: 0; color: var(--primary);">AUROOMS</h2>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" data-lang="it">Home</a>
+        <a href="index.html" class="hidden" data-lang="en">Home</a>
+        <a href="rooms.html" data-lang="it">Camere</a>
+        <a href="rooms.html" class="hidden" data-lang="en">Rooms</a>
+        <div class="auth-links" id="auth-links">
+          <!-- Will be populated by JavaScript -->
+        </div>
+        <div class="lang-switch">
+          <button onclick="switchLang('it')" data-lang="en">IT</button>
+          <button onclick="switchLang('en')" data-lang="it">EN</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container">
+    <h1 data-lang="it">Le Nostre Camere</h1>
+    <h1 class="hidden" data-lang="en">Our Rooms</h1>
+    
+    <div class="rooms-container">
+      <div class="rooms-list">
+        <!-- Camera Doppia Comfort -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Doppia Comfort</h3>
+          <h3 class="hidden" data-lang="en">Comfort Double Room</h3>
+
+          <div class="room-gallery">
+            <img src="./attached_assets/Glicine1.jpg" alt="Camera Comfort" />
+            <img src="./attached_assets/Balcone.jpg" alt="Balcone" />
+            <img src="./attached_assets/Bagno.jpg" alt="Bagno" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>👫</span>
+              <span data-lang="it">Fino a 2 ospiti</span>
+              <span class="hidden" data-lang="en">Up to 2 guests</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV</span>
+              <span class="hidden" data-lang="en">TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+            <div class="amenity-item">
+              <span>🚿</span>
+              <span data-lang="it">Bagno privato</span>
+              <span class="hidden" data-lang="en">Private bathroom</span>
+            </div>
+            <div class="amenity-item">
+              <span>🌅</span>
+              <span data-lang="it">Balcone</span>
+              <span class="hidden" data-lang="en">Balcony</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€65</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoomForBooking(1)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Prenota questa camera</span>
+            <span class="hidden" data-lang="en">Book this room</span>
+          </button>
+        </div>
+
+        <!-- Camera Matrimoniale Deluxe -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Matrimoniale Deluxe</h3>
+          <h3 class="hidden" data-lang="en">Deluxe Queen Room</h3>
+
+          <div class="room-gallery">
+            <img src="./attached_assets/Balcone.jpg" alt="Camera Deluxe" />
+            <img src="./attached_assets/Bagno.jpg" alt="Bagno con vasca" />
+            <img src="./attached_assets/Glicine1.jpg" alt="Vista mare" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>👫</span>
+              <span data-lang="it">Fino a 2 ospiti</span>
+              <span class="hidden" data-lang="en">Up to 2 guests</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV</span>
+              <span class="hidden" data-lang="en">TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+            <div class="amenity-item">
+              <span>🛁</span>
+              <span data-lang="it">Bagno con vasca</span>
+              <span class="hidden" data-lang="en">Bathroom with tub</span>
+            </div>
+            <div class="amenity-item">
+              <span>🌊</span>
+              <span data-lang="it">Vista mare</span>
+              <span class="hidden" data-lang="en">Sea view</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€85</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoomForBooking(2)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Prenota questa camera</span>
+            <span class="hidden" data-lang="en">Book this room</span>
+          </button>
+        </div>
+
+        <!-- Camera Familiare -->
+        <div class="room-card">
+          <h3 data-lang="it">Camera Familiare</h3>
+          <h3 class="hidden" data-lang="en">Family Room</h3>
+
+          <div class="room-gallery">
+            <img src="./attached_assets/Bagno.jpg" alt="Camera Familiare" />
+            <img src="./attached_assets/Glicine1.jpg" alt="Secondo bagno" />
+            <img src="./attached_assets/Balcone.jpg" alt="Frigorifero" />
+          </div>
+
+          <div class="room-amenities">
+            <div class="amenity-item">
+              <span>👪</span>
+              <span data-lang="it">Fino a 4 ospiti</span>
+              <span class="hidden" data-lang="en">Up to 4 guests</span>
+            </div>
+            <div class="amenity-item">
+              <span>📺</span>
+              <span data-lang="it">TV</span>
+              <span class="hidden" data-lang="en">TV</span>
+            </div>
+            <div class="amenity-item">
+              <span>📶</span>
+              <span data-lang="it">Wi-Fi gratuito</span>
+              <span class="hidden" data-lang="en">Free Wi-Fi</span>
+            </div>
+            <div class="amenity-item">
+              <span>🚿🚿</span>
+              <span data-lang="it">2 Bagni</span>
+              <span class="hidden" data-lang="en">2 Bathrooms</span>
+            </div>
+            <div class="amenity-item">
+              <span>❄️</span>
+              <span data-lang="it">Frigorifero</span>
+              <span class="hidden" data-lang="en">Refrigerator</span>
+            </div>
+          </div>
+
+          <div class="price-section">
+            <div class="price">€110</div>
+            <small data-lang="it">per notte</small>
+            <small class="hidden" data-lang="en">per night</small>
+          </div>
+
+          <button onclick="selectRoomForBooking(3)" role="button" style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Prenota questa camera</span>
+            <span class="hidden" data-lang="en">Book this room</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Booking Sidebar -->
+      <div class="booking-sidebar">
+        <h4 data-lang="it">Prenota la tua camera</h4>
+        <h4 class="hidden" data-lang="en">Book your room</h4>
+
+        <form id="rooms-booking-form" onsubmit="handleRoomsBooking(event)">
+          <div>
+            <label data-lang="it">Check-in</label>
+            <label class="hidden" data-lang="en">Check-in</label>
+            <input type="date" id="rooms-checkin" required />
+          </div>
+
+          <div>
+            <label data-lang="it">Check-out</label>
+            <label class="hidden" data-lang="en">Check-out</label>
+            <input type="date" id="rooms-checkout" required />
+          </div>
+
+          <div>
+            <label data-lang="it">Ospiti</label>
+            <label class="hidden" data-lang="en">Guests</label>
+            <select id="rooms-guests">
+              <option value="1">1</option>
+              <option value="2" selected>2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select>
+          </div>
+
+          <div id="selected-room-info" class="hidden" style="margin: 1rem 0; padding: 1rem; background: var(--primary-background); border-radius: 8px;">
+            <h6 data-lang="it">Camera selezionata:</h6>
+            <h6 class="hidden" data-lang="en">Selected room:</h6>
+            <p id="selected-room-name"></p>
+            <p><strong id="room-total-price">€0</strong> <span data-lang="it">totale</span><span class="hidden" data-lang="en">total</span></p>
+          </div>
+
+          <button type="button" onclick="proceedToLogin()" id="proceed-btn" disabled style="width: 100%; margin-top: 1rem;">
+            <span data-lang="it">Accedi per prenotare</span>
+            <span class="hidden" data-lang="en">Login to book</span>
+          </button>
+        </form>
+
+        <div style="margin-top: 2rem; text-align: center;">
+          <h5 data-lang="it">Contatti</h5>
+          <h5 class="hidden" data-lang="en">Contact</h5>
+          <a href="https://wa.me/393758843175" target="_blank" style="color: #25D366;">
+            📱 WhatsApp: +39 375 884 3175
+          </a>
+          <br>
+          <a href="tel:+393758843175">
+            📞 Tel: +39 375 884 3175
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
       font-size: 2rem;
       font-weight: bold;
       color: var(--primary);
@@ -280,74 +552,128 @@
             <span data-lang="it">Seleziona questa camera</span>
             <span class="hidden" data-lang="en">Select this room</span>
           </button>
-        </div>
-      </div>
-      </div>
+  <script src="script.js"></script>
+  <script>
+    let selectedRoomId = null;
 
-      <!-- Booking Form Sidebar -->
-      <div>
-        <div class="booking-form">
-          <h4 data-lang="it">Prenota la tua camera</h4>
-          <h4 class="hidden" data-lang="en">Book your room</h4>
+    function selectRoomForBooking(roomId) {
+      selectedRoomId = roomId;
+      const room = roomsData.find(r => r.id === roomId);
+      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+      
+      // Update selected room display
+      document.getElementById('selected-room-name').textContent = room.name[currentLang];
+      document.getElementById('selected-room-info').classList.remove('hidden');
+      
+      // Update total price if dates are selected
+      updateTotalPrice();
+      
+      // Enable proceed button
+      document.getElementById('proceed-btn').disabled = false;
+    }
 
-          <form id="booking-form">
-            <div class="grid">
-              <div>
-                <label data-lang="it">Check-in</label>
-                <label class="hidden" data-lang="en">Check-in</label>
-                <input type="date" id="checkin" required />
-              </div>
-              <div>
-                <label data-lang="it">Check-out</label>
-                <label class="hidden" data-lang="en">Check-out</label>
-                <input type="date" id="checkout" required />
-              </div>
-            </div>
+    function updateTotalPrice() {
+      if (!selectedRoomId) return;
+      
+      const checkin = document.getElementById('rooms-checkin').value;
+      const checkout = document.getElementById('rooms-checkout').value;
+      
+      if (checkin && checkout) {
+        const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+        const room = roomsData.find(r => r.id === selectedRoomId);
+        const totalPrice = room.price * nights;
+        
+        document.getElementById('room-total-price').textContent = `€${totalPrice}`;
+      }
+    }
 
-            <div class="grid">
-              <div>
-                <label data-lang="it">Ospiti</label>
-                <label class="hidden" data-lang="en">Guests</label>
-                <select id="guests">
-                  <option value="1">1</option>
-                  <option value="2" selected>2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                </select>
-              </div>
-              <div>
-                <label data-lang="it">Camere</label>
-                <label class="hidden" data-lang="en">Rooms</label>
-                <select id="rooms">
-                  <option value="1" selected>1</option>
-                  <option value="2">2</option>
-                </select>
-              </div>
-            </div>
+    function proceedToLogin() {
+      if (!selectedRoomId) {
+        alert('Seleziona prima una camera');
+        return;
+      }
+      
+      const checkin = document.getElementById('rooms-checkin').value;
+      const checkout = document.getElementById('rooms-checkout').value;
+      const guests = parseInt(document.getElementById('rooms-guests').value);
+      
+      if (!checkin || !checkout) {
+        alert('Seleziona le date di check-in e check-out');
+        return;
+      }
+      
+      // Store booking attempt
+      const room = roomsData.find(r => r.id === selectedRoomId);
+      const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
+      
+      sessionStorage.setItem('pending_booking', JSON.stringify({
+        roomId: selectedRoomId,
+        checkin,
+        checkout,
+        guests,
+        roomName: room.name.it,
+        pricePerNight: room.price,
+        nights
+      }));
+      
+      // Check if user is logged in
+      const currentUser = localStorage.getItem('aurooms_current_user');
+      if (currentUser) {
+        window.location.href = 'pagamento.html';
+      } else {
+        sessionStorage.setItem('returnUrl', 'pagamento.html');
+        window.location.href = 'login.html';
+      }
+    }
 
-            <div id="selected-room" style="display: none;">
-              <h5 data-lang="it">Camera selezionata:</h5>
-              <h5 class="hidden" data-lang="en">Selected room:</h5>
-              <p id="room-info"></p>
-              <div id="total-price" style="font-size: 1.2rem; font-weight: bold; color: var(--primary);"></div>
-            </div>
+    function updateAuthLinks() {
+      const authLinksContainer = document.getElementById('auth-links');
+      const currentUser = localStorage.getItem('aurooms_current_user');
+      
+      if (currentUser) {
+        const user = JSON.parse(currentUser);
+        authLinksContainer.innerHTML = `
+          <span>Ciao, ${user.firstName}!</span>
+          <a href="#" onclick="logout()">Logout</a>
+        `;
+        
+        // Update button text
+        const proceedBtn = document.getElementById('proceed-btn');
+        if (proceedBtn) {
+          proceedBtn.innerHTML = `
+            <span data-lang="it">Procedi al pagamento</span>
+            <span class="hidden" data-lang="en">Proceed to payment</span>
+          `;
+        }
+      } else {
+        authLinksContainer.innerHTML = `
+          <a href="login.html">
+            <span data-lang="it">Accedi</span>
+            <span class="hidden" data-lang="en">Login</span>
+          </a>
+        `;
+      }
+    }
 
-            <button type="button" onclick="proceedToBooking()" disabled id="book-btn" style="width: 100%; margin-top: 1rem;">
-              <span data-lang="it">Continua con la prenotazione</span>
-              <span class="hidden" data-lang="en">Continue with booking</span>
-            </button>
-          </form>
+    function logout() {
+      localStorage.removeItem('aurooms_current_user');
+      sessionStorage.clear();
+      window.location.reload();
+    }
 
-          <div style="margin-top: 2rem; text-align: center;">
-            <h5 data-lang="it">Contatti</h5>
-            <h5 class="hidden" data-lang="en">Contact</h5>
-            <a href="https://wa.me/393471234567" target="_blank" style="color: #25D366;">
-              📱 WhatsApp: +39 375 884 3175
-            </a>
-            <br>
-            <a href="tel:+393758843175">
-              📞 Tel: +39 375 884 3175
-            </a>
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function() {
+      updateAuthLinks();
+      setMinDate();
+      updateCheckoutMinDate();
+      
+      // Add event listeners for date changes
+      document.getElementById('rooms-checkin').addEventListener('change', updateTotalPrice);
+      document.getElementById('rooms-checkout').addEventListener('change', updateTotalPrice);
+    });
+  </script>
+</body>
+</html>
           </div>
         </div>
       </div>

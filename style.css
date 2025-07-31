@@ -1,4 +1,3 @@
-
 html {
   height: 100%;
   width: 100%;
@@ -41,6 +40,165 @@ body {
 
 .swiper-slide img:hover {
   transform: scale(1.03);
+}
+
+/* Booking System Styles */
+.booking-widget {
+  background: var(--card-background-color);
+  padding: 2rem;
+  border-radius: 12px;
+  margin: 2rem 0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  color: var(--color);
+  font-size: 0.9rem;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 1rem;
+}
+
+.search-btn {
+  background: linear-gradient(45deg, #28a745, #20c997);
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+}
+
+.search-results {
+  margin-top: 2rem;
+  padding: 2rem;
+  background: var(--secondary-background);
+  border-radius: 12px;
+}
+
+.rooms-list {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.room-card {
+  display: grid;
+  grid-template-columns: 200px 1fr auto;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--card-background-color);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  align-items: center;
+}
+
+.room-image {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.room-info h4 {
+  margin: 0 0 0.5rem 0;
+  color: var(--color);
+}
+
+.room-features {
+  display: flex;
+  gap: 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
+.room-price {
+  text-align: center;
+}
+
+.price-amount {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary);
+  display: block;
+}
+
+.price-unit {
+  font-size: 0.9rem;
+  color: var(--muted-color);
+}
+
+.book-room-btn {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.book-room-btn:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.whatsapp-fallback {
+  text-align: center;
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--secondary-background);
+  border-radius: 8px;
+}
+
+.whatsapp-link {
+  display: inline-block;
+  background-color: #25D366;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 25px;
+  text-decoration: none;
+  margin-top: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.whatsapp-link:hover {
+  background-color: #128C7E;
+  color: white;
+  transform: translateY(-1px);
 }
 
 /* Sticky Navigation */
@@ -159,6 +317,26 @@ nav a:focus, nav a:hover {
   }
   
   /* Form mobile */
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .booking-widget {
+    padding: 1.5rem;
+  }
+  
+  .room-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 1rem;
+  }
+  
+  .room-image {
+    width: 100%;
+    height: 150px;
+  }
+  
   #booking-form {
     gap: 1rem;
   }

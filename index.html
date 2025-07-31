@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -17,8 +17,9 @@
     <ul>
       <li><a href="#rooms" data-lang="it">Camere</a></li>
       <li><a href="#rooms" class="hidden" data-lang="en">Rooms</a></li>
-      <li><a href="login.html" data-lang="it">Accedi</a></li>
-      <li><a href="login.html" class="hidden" data-lang="en">Login</a></li>
+      <li class="auth-links">
+        <!-- Will be populated by JavaScript -->
+      </li>
       <li><a href="rooms.html" role="button" data-lang="it">Prenota</a></li>
       <li><a href="rooms.html" role="button" class="hidden" data-lang="en">Book Now</a></li>
       <li class="lang-toggle">
@@ -29,24 +30,23 @@
   </nav>
 
   <main class="container">
-    <div class="grid">
-      <section data-aos="fade-up">
-        <hgroup>
-          <h2 data-lang="it">Benvenuti da AUROOMS</h2>
-          <h2 class="hidden" data-lang="en">Welcome to AUROOMS</h2>
-          <h3 data-lang="it">Guest House a Cinisi, vicino Palermo</h3>
-          <h3 class="hidden" data-lang="en">Guest House in Cinisi, near Palermo</h3>
-        </hgroup>
-        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
-        <div style="text-align: center; margin-top: 2rem;">
-          <a href="rooms.html" role="button" data-lang="it">PRENOTA ORA</a>
-          <a href="rooms.html" role="button" class="hidden" data-lang="en">BOOK NOW</a>
-        </div>
-      </section>
-      </main>
-      <section id="rooms" data-aos="fade-up">
-        <h3 style="text-align: center;" data-lang="it">Le Camere</h3>
-        <h3 style="text-align: center;" class="hidden" data-lang="en">Our Rooms</h3>
+    <section data-aos="fade-up">
+      <hgroup>
+        <h2 data-lang="it">Benvenuti da AUROOMS</h2>
+        <h2 class="hidden" data-lang="en">Welcome to AUROOMS</h2>
+        <h3 data-lang="it">Guest House a Cinisi, vicino Palermo</h3>
+        <h3 class="hidden" data-lang="en">Guest House in Cinisi, near Palermo</h3>
+      </hgroup>
+      <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="rooms.html" role="button" data-lang="it">PRENOTA ORA</a>
+        <a href="rooms.html" role="button" class="hidden" data-lang="en">BOOK NOW</a>
+      </div>
+    </section>
+      
+    <section id="rooms" data-aos="fade-up">
+      <h3 style="text-align: center;" data-lang="it">Le Camere</h3>
+      <h3 style="text-align: center;" class="hidden" data-lang="en">Our Rooms</h3>
         <p style="text-align: center;" data-lang="it">Camere moderne e confortevoli per un soggiorno perfetto in Sicilia.</p>
         <p style="text-align: center;" class="hidden" data-lang="en">Modern and comfortable rooms for a perfect stay in Sicily.</p>
         <div style="text-align: center; margin-top: 2rem;">
@@ -62,7 +62,6 @@
           <a href="rooms.html" role="button" class="secondary hidden" data-lang="en">Discover our rooms</a>
         </div>
       </section>
-<<<<<<< Updated upstream
 
       <!--Perchè AUROOMS?-->
       <section id="why_us" data-aos="fade-up" style="margin: 4rem 0; padding: 3rem 2rem; background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.3);">
@@ -120,17 +119,59 @@
     <div class="container">
       <article>
         <hgroup>
-          <h2 data-lang="it">Prenota Ora</h2>
-          <h2 class="hidden" data-lang="en">Book Now</h2>
-          <h3 data-lang="it">Contattaci su WhatsApp per verificare la disponibilità</h3>
-          <h3 class="hidden" data-lang="en">Contact us on WhatsApp to check availability</h3>
+          <h2 data-lang="it">Verifica Disponibilità</h2>
+          <h2 class="hidden" data-lang="en">Check Availability</h2>
+          <h3 data-lang="it">Seleziona le date del tuo soggiorno per vedere camere e prezzi</h3>
+          <h3 class="hidden" data-lang="en">Select your stay dates to see rooms and prices</h3>
         </hgroup>
-        <form class="grid" id="booking-form">
-          <input type="text" id="nome" placeholder="Nome / Name" required />
-          <input type="date" id="checkin" required />
-          <input type="date" id="checkout" required />
-          <button type="submit">Procedi</button>
-        </form>
+        
+        <!-- Booking Widget Migliorato -->
+        <div class="booking-widget">
+          <form class="booking-form" id="booking-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="checkin" data-lang="it">Check-in</label>
+                <label for="checkin" class="hidden" data-lang="en">Check-in</label>
+                <input type="date" id="checkin" required />
+              </div>
+              <div class="form-group">
+                <label for="checkout" data-lang="it">Check-out</label>
+                <label for="checkout" class="hidden" data-lang="en">Check-out</label>
+                <input type="date" id="checkout" required />
+              </div>
+              <div class="form-group">
+                <label for="guests" data-lang="it">Ospiti</label>
+                <label for="guests" class="hidden" data-lang="en">Guests</label>
+                <select id="guests" required>
+                  <option value="1">1 ospite</option>
+                  <option value="2" selected>2 ospiti</option>
+                  <option value="3">3 ospiti</option>
+                  <option value="4">4 ospiti</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="search-btn" data-lang="it">🔍 Cerca Disponibilità</button>
+            <button type="submit" class="search-btn hidden" data-lang="en">🔍 Search Availability</button>
+          </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="search-results" class="search-results hidden">
+          <h3 data-lang="it">Camere Disponibili</h3>
+          <h3 class="hidden" data-lang="en">Available Rooms</h3>
+          <div id="rooms-list" class="rooms-list">
+            <!-- Le camere verranno generate dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Fallback WhatsApp -->
+        <div class="whatsapp-fallback">
+          <p data-lang="it">Oppure contattaci direttamente su WhatsApp</p>
+          <p class="hidden" data-lang="en">Or contact us directly on WhatsApp</p>
+          <a href="https://wa.me/393758843175" class="whatsapp-link" target="_blank">
+            📱 WhatsApp
+          </a>
+        </div>
       </article>
     </div>
   </section>
