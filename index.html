@@ -7,106 +7,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
-  <style>
-    body { 
-      scroll-behavior: smooth; 
-      padding-top: 80px; /* Spazio per la navbar fissa */
-    }
-    .flag { cursor: pointer; width: 24px; margin-left: 10px; }
-    .hidden { display: none; }
-    .hero-img { width: 100%; border-radius: 12px; }
-    .lang-toggle { float: right; }
-    .swiper { width: 90%; padding: 1rem 0; }
-    .swiper-slide img { width: 80%; border-radius: 8px; }
-    
-    /* Sticky Navigation */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 999;
-      background-color: var(--background-color, #fff);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border-color, #ddd);
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    
-    .whatsapp-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: #25D366;
-      color: white;
-      padding: 12px;
-      border-radius: 50%;
-      z-index: 1000;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 56px;
-      height: 56px;
-    }
-    nav a:focus, nav a:hover {
-      background-color: var(--primary);
-      color: white;
-    }
-    .swiper-slide img {
-      transition: transform 0.4s ease;
-    }
-    .swiper-slide img:hover {
-      transform: scale(1.03);
-    }
-    @media (max-width: 768px) {
-      body {
-        padding-top: 60px; /* Ridotto per mobile */
-      }
-      
-      nav {
-        padding: 0.5rem 1rem; /* Navbar più compatta su mobile */
-      }
-      
-      nav ul li {
-        margin: 0 0.2rem; /* Spazio ridotto tra elementi */
-      }
-      
-      nav ul li a {
-        padding: 0.3rem 0.6rem; /* Padding ridotto per i link */
-        font-size: 0.9rem; /* Font leggermente più piccolo */
-      }
-      
-      .lang-toggle .flag {
-        width: 20px; /* Bandiere più piccole */
-        margin-left: 5px;
-      }
-      
-      .whatsapp-button {
-        bottom: 15px;
-        right: 15px;
-        width: 48px;
-        height: 48px;
-        padding: 10px;
-      }
-      .whatsapp-button img {
-        width: 24px !important;
-        height: 24px !important;
-      }
-      #why_us {
-        margin: 2rem 0 !important;
-        padding: 2rem 1rem !important;
-      }
-      #why_us h3 {
-        font-size: 1.5rem !important;
-      }
-      #why_us div[style*="grid-template-columns"] {
-        grid-template-columns: 1fr !important;
-        gap: 1rem !important;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <nav class="container-fluid">
@@ -116,8 +17,6 @@
     <ul>
       <li><a href="#rooms" data-lang="it">Camere</a></li>
       <li><a href="#rooms" class="hidden" data-lang="en">Rooms</a></li>
-      <li><a href="#attractions" data-lang="it">Attrazioni</a></li>
-      <li><a href="#attractions" class="hidden" data-lang="en">Attractions</a></li>
       <li><a href="login.html" data-lang="it">Accedi</a></li>
       <li><a href="login.html" class="hidden" data-lang="en">Login</a></li>
       <li><a href="rooms.html" role="button" data-lang="it">Prenota</a></li>
@@ -140,8 +39,8 @@
         </hgroup>
         <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
         <div style="text-align: center; margin-top: 2rem;">
-          <a href="rooms.html" role="button" class="hero-booking-btn" data-lang="it">PRENOTA ORA</a>
-          <a href="rooms.html" role="button" class="hero-booking-btn hidden" data-lang="en">BOOK NOW</a>
+          <a href="rooms.html" role="button" data-lang="it">PRENOTA ORA</a>
+          <a href="rooms.html" role="button" class="hidden" data-lang="en">BOOK NOW</a>
         </div>
       </section>
       </main>

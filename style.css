@@ -6,6 +6,7 @@ html {
 
 body { 
   scroll-behavior: smooth; 
+  padding-top: 80px; /* Spazio per la navbar fissa */
 }
 
 .flag { 
@@ -28,18 +29,37 @@ body {
 }
 
 .swiper { 
-  width: 100%; 
+  width: 90%; 
   padding: 1rem 0; 
 }
 
 .swiper-slide img { 
-  width: 100%; 
+  width: 80%; 
   border-radius: 8px; 
   transition: transform 0.4s ease;
 }
 
 .swiper-slide img:hover {
   transform: scale(1.03);
+}
+
+/* Sticky Navigation */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999;
+  background-color: var(--background-color, #fff);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border-color, #ddd);
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+nav a:focus, nav a:hover {
+  background-color: var(--primary);
+  color: white;
 }
 
 .whatsapp-button {
@@ -75,33 +95,78 @@ body {
   color: white;
 }
 
-.hero-booking-btn {
-  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
-  color: white;
-  padding: 1rem 2rem;
-  font-size: 1.2rem;
-  font-weight: bold;
-  border-radius: 30px;
-  text-decoration: none;
-  display: inline-block;
-  box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-  transition: all 0.3s ease;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.hero-booking-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-  color: white;
-}
-
-nav a:focus, nav a:hover {
-  background-color: var(--primary);
-  color: white;
-}
-
 @media (max-width: 768px) {
+  body {
+    padding-top: 60px; /* Ridotto per mobile */
+  }
+  
+  nav {
+    padding: 0.5rem 1rem; /* Navbar più compatta su mobile */
+  }
+  
+  nav {
+    padding: 0.5rem 1rem;
+  }
+  
+  nav ul li {
+    margin: 0 0.2rem;
+  }
+  
+  nav ul li a {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.9rem;
+  }
+  
+  .lang-toggle .flag {
+    width: 20px;
+    margin-left: 5px;
+  }
+  
+  /* Mobile typography */
+  h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3 {
+    font-size: 1.2rem !important;
+  }
+  
+  p {
+    font-size: 0.9rem !important;
+  }
+  
+  /* Mobile spacing */
+  .container {
+    padding: 0 1rem;
+  }
+  
+  section {
+    margin: 1.5rem 0 !important;
+  }
+  
+  /* Hero section mobile */
+  .hero-img {
+    margin-bottom: 1rem;
+  }
+  
+  /* Swiper mobile */
+  .swiper {
+    width: 100% !important;
+  }
+  
+  .swiper-slide img {
+    width: 100% !important;
+  }
+  
+  /* Form mobile */
+  #booking-form {
+    gap: 1rem;
+  }
+  
+  #booking-form input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
   .whatsapp-button {
     bottom: 15px;
     right: 15px;
@@ -109,8 +174,39 @@ nav a:focus, nav a:hover {
     height: 48px;
     padding: 10px;
   }
+  
   .whatsapp-button img {
     width: 24px !important;
     height: 24px !important;
+  }
+  
+  #why_us {
+    margin: 2rem 0 !important;
+    padding: 2rem 1rem !important;
+  }
+  
+  #why_us h3 {
+    font-size: 1.5rem !important;
+  }
+  
+  #why_us div[style*="grid-template-columns"] {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+/* Tablet responsive */
+@media (max-width: 1024px) and (min-width: 769px) {
+  nav ul li a {
+    font-size: 0.95rem;
+    padding: 0.4rem 0.8rem;
+  }
+  
+  .container {
+    padding: 0 2rem;
+  }
+  
+  #why_us div[style*="grid-template-columns"] {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 }
