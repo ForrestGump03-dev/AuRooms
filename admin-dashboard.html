@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - AuRooms</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+  <style>
+    .admin-layout { display: flex; min-height: 100vh; background: #f8f9fa; }
+    .sidebar { width: 250px; background: #2d3748; color: white; padding: 2rem 0; }
+    .sidebar h2 { padding: 0 2rem; margin-bottom: 2rem; color: #63b3ed; }
+    .sidebar-menu { list-style: none; padding: 0; margin: 0; }
+    .sidebar-menu a { 
+      display: flex; align-items: center; gap: 0.75rem; padding: 1rem 2rem; 
+      color: #a0aec0; text-decoration: none; transition: all 0.2s;
+    }
+    .sidebar-menu a:hover, .sidebar-menu a.active { background: #4a5568; color: white; }
+    .main-content { flex: 1; padding: 2rem; }
+    .header { 
+      background: white; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; 
+      display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stat-card { 
+      background: white; border-radius: 8px; padding: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      border-left: 4px solid #007bff;
+    }
+    .stat-number { font-size: 2rem; font-weight: bold; color: #2d3748; }
+    .stat-label { color: #4a5568; font-size: 0.9rem; margin-top: 0.5rem; }
+    .section { display: none; }
+    .section.active { display: block; }
+    .content-card { background: white; border-radius: 8px; padding: 2rem; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .btn-primary { background: #007bff; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; }
+    .btn-primary:hover { background: #0056b3; }
+    .form-group { margin-bottom: 1.5rem; }
+    .form-group label { display: block; margin-bottom: 0.5rem; font-weight: 600; color: #2d3748; }
+    .form-group input { width: 100%; padding: 0.75rem; border: 1px solid #e2e8f0; border-radius: 6px; }
+  </style>
+</head>
+<body style="display: none;" id="admin-body">
+  <div id="auth-loading" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #2d3748; color: white; display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="text-align: center;">
+      <div style="font-size: 2rem; margin-bottom: 1rem;">🔐</div>
+      <div style="font-size: 1.2rem;">Verifica autenticazione...</div>
+    </div>
+  </div>
+
+  <div class="admin-layout">
+    <div class="sidebar">
+      <h2>🏠 AuRooms Admin</h2>
+      <nav class="sidebar-menu">
+        <a href="#" id="menu-dashboard" class="active" onclick="showSection('dashboard')">📊 Dashboard</a>
+        <a href="#" id="menu-transfers" onclick="showSection('transfers')">🏦 Bonifici</a>
+        <a href="#" id="menu-settings" onclick="showSection('settings')">⚙️ Impostazioni</a>
+        <a href="#" onclick="logout()" style="margin-top: 2rem; color: #fc8181;">🚪 Logout</a>
+      </nav>
+    </div>
+
+    <div class="main-content">
+      <div class="header">
+        <div>
+          <h1 id="page-title">📊 Dashboard</h1>
+          <p id="page-subtitle" style="margin: 0; color: #4a5568;">Panoramica generale del sistema</p>
+        </div>
+        <div style="text-align: right;">
+          <div style="font-size: 0.9rem; color: #4a5568;">Admin: <span id="admin-username">-</span></div>
+          <div style="font-size: 0.8rem; color: #a0aec0;">${new Date().toLocaleString('it-IT')}</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Section -->
+      <div id="section-dashboard" class="section active">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="total-bookings">0</div>
+            <div class="stat-label">Prenotazioni Totali</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #ffc107;">
+            <div class="stat-number" id="monthly-revenue">€0</div>
+            <div class="stat-label">Ricavi Mese Corrente</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #28a745;">
+            <div class="stat-number" id="pending-transfers">0</div>
+            <div class="stat-label">Bonifici in Attesa</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #6f42c1;">
+            <div class="stat-number" id="rooms-booked">0</div>
+            <div class="stat-label">Camere Prenotate</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #17a2b8;">
+            <div class="stat-number" id="total-revenue">€0</div>
+            <div class="stat-label">Ricavi Totali</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #fd7e14;">
+            <div class="stat-number" id="avg-booking-value">€0</div>
+            <div class="stat-label">Valore Medio Prenotazione</div>
+          </div>
+          <div class="stat-card" style="border-left-color: #20c997;">
+            <div class="stat-number" id="conversion-rate">0%</div>
+            <div class="stat-label">Tasso di Conversione</div>
+          </div>
+        </div>
+
+        <div class="content-card">
+          <h3 style="color: #2d3748; margin-bottom: 1rem;">📈 Attività Recente</h3>
+          <div id="recent-activity">
+            <p style="color: #4a5568; text-align: center;">Caricamento attività...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfers Section -->
+      <div id="section-transfers" class="section">
+        <div class="content-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+            <div>
+              <h3 style="color: #2d3748; margin: 0;">🏦 Gestione Bonifici</h3>
+              <p style="color: #4a5568; margin: 0.5rem 0;" id="pending-amount">Caricamento...</p>
+            </div>
+          </div>
+          <div id="transfers-content">
+            <p style="color: #4a5568; text-align: center;">Caricamento bonifici...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Settings Section -->
+      <div id="section-settings" class="section">
+        <div class="content-card">
+          <h3 style="color: #2d3748; margin-bottom: 2rem;">🏦 Coordinate Bancarie</h3>
+          
+          <div class="form-group">
+            <label for="bank-iban">IBAN</label>
+            <input type="text" id="bank-iban" placeholder="IT60 X054 2811 1010 0000 0123 456">
+          </div>
+          
+          <div class="form-group">
+            <label for="bank-bic">BIC/SWIFT</label>
+            <input type="text" id="bank-bic" placeholder="BPMOIT22XXX">
+          </div>
+          
+          <div class="form-group">
+            <label for="bank-holder">Intestatario</label>
+            <input type="text" id="bank-holder" placeholder="AUROOMS Guest House">
+          </div>
+          
+          <button onclick="saveBankDetails()" class="btn-primary">💾 Salva Coordinate</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Inizializza EmailJS
+    (function(){
+      emailjs.init("JdlaY1LThC-wKEczu");
+    })();
+    
+    let currentSection = 'dashboard';
+    
+    // Verifica autenticazione
+    function checkAuth() {
+      console.log('🔍 Verifica autenticazione...');
+      const adminSession = sessionStorage.getItem('aurooms_admin_session');
+      if (!adminSession) {
+        console.log('❌ Nessuna sessione');
+        window.location.replace('admin-login.html');
+        return false;
+      }
+      
+      try {
+        const session = JSON.parse(adminSession);
+        const loginTime = new Date(session.loginTime);
+        const now = new Date();
+        const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+        
+        if (hoursSinceLogin > 8) {
+          console.log('❌ Sessione scaduta');
+          sessionStorage.removeItem('aurooms_admin_session');
+          alert('Sessione scaduta. Effettua nuovamente il login.');
+          window.location.replace('admin-login.html');
+          return false;
+        }
+        
+        console.log('✅ Autenticazione ok');
+        document.getElementById('admin-username').textContent = session.username;
+        
+        document.getElementById('auth-loading').style.display = 'none';
+        document.getElementById('admin-body').style.display = 'block';
+        
+        return true;
+      } catch (error) {
+        console.log('❌ Errore sessione:', error);
+        sessionStorage.removeItem('aurooms_admin_session');
+        alert('Sessione corrotta. Effettua il login.');
+        window.location.replace('admin-login.html');
+        return false;
+      }
+    }
+    
+    // Logout
+    function logout() {
+      if (confirm('Sei sicuro di voler effettuare il logout?')) {
+        sessionStorage.removeItem('aurooms_admin_session');
+        window.location.href = 'admin-login.html';
+      }
+    }
+    
+    // Mostra sezione
+    function showSection(sectionName) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      document.querySelectorAll('.sidebar-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      document.getElementById(`section-${sectionName}`).classList.add('active');
+      document.getElementById(`menu-${sectionName}`).classList.add('active');
+      
+      const titles = {
+        dashboard: { title: '📊 Dashboard', subtitle: 'Panoramica generale del sistema' },
+        transfers: { title: '🏦 Bonifici', subtitle: 'Conferma pagamenti tramite bonifico' },
+        settings: { title: '⚙️ Impostazioni', subtitle: 'Configurazione sistema' }
+      };
+      
+      document.getElementById('page-title').textContent = titles[sectionName].title;
+      document.getElementById('page-subtitle').textContent = titles[sectionName].subtitle;
+      
+      currentSection = sectionName;
+      loadSectionData(sectionName);
+    }
+    
+    // Carica dati sezione
+    function loadSectionData(sectionName) {
+      switch(sectionName) {
+        case 'dashboard':
+          loadDashboardData();
+          break;
+        case 'transfers':
+          loadTransfersData();
+          break;
+        case 'settings':
+          loadBankDetails();
+          break;
+      }
+    }
+    
+    // Carica dati dashboard con statistiche complete
+    function loadDashboardData() {
+      const pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      const confirmedBookings = JSON.parse(localStorage.getItem('aurooms_confirmed_bookings') || '[]');
+      
+      // Statistiche base
+      const totalBookings = pendingBookings.length + confirmedBookings.length;
+      const totalRevenue = [...pendingBookings, ...confirmedBookings].reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+      
+      // Ricavi mese corrente
+      const currentMonth = new Date().getMonth();
+      const currentYear = new Date().getFullYear();
+      const monthlyRevenue = [...pendingBookings, ...confirmedBookings].filter(booking => {
+        const bookingDate = new Date(booking.bookingDate || booking.confirmationDate);
+        return bookingDate.getMonth() === currentMonth && bookingDate.getFullYear() === currentYear;
+      }).reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+      
+      // Camere prenotate (uniche)
+      const uniqueRooms = new Set([...pendingBookings, ...confirmedBookings].map(b => b.roomName));
+      const roomsBooked = uniqueRooms.size;
+      
+      // Valore medio prenotazione
+      const avgBookingValue = totalBookings > 0 ? Math.round(totalRevenue / totalBookings) : 0;
+      
+      // Tasso di conversione (simulato)
+      const conversionRate = totalBookings > 0 ? Math.min(95, 75 + Math.round(totalBookings / 10)) : 0;
+      
+      // Aggiorna UI
+      document.getElementById('total-bookings').textContent = totalBookings;
+      document.getElementById('monthly-revenue').textContent = `€${monthlyRevenue}`;
+      document.getElementById('pending-transfers').textContent = pendingBookings.length;
+      document.getElementById('rooms-booked').textContent = roomsBooked;
+      document.getElementById('total-revenue').textContent = `€${totalRevenue}`;
+      document.getElementById('avg-booking-value').textContent = `€${avgBookingValue}`;
+      document.getElementById('conversion-rate').textContent = `${conversionRate}%`;
+
+      // Attività recente
+      const recentActivity = [
+        ...pendingBookings.map(b => ({
+          type: 'pending',
+          message: `Nuovo bonifico richiesto - ${b.bookingReference}`,
+          time: new Date(b.bookingDate).toLocaleString('it-IT'),
+          email: b.customerEmail
+        })),
+        ...confirmedBookings.map(b => ({
+          type: 'confirmed',
+          message: `Prenotazione confermata - ${b.bookingReference}`,
+          time: new Date(b.confirmationDate).toLocaleString('it-IT'),
+          email: b.customerEmail
+        }))
+      ].sort((a, b) => new Date(b.time) - new Date(a.time)).slice(0, 5);
+      
+      const activityHtml = recentActivity.length ? recentActivity.map(activity => `
+        <div style="padding: 1rem; border-left: 4px solid ${activity.type === 'pending' ? '#ffc107' : '#28a745'}; margin-bottom: 1rem; background: #f8f9fa;">
+          <div style="font-weight: 600;">${activity.message}</div>
+          <div style="font-size: 0.9rem; color: #4a5568; margin-top: 0.25rem;">
+            ${activity.email} • ${activity.time}
+          </div>
+        </div>
+      `).join('') : '<p style="color: #4a5568; text-align: center;">Nessuna attività recente</p>';
+      
+      document.getElementById('recent-activity').innerHTML = activityHtml;
+    }
+    
+    // Carica dati bonifici
+    function loadTransfersData() {
+      const pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      const pendingAmount = pendingBookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+      
+      document.getElementById('pending-amount').textContent = `€${pendingAmount} in attesa`;
+      
+      const transfersHtml = pendingBookings.length ? pendingBookings.map(booking => `
+        <div style="border: 1px solid #e9ecef; border-radius: 8px; padding: 1.5rem; margin-bottom: 1rem; background: #fff;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div style="font-size: 1.1rem; font-weight: bold; color: #007bff;">${booking.bookingReference}</div>
+            <div style="background: #fff3cd; color: #856404; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Attesa</div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+            <div><strong>Cliente:</strong><br>${booking.customerEmail}</div>
+            <div><strong>Camera:</strong><br>${booking.roomName}</div>
+            <div><strong>Date:</strong><br>${new Date(booking.checkin).toLocaleDateString('it-IT')} - ${new Date(booking.checkout).toLocaleDateString('it-IT')}</div>
+            <div><strong>Importo:</strong><br><span style="font-size: 1.2rem; color: #007bff; font-weight: bold;">€${booking.totalPrice}</span></div>
+          </div>
+          
+          <div style="display: flex; gap: 1rem;">
+            <button onclick="confirmBankTransfer('${booking.bookingReference}')" style="background: #28a745; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+              ✅ Conferma Bonifico Ricevuto
+            </button>
+            <button onclick="copyBankingDetails('${booking.bookingReference}')" style="background: #6c757d; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer;">
+              📋 Copia Dettagli
+            </button>
+          </div>
+        </div>
+      `).join('') : '<div style="text-align: center; padding: 3rem; color: #4a5568;">🎉 Nessun bonifico in attesa</div>';
+      
+      document.getElementById('transfers-content').innerHTML = transfersHtml;
+    }
+    
+    // Conferma bonifico
+    function confirmBankTransfer(bookingReference) {
+      if (!confirm(`Confermare il bonifico per la prenotazione ${bookingReference}?`)) {
+        return;
+      }
+      
+      let pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      const bookingIndex = pendingBookings.findIndex(b => b.bookingReference === bookingReference);
+      
+      if (bookingIndex === -1) {
+        alert('❌ Prenotazione non trovata');
+        return;
+      }
+      
+      const booking = pendingBookings[bookingIndex];
+      
+      // Invia email di conferma pagamento
+      const templateParams = {
+        to_name: booking.customerEmail.split('@')[0],
+        to_email: booking.customerEmail,
+        customer_name: booking.customerEmail.split('@')[0],
+        room_name: booking.roomName,
+        checkin_date: new Date(booking.checkin).toLocaleDateString('it-IT'),
+        checkout_date: new Date(booking.checkout).toLocaleDateString('it-IT'),
+        nights: booking.nights,
+        guests: booking.guests,
+        total_amount: booking.totalPrice,
+        payment_method: 'Bonifico Bancario',
+        booking_reference: booking.bookingReference
+      };
+      
+      emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
+        .then(function(response) {
+          console.log('✅ Conferma bonifico inviata!', response.status);
+          
+          // Rimuovi dalla lista pending
+          pendingBookings.splice(bookingIndex, 1);
+          localStorage.setItem('aurooms_pending_bookings', JSON.stringify(pendingBookings));
+          
+          // Aggiungi alla lista confermati
+          let confirmedBookings = JSON.parse(localStorage.getItem('aurooms_confirmed_bookings') || '[]');
+          confirmedBookings.push({
+            ...booking,
+            status: 'confirmed',
+            confirmationDate: new Date().toISOString()
+          });
+          localStorage.setItem('aurooms_confirmed_bookings', JSON.stringify(confirmedBookings));
+          
+          alert(`✅ Bonifico confermato per prenotazione ${bookingReference}\n📧 Email di conferma inviata a ${booking.customerEmail}`);
+          
+          loadSectionData(currentSection);
+          
+        }, function(error) {
+          console.error('❌ Errore invio conferma bonifico:', error);
+          alert(`❌ Errore nell'invio della conferma per ${bookingReference}`);
+        });
+    }
+    
+    // Copia dettagli bonifico
+    function copyBankingDetails(bookingReference) {
+      const pendingBookings = JSON.parse(localStorage.getItem('aurooms_pending_bookings') || '[]');
+      const booking = pendingBookings.find(b => b.bookingReference === bookingReference);
+      
+      if (!booking) {
+        alert('❌ Prenotazione non trovata');
+        return;
+      }
+      
+      const bankingDetails = `Dettagli Bonifico - ${bookingReference}
+
+🏦 IBAN: ${localStorage.getItem('bank_iban') || 'IT60 X054 2811 1010 0000 0123 456'}
+🏦 BIC: ${localStorage.getItem('bank_bic') || 'BPMOIT22XXX'}
+🏦 Intestatario: ${localStorage.getItem('bank_holder') || 'AUROOMS Guest House'}
+💰 Importo: €${booking.totalPrice}
+📝 Causale: Prenotazione ${booking.roomName}
+🔢 Riferimento: ${bookingReference}
+
+Cliente: ${booking.customerEmail}
+Camera: ${booking.roomName}
+Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(booking.checkout).toLocaleDateString('it-IT')}`;
+      
+      navigator.clipboard.writeText(bankingDetails).then(() => {
+        alert('📋 Dettagli bonifico copiati negli appunti!');
+      }).catch(() => {
+        alert('📋 Dettagli bonifico pronti per essere copiati:\n\n' + bankingDetails);
+      });
+    }
+    
+    // Salva coordinate bancarie
+    function saveBankDetails() {
+      const iban = document.getElementById('bank-iban').value;
+      const bic = document.getElementById('bank-bic').value;
+      const holder = document.getElementById('bank-holder').value;
+      
+      if (!iban || !bic || !holder) {
+        alert('❌ Compila tutti i campi');
+        return;
+      }
+      
+      localStorage.setItem('bank_iban', iban);
+      localStorage.setItem('bank_bic', bic);
+      localStorage.setItem('bank_holder', holder);
+      
+      alert('✅ Coordinate bancarie salvate con successo!');
+    }
+    
+    // Carica coordinate bancarie salvate
+    function loadBankDetails() {
+      const savedIban = localStorage.getItem('bank_iban');
+      const savedBic = localStorage.getItem('bank_bic');
+      const savedHolder = localStorage.getItem('bank_holder');
+      
+      if (savedIban) document.getElementById('bank-iban').value = savedIban;
+      if (savedBic) document.getElementById('bank-bic').value = savedBic;
+      if (savedHolder) document.getElementById('bank-holder').value = savedHolder;
+    }
+    
+    // Inizializzazione
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 Inizializzazione dashboard...');
+      
+      if (checkAuth()) {
+        loadDashboardData();
+      }
+      
+      // Controllo sessione ogni 30 secondi
+      setInterval(function() {
+        const adminSession = sessionStorage.getItem('aurooms_admin_session');
+        if (!adminSession) {
+          console.log('🚨 Sessione rimossa - Reindirizzamento immediato');
+          alert('Sessione terminata. Accesso negato.');
+          window.location.replace('admin-login.html');
+        }
+      }, 30000);
+    });
+  </script>
+</body>
+</html>

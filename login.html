@@ -1,310 +1,303 @@
-
 <!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Accedi - AUROOMS</title>
+  <title>Login - AUROOMS Guest House</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
   <link rel="stylesheet" href="style.css" />
-  <style>
-    .auth-container {
-      max-width: 500px;
-      margin: 2rem auto;
-      padding: 2rem;
-      background: var(--card-background-color);
-      border-radius: 12px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .auth-tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0;
-      margin-bottom: 2rem;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .auth-tab {
-      padding: 1rem;
-      text-align: center;
-      cursor: pointer;
-      background: var(--secondary-background);
-      border: none;
-      transition: all 0.3s ease;
-    }
-    .auth-tab.active {
-      background: var(--primary);
-      color: white;
-    }
-    .auth-form {
-      display: none;
-    }
-    .auth-form.active {
-      display: block;
-    }
-    .social-login {
-      margin: 1.5rem 0;
-      text-align: center;
-    }
-    .social-btn {
-      display: block;
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      background: white;
-      color: #333;
-      text-decoration: none;
-      transition: all 0.3s ease;
-    }
-    .social-btn:hover {
-      background: var(--secondary-background);
-      color: #333;
-    }
-    .divider {
-      text-align: center;
-      margin: 1.5rem 0;
-      position: relative;
-    }
-    .divider::before {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: var(--border-color);
-    }
-    .divider span {
-      background: var(--card-background-color);
-      padding: 0 1rem;
-      color: var(--muted-color);
-    }
-  </style>
 </head>
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
     </ul>
     <ul>
-      <li><a href="index.html">← Torna alla Home</a></li>
+      <li><a href="index.html#rooms" data-lang="it">Camere</a></li>
+      <li><a href="index.html#rooms" class="hidden" data-lang="en">Rooms</a></li>
+      <li><a href="rooms.html" role="button" data-lang="it">Prenota</a></li>
+      <li><a href="rooms.html" role="button" class="hidden" data-lang="en">Book Now</a></li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
     </ul>
   </nav>
 
   <main class="container">
-    <div class="auth-container">
-      <hgroup style="text-align: center; margin-bottom: 2rem;">
-        <h2>Accedi al tuo account</h2>
-        <h3>Gestisci le tue prenotazioni e molto altro</h3>
-      </hgroup>
+    <section style="max-width: 500px; margin: 2rem auto; padding: 2rem;">
+      <div class="auth-container">
+        <!-- Login Form -->
+        <div id="login-form" class="auth-form">
+          <hgroup style="text-align: center; margin-bottom: 2rem;">
+            <h2 data-lang="it">Accedi al tuo Account</h2>
+            <h2 class="hidden" data-lang="en">Login to Your Account</h2>
+            <p data-lang="it">Inserisci le tue credenziali per continuare</p>
+            <p class="hidden" data-lang="en">Enter your credentials to continue</p>
+          </hgroup>
 
-      <!-- Auth Tabs -->
-      <div class="auth-tabs">
-        <button class="auth-tab active" onclick="switchTab('login')">Accedi</button>
-        <button class="auth-tab" onclick="switchTab('register')">Registrati</button>
-      </div>
+          <form id="loginForm" onsubmit="handleLogin(event)">
+            <div class="form-group">
+              <label for="loginEmail" data-lang="it">Email</label>
+              <label for="loginEmail" class="hidden" data-lang="en">Email</label>
+              <input type="email" id="loginEmail" name="email" required 
+                     placeholder="esempio@email.com" />
+            </div>
 
-      <!-- Login Form -->
-      <div id="login-form" class="auth-form active">
-        <form onsubmit="handleLogin(event)">
-          <input type="email" placeholder="Email" required />
-          <input type="password" placeholder="Password" required />
-          
-          <label>
-            <input type="checkbox" />
-            Ricordami
-          </label>
+            <div class="form-group">
+              <label for="loginPassword" data-lang="it">Password</label>
+              <label for="loginPassword" class="hidden" data-lang="en">Password</label>
+              <input type="password" id="loginPassword" name="password" required 
+                     placeholder="••••••••" />
+            </div>
 
-          <button type="submit" style="width: 100%;">Accedi</button>
-        </form>
+            <div id="login-error" class="error-message" style="display: none;"></div>
 
-        <div style="text-align: center; margin-top: 1rem;">
-          <a href="#" onclick="showPasswordReset()" style="color: var(--primary);">
-            Password dimenticata?
-          </a>
-        </div>
-      </div>
+            <button type="submit" class="primary" style="width: 100%; margin-top: 1rem;">
+              <span data-lang="it">Accedi</span>
+              <span class="hidden" data-lang="en">Login</span>
+            </button>
+          </form>
 
-      <!-- Register Form -->
-      <div id="register-form" class="auth-form">
-        <form onsubmit="handleRegister(event)">
-          <div class="grid">
-            <input type="text" placeholder="Nome" required />
-            <input type="text" placeholder="Cognome" required />
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <p data-lang="it">Non hai un account? 
+              <a href="#" onclick="showRegisterForm()" style="text-decoration: underline;">Registrati</a>
+            </p>
+            <p class="hidden" data-lang="en">Don't have an account? 
+              <a href="#" onclick="showRegisterForm()" style="text-decoration: underline;">Register</a>
+            </p>
           </div>
-          
-          <input type="email" placeholder="Email" required />
-          <input type="tel" placeholder="Telefono" required />
-          <input type="password" placeholder="Password (min. 8 caratteri)" required minlength="8" />
-          <input type="password" placeholder="Conferma Password" required />
-          
-          <div class="grid">
-            <input type="date" placeholder="Data di nascita" required />
-            <input type="text" placeholder="Cittadinanza" required />
-          </div>
-
-          <label>
-            <input type="checkbox" required />
-            Accetto i <a href="#" target="_blank">Termini e Condizioni</a>
-          </label>
-
-          <label>
-            <input type="checkbox" required />
-            Accetto l'<a href="#" target="_blank">Informativa Privacy</a>
-          </label>
-
-          <label>
-            <input type="checkbox" />
-            Desidero ricevere offerte e aggiornamenti via email
-          </label>
-
-          <button type="submit" style="width: 100%;">Registrati</button>
-        </form>
-      </div>
-
-      <!-- Social Login -->
-      <div class="social-login">
-        <div class="divider">
-          <span>oppure</span>
         </div>
 
-        <a href="#" class="social-btn" onclick="socialLogin('google')">
-          🔍 Continua con Google
-        </a>
-        
-        <a href="#" class="social-btn" onclick="socialLogin('facebook')">
-          📘 Continua con Facebook
-        </a>
-      </div>
+        <!-- Register Form -->
+        <div id="register-form" class="auth-form" style="display: none;">
+          <hgroup style="text-align: center; margin-bottom: 2rem;">
+            <h2 data-lang="it">Crea un Nuovo Account</h2>
+            <h2 class="hidden" data-lang="en">Create a New Account</h2>
+            <p data-lang="it">Registrati per prenotare le tue camere</p>
+            <p class="hidden" data-lang="en">Register to book your rooms</p>
+          </hgroup>
 
-      <!-- Benefits -->
-      <div style="margin-top: 2rem; padding: 1rem; background: var(--primary-background); border-radius: 8px;">
-        <h5>Perché creare un account?</h5>
-        <ul style="margin: 0; padding-left: 1.2rem;">
-          <li>✓ Gestisci tutte le tue prenotazioni in un posto</li>
-          <li>✓ Check-in più veloce con dati salvati</li>
-          <li>✓ Accesso esclusivo a offerte speciali</li>
-          <li>✓ Programma fedeltà con sconti progressivi</li>
-          <li>✓ Assistenza prioritaria</li>
-        </ul>
+          <form id="registerForm" onsubmit="handleRegister(event)">
+            <div class="form-group">
+              <label for="registerFirstName" data-lang="it">Nome</label>
+              <label for="registerFirstName" class="hidden" data-lang="en">First Name</label>
+              <input type="text" id="registerFirstName" name="firstName" required 
+                     placeholder="Mario" />
+            </div>
+
+            <div class="form-group">
+              <label for="registerLastName" data-lang="it">Cognome</label>
+              <label for="registerLastName" class="hidden" data-lang="en">Last Name</label>
+              <input type="text" id="registerLastName" name="lastName" required 
+                     placeholder="Rossi" />
+            </div>
+
+            <div class="form-group">
+              <label for="registerEmail" data-lang="it">Email</label>
+              <label for="registerEmail" class="hidden" data-lang="en">Email</label>
+              <input type="email" id="registerEmail" name="email" required 
+                     placeholder="esempio@email.com" />
+            </div>
+
+            <div class="form-group">
+              <label for="registerPhone" data-lang="it">Telefono</label>
+              <label for="registerPhone" class="hidden" data-lang="en">Phone</label>
+              <input type="tel" id="registerPhone" name="phone" required 
+                     placeholder="+39 123 456 7890" />
+            </div>
+
+            <div class="form-group">
+              <label for="registerPassword" data-lang="it">Password</label>
+              <label for="registerPassword" class="hidden" data-lang="en">Password</label>
+              <input type="password" id="registerPassword" name="password" required 
+                     placeholder="••••••••" minlength="6" />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword" data-lang="it">Conferma Password</label>
+              <label for="confirmPassword" class="hidden" data-lang="en">Confirm Password</label>
+              <input type="password" id="confirmPassword" name="confirmPassword" required 
+                     placeholder="••••••••" minlength="6" />
+            </div>
+
+            <div id="register-error" class="error-message" style="display: none;"></div>
+
+            <button type="submit" class="primary" style="width: 100%; margin-top: 1rem;">
+              <span data-lang="it">Registrati</span>
+              <span class="hidden" data-lang="en">Register</span>
+            </button>
+          </form>
+
+          <div style="text-align: center; margin-top: 1.5rem;">
+            <p data-lang="it">Hai già un account? 
+              <a href="#" onclick="showLoginForm()" style="text-decoration: underline;">Accedi</a>
+            </p>
+            <p class="hidden" data-lang="en">Already have an account? 
+              <a href="#" onclick="showLoginForm()" style="text-decoration: underline;">Login</a>
+            </p>
+          </div>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="success-message" style="display: none;">
+          <div style="text-align: center; padding: 2rem;">
+            <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+            <h3 data-lang="it">Accesso Effettuato!</h3>
+            <h3 class="hidden" data-lang="en">Login Successful!</h3>
+            <p data-lang="it">Reindirizzamento in corso...</p>
+            <p class="hidden" data-lang="en">Redirecting...</p>
+          </div>
+        </div>
       </div>
-    </div>
+    </section>
   </main>
 
-  <!-- Password Reset Modal -->
-  <dialog id="password-reset-modal">
-    <article>
-      <header>
-        <a href="#close" aria-label="Close" class="close" onclick="closePasswordReset()"></a>
-        <p><strong>Recupera Password</strong></p>
-      </header>
-      <form onsubmit="handlePasswordReset(event)">
-        <p>Inserisci la tua email per ricevere il link di reset della password.</p>
-        <input type="email" placeholder="La tua email" required />
-        <button type="submit">Invia Link</button>
-      </form>
-    </article>
-  </dialog>
+  <!-- WhatsApp Floating Button -->
+  <a class="whatsapp-button" href="https://wa.me/393758843175" target="_blank" title="Contattaci su WhatsApp">
+    <img src="./attached_assets/whatsapplogo_1753691477533.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+  </a>
 
   <script src="script.js"></script>
   <script>
-    function switchTab(tab) {
-      // Update tab buttons
-      document.querySelectorAll('.auth-tab').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
-      
-      // Update forms
-      document.querySelectorAll('.auth-form').forEach(form => form.classList.remove('active'));
-      document.getElementById(tab + '-form').classList.add('active');
-    }
-
+    // Authentication Functions
     function handleLogin(event) {
       event.preventDefault();
       
-      // In production, this would authenticate with backend
-      const email = event.target.querySelector('input[type="email"]').value;
-      const password = event.target.querySelector('input[type="password"]').value;
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const errorDiv = document.getElementById('login-error');
       
-      // Simulate login
-      if (email && password) {
-        const userData = {
-          nome: email.split('@')[0],
-          email: email
-        };
+      // Simulated authentication
+      const users = JSON.parse(localStorage.getItem('aurooms_users') || '[]');
+      const user = users.find(u => u.email === email && u.password === password);
+      
+      if (user) {
+        // Login successful
+        localStorage.setItem('aurooms_current_user', JSON.stringify(user));
+        showSuccessMessage();
         
-        localStorage.setItem('userLoggedIn', 'true');
-        localStorage.setItem('userData', JSON.stringify(userData));
-        
-        alert('Login effettuato con successo!');
-        
-        // Redirect to dashboard or original page
-        const redirectTo = new URLSearchParams(window.location.search).get('redirect') || 'dashboard.html';
-        window.location.href = redirectTo;
+        // Redirect after 2 seconds
+        setTimeout(() => {
+          const pendingBooking = sessionStorage.getItem('pending_booking');
+          if (pendingBooking) {
+            window.location.href = 'pagamento.html';
+          } else {
+            window.location.href = 'rooms.html';
+          }
+        }, 2000);
+      } else {
+        errorDiv.textContent = getCurrentLanguage() === 'it' ? 
+          'Email o password non corretti' : 'Invalid email or password';
+        errorDiv.style.display = 'block';
       }
     }
-
+    
     function handleRegister(event) {
       event.preventDefault();
       
-      const formData = new FormData(event.target);
-      const inputs = event.target.querySelectorAll('input');
+      const firstName = document.getElementById('registerFirstName').value;
+      const lastName = document.getElementById('registerLastName').value;
+      const email = document.getElementById('registerEmail').value;
+      const phone = document.getElementById('registerPhone').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorDiv = document.getElementById('register-error');
       
-      // Basic validation
-      const password = inputs[4].value;
-      const confirmPassword = inputs[5].value;
-      
+      // Validation
       if (password !== confirmPassword) {
-        alert('Le password non coincidono');
+        errorDiv.textContent = getCurrentLanguage() === 'it' ? 
+          'Le password non coincidono' : 'Passwords do not match';
+        errorDiv.style.display = 'block';
         return;
       }
       
-      // Simulate registration
-      const userData = {
-        nome: inputs[0].value,
-        cognome: inputs[1].value,
-        email: inputs[2].value,
-        telefono: inputs[3].value
+      // Check if user already exists
+      const users = JSON.parse(localStorage.getItem('aurooms_users') || '[]');
+      if (users.find(u => u.email === email)) {
+        errorDiv.textContent = getCurrentLanguage() === 'it' ? 
+          'Email già registrata' : 'Email already registered';
+        errorDiv.style.display = 'block';
+        return;
+      }
+      
+      // Create new user with separate first and last name
+      const newUser = { 
+        firstName, 
+        lastName, 
+        name: `${firstName} ${lastName}`, // Keep full name for compatibility
+        email, 
+        phone, 
+        password 
       };
+      users.push(newUser);
+      localStorage.setItem('aurooms_users', JSON.stringify(users));
+      localStorage.setItem('aurooms_current_user', JSON.stringify(newUser));
       
-      localStorage.setItem('userLoggedIn', 'true');
-      localStorage.setItem('userData', JSON.stringify(userData));
+      showSuccessMessage();
       
-      alert('Registrazione completata con successo! Benvenuto in AUROOMS!');
-      
-      // Send welcome email (simulate)
-      console.log('Welcome email would be sent to:', userData.email);
-      
-      window.location.href = 'dashboard.html';
+      // Redirect after 2 seconds
+      setTimeout(() => {
+        const pendingBooking = sessionStorage.getItem('pending_booking');
+        if (pendingBooking) {
+          window.location.href = 'pagamento.html';
+        } else {
+          window.location.href = 'rooms.html';
+        }
+      }, 2000);
     }
-
-    function socialLogin(provider) {
-      alert(`Login con ${provider} in sviluppo. Per ora usa email e password.`);
-      // In production, integrate with OAuth providers
+    
+    function showLoginForm() {
+      document.getElementById('login-form').style.display = 'block';
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('register-error').style.display = 'none';
     }
-
-    function showPasswordReset() {
-      document.getElementById('password-reset-modal').showModal();
+    
+    function showRegisterForm() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'block';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('register-error').style.display = 'none';
     }
-
-    function closePasswordReset() {
-      document.getElementById('password-reset-modal').close();
+    
+    function showSuccessMessage() {
+      document.getElementById('login-form').style.display = 'none';
+      document.getElementById('register-form').style.display = 'none';
+      document.getElementById('success-message').style.display = 'block';
     }
-
-    function handlePasswordReset(event) {
-      event.preventDefault();
-      const email = event.target.querySelector('input[type="email"]').value;
-      
-      // Simulate password reset
-      alert(`Link di reset inviato a ${email}. Controlla la tua casella email.`);
-      closePasswordReset();
+    
+    function getCurrentLanguage() {
+      return localStorage.getItem('aurooms_language') || 'it';
     }
-
-    // Auto-focus on email field
+    
+    function switchLang(lang) {
+      localStorage.setItem('aurooms_language', lang);
+      document.querySelectorAll('[data-lang]').forEach(el => {
+        if (el.getAttribute('data-lang') === lang) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+    }
+    
+    // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
-      document.querySelector('#login-form input[type="email"]').focus();
+      const currentLang = getCurrentLanguage();
+      switchLang(currentLang);
+      
+      // Check if user is already logged in
+      const currentUser = localStorage.getItem('aurooms_current_user');
+      if (currentUser) {
+        // User already logged in, redirect to booking flow
+        const pendingBooking = sessionStorage.getItem('pending_booking');
+        if (pendingBooking) {
+          window.location.href = 'pagamento.html';
+        } else {
+          window.location.href = 'rooms.html';
+        }
+      }
     });
   </script>
 </body>

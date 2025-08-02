@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8" />
@@ -8,19 +8,46 @@
   <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Responsive navigation senza hamburger */
+    @media (max-width: 768px) {
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem;
+      }
+      
+      nav ul li {
+        margin: 0.25rem;
+      }
+      
+      .lang-toggle {
+        order: -1;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+      }
+      
+      nav ul li a[role="button"] {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
 </head>
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
     </ul>
     <ul>
       <li><a href="#rooms" data-lang="it">Camere</a></li>
       <li><a href="#rooms" class="hidden" data-lang="en">Rooms</a></li>
-      <li><a href="login.html" data-lang="it">Accedi</a></li>
-      <li><a href="login.html" class="hidden" data-lang="en">Login</a></li>
-      <li><a href="rooms.html" role="button" data-lang="it">Prenota</a></li>
-      <li><a href="rooms.html" role="button" class="hidden" data-lang="en">Book Now</a></li>
+      <li class="auth-links">
+        <!-- Will be populated by JavaScript -->
+      </li>
+      <li><a href="#booking" role="button" data-lang="it">Prenota</a></li>
+      <li><a href="#booking" role="button" class="hidden" data-lang="en">Book Now</a></li>
       <li class="lang-toggle">
         <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
         <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
@@ -29,24 +56,23 @@
   </nav>
 
   <main class="container">
-    <div class="grid">
-      <section data-aos="fade-up">
-        <hgroup>
-          <h2 data-lang="it">Benvenuti da AUROOMS</h2>
-          <h2 class="hidden" data-lang="en">Welcome to AUROOMS</h2>
-          <h3 data-lang="it">Guest House a Cinisi, vicino Palermo</h3>
-          <h3 class="hidden" data-lang="en">Guest House in Cinisi, near Palermo</h3>
-        </hgroup>
-        <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
-        <div style="text-align: center; margin-top: 2rem;">
-          <a href="rooms.html" role="button" data-lang="it">PRENOTA ORA</a>
-          <a href="rooms.html" role="button" class="hidden" data-lang="en">BOOK NOW</a>
-        </div>
-      </section>
-      </main>
-      <section id="rooms" data-aos="fade-up">
-        <h3 style="text-align: center;" data-lang="it">Le Camere</h3>
-        <h3 style="text-align: center;" class="hidden" data-lang="en">Our Rooms</h3>
+    <section data-aos="fade-up">
+      <hgroup>
+        <h2 data-lang="it">Benvenuti da AUROOMS</h2>
+        <h2 class="hidden" data-lang="en">Welcome to AUROOMS</h2>
+        <h3 data-lang="it">Guest House a Cinisi, vicino Palermo</h3>
+        <h3 class="hidden" data-lang="en">Guest House in Cinisi, near Palermo</h3>
+      </hgroup>
+      <img src="https://images.unsplash.com/photo-1507089947368-19c1da9775ae?auto=format&fit=crop&w=1200&q=80" alt="AUROOMS" class="hero-img" />
+      <div style="text-align: center; margin-top: 2rem;">
+        <a href="#booking" role="button" data-lang="it">PRENOTA ORA</a>
+        <a href="#booking" role="button" class="hidden" data-lang="en">BOOK NOW</a>
+      </div>
+    </section>
+      
+    <section id="rooms" data-aos="fade-up">
+      <h3 style="text-align: center;" data-lang="it">Le Camere</h3>
+      <h3 style="text-align: center;" class="hidden" data-lang="en">Our Rooms</h3>
         <p style="text-align: center;" data-lang="it">Camere moderne e confortevoli per un soggiorno perfetto in Sicilia.</p>
         <p style="text-align: center;" class="hidden" data-lang="en">Modern and comfortable rooms for a perfect stay in Sicily.</p>
         <div style="text-align: center; margin-top: 2rem;">
@@ -58,8 +84,8 @@
           </div>
         </div>
         <div style="text-align: center; margin-top: 1.5rem;">
-          <a href="rooms.html" role="button" class="secondary" data-lang="it">Scopri le nostre camere</a>
-          <a href="rooms.html" role="button" class="secondary hidden" data-lang="en">Discover our rooms</a>
+          <a href="#booking" role="button" class="secondary" data-lang="it">Scopri le nostre camere</a>
+          <a href="#booking" role="button" class="secondary hidden" data-lang="en">Discover our rooms</a>
         </div>
       </section>
 
@@ -99,46 +125,241 @@
         </div>
       </section>
 
-  
-
-  <section class="container" data-aos="fade-up" style="text-align: center; margin-top: 2rem;">
-    <h3 data-lang="it">Ci trovi anche su</h3>
-    <h3 class="hidden" data-lang="en">Also available on</h3>
-    <a href="https://www.booking.com/Share-hZPEGQZ" target="_blank" style="margin: 20px; display: inline-block;">Booking</a>
-    <a href="https://www.airbnb.it/users/show/470222530" target="_blank" style="margin: 20px; display: inline-block;">Airbnb</a>
+  <!-- Sezione Recensioni -->
+  <section class="reviews-section" data-aos="fade-up" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 4rem 2rem; border-radius: 16px; margin: 4rem 0;">
+    <div class="container">
+      <hgroup style="text-align: center; margin-bottom: 3rem;">
+        <h2 data-lang="it">⭐ Cosa Dicono i Nostri Ospiti</h2>
+        <h2 class="hidden" data-lang="en">⭐ What Our Guests Say</h2>
+        <p data-lang="it">Le recensioni dei nostri ospiti sono la nostra migliore pubblicità</p>
+        <p class="hidden" data-lang="en">Our guests' reviews are our best advertising</p>
+      </hgroup>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2rem;">
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+            <div style="background: #007bff; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">MR</div>
+            <div>
+              <h4 style="margin: 0;">Marco & Rita</h4>
+              <div style="color: #ffd700;">⭐⭐⭐⭐⭐</div>
+            </div>
+          </div>
+          <p data-lang="it">"Soggiorno perfetto! La camera era pulitissima e la colazione siciliana eccezionale. I proprietari sono stati molto disponibili. Consigliatissimo!"</p>
+          <p class="hidden" data-lang="en">"Perfect stay! The room was very clean and the Sicilian breakfast exceptional. The owners were very helpful. Highly recommended!"</p>
+        </div>
+        
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+            <div style="background: #28a745; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">AF</div>
+            <div>
+              <h4 style="margin: 0;">Anna & Family</h4>
+              <div style="color: #ffd700;">⭐⭐⭐⭐⭐</div>
+            </div>
+          </div>
+          <p data-lang="it">"Ideale per famiglie! I bambini si sono divertiti moltissimo e noi abbiamo potuto rilassarci. Posizione strategica per visitare la Sicilia."</p>
+          <p class="hidden" data-lang="en">"Ideal for families! The children had a great time and we were able to relax. Strategic location to visit Sicily."</p>
+        </div>
+        
+        <div style="background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+            <div style="background: #dc3545; color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; margin-right: 1rem;">JD</div>
+            <div>
+              <h4 style="margin: 0;">John & David</h4>
+              <div style="color: #ffd700;">⭐⭐⭐⭐⭐</div>
+            </div>
+          </div>
+          <p data-lang="it">"Esperienza fantastica! Camere comode, staff gentilissimo e ottima posizione. Torneremo sicuramente!"</p>
+          <p class="hidden" data-lang="en">"Fantastic experience! Comfortable rooms, very kind staff and great location. We will definitely be back!"</p>
+        </div>
+      </div>
+    </div>
   </section>
 
-  <section class="container" data-aos="fade-up" style="margin-top: 2rem;">
-    <h3 data-lang="it">Cosa dicono i nostri ospiti</h3>
-    <h3 class="hidden" data-lang="en">What our guests say</h3>
-    <blockquote>"Esperienza fantastica! A due passi dall'aeroporto e camere super pulite." – Maria R.</blockquote>
-    <blockquote>"Clean, cozy and the perfect location to explore western Sicily!" – John T.</blockquote>
+  <!-- Sezione FAQ -->
+  <section class="faq-section" data-aos="fade-up" style="background: white; padding: 4rem 2rem; border-radius: 16px; margin: 4rem 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+    <div class="container">
+      <hgroup style="text-align: center; margin-bottom: 3rem;">
+        <h2 data-lang="it">❓ Domande Frequenti</h2>
+        <h2 class="hidden" data-lang="en">❓ Frequently Asked Questions</h2>
+        <p data-lang="it">Trova le risposte alle domande più comuni</p>
+        <p class="hidden" data-lang="en">Find answers to the most common questions</p>
+      </hgroup>
+      
+      <div style="max-width: 800px; margin: 0 auto;">
+        <details style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+          <summary style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="it">🕐 Quali sono gli orari di check-in e check-out?</summary>
+          <summary class="hidden" style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="en">🕐 What are the check-in and check-out times?</summary>
+          <p data-lang="it">Check-in dalle 15:00 alle 20:00, check-out entro le 11:00. Orari flessibili su richiesta.</p>
+          <p class="hidden" data-lang="en">Check-in from 3:00 PM to 8:00 PM, check-out by 11:00 AM. Flexible times on request.</p>
+        </details>
+        
+        <details style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+          <summary style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="it">🚗 È disponibile il parcheggio?</summary>
+          <summary class="hidden" style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="en">🚗 Is parking available?</summary>
+          <p data-lang="it">Sì, abbiamo un parcheggio privato gratuito disponibile per tutti gli ospiti.</p>
+          <p class="hidden" data-lang="en">Yes, we have free private parking available for all guests.</p>
+        </details>
+        
+        <details style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+          <summary style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="it">🍳 La colazione è inclusa?</summary>
+          <summary class="hidden" style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="en">🍳 Is breakfast included?</summary>
+          <p data-lang="it">Sì, la colazione siciliana è inclusa nel prezzo con prodotti locali e fatti in casa.</p>
+          <p class="hidden" data-lang="en">Yes, Sicilian breakfast is included with local and homemade products.</p>
+        </details>
+        
+        <details style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+          <summary style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="it">🐕 Accettate animali domestici?</summary>
+          <summary class="hidden" style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="en">🐕 Do you accept pets?</summary>
+          <p data-lang="it">Sì, accettiamo animali domestici piccoli con un supplemento di €10/notte. Contattaci prima della prenotazione.</p>
+          <p class="hidden" data-lang="en">Yes, we accept small pets with a supplement of €10/night. Contact us before booking.</p>
+        </details>
+        
+        <details style="margin-bottom: 1.5rem; border: 1px solid #e9ecef; border-radius: 8px; padding: 1rem;">
+          <summary style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="it">❌ Posso cancellare la prenotazione?</summary>
+          <summary class="hidden" style="font-weight: bold; cursor: pointer; padding: 0.5rem 0;" data-lang="en">❌ Can I cancel my reservation?</summary>
+          <p data-lang="it">Cancellazione gratuita fino a 24 ore prima dell'arrivo. Per modifiche dell'ultimo minuto, contattaci.</p>
+          <p class="hidden" data-lang="en">Free cancellation up to 24 hours before arrival. For last-minute changes, contact us.</p>
+        </details>
+      </div>
+    </div>
   </section>
 
   <section id="booking" aria-label="Prenotazione" data-aos="fade-up">
     <div class="container">
       <article>
         <hgroup>
-          <h2 data-lang="it">Prenota Ora</h2>
-          <h2 class="hidden" data-lang="en">Book Now</h2>
-          <h3 data-lang="it">Contattaci su WhatsApp per verificare la disponibilità</h3>
-          <h3 class="hidden" data-lang="en">Contact us on WhatsApp to check availability</h3>
+          <h2 data-lang="it">Verifica Disponibilità</h2>
+          <h2 class="hidden" data-lang="en">Check Availability</h2>
+          <h3 data-lang="it">Seleziona le date del tuo soggiorno per vedere camere e prezzi</h3>
+          <h3 class="hidden" data-lang="en">Select your stay dates to see rooms and prices</h3>
         </hgroup>
-        <form class="grid" id="booking-form">
-          <input type="text" id="nome" placeholder="Nome / Name" required />
-          <input type="date" id="checkin" required />
-          <input type="date" id="checkout" required />
-          <button type="submit">Procedi</button>
-        </form>
+        
+        <!-- Booking Widget Migliorato -->
+        <div class="booking-widget">
+          <form class="booking-form" id="booking-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="checkin" data-lang="it">Check-in</label>
+                <label for="checkin" class="hidden" data-lang="en">Check-in</label>
+                <input type="date" id="checkin" required />
+              </div>
+              <div class="form-group">
+                <label for="checkout" data-lang="it">Check-out</label>
+                <label for="checkout" class="hidden" data-lang="en">Check-out</label>
+                <input type="date" id="checkout" required />
+              </div>
+              <div class="form-group">
+                <label for="guests" data-lang="it">Ospiti</label>
+                <label for="guests" class="hidden" data-lang="en">Guests</label>
+                <select id="guests" required>
+                  <option value="1">1 ospite</option>
+                  <option value="2" selected>2 ospiti</option>
+                  <option value="3">3 ospiti</option>
+                  <option value="4">4 ospiti</option>
+                </select>
+              </div>
+            </div>
+            <button type="submit" class="search-btn" data-lang="it">🔍 Cerca Disponibilità</button>
+            <button type="submit" class="search-btn hidden" data-lang="en">🔍 Search Availability</button>
+          </form>
+        </div>
+
+        <!-- Results Section -->
+        <div id="search-results" class="search-results hidden">
+          <h3 data-lang="it">Camere Disponibili</h3>
+          <h3 class="hidden" data-lang="en">Available Rooms</h3>
+          <div id="rooms-list" class="rooms-list">
+            <!-- Le camere verranno generate dinamicamente -->
+          </div>
+        </div>
+
+        <!-- Fallback WhatsApp -->
+        <div class="whatsapp-fallback">
+          <p data-lang="it">Oppure contattaci direttamente su WhatsApp</p>
+          <p class="hidden" data-lang="en">Or contact us directly on WhatsApp</p>
+          <a href="https://wa.me/393758843175" class="whatsapp-link" target="_blank">
+            📱 WhatsApp
+          </a>
+        </div>
       </article>
     </div>
   </section>
 
-  <footer class="container" data-aos="fade-up" style="margin-bottom: 80px;">
-    <small>
-      <strong>Telefono:</strong> <a href="tel:+393758843175">+39 375 884 3175</a><br>
-      <a href="#">Privacy</a> • <a href="#">Contatti</a>
-    </small>
+  <!-- Sezione Link Esterni -->
+  <section class="container" data-aos="fade-up" style="text-align: center; margin: 4rem 0; padding: 3rem 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+    <div style="margin-bottom: 2rem;">
+      <h3 data-lang="it" style="color: #2d3748; font-size: 1.8rem; margin-bottom: 1rem;">🌐 Ci Trovi Anche Su</h3>
+      <h3 class="hidden" data-lang="en" style="color: #2d3748; font-size: 1.8rem; margin-bottom: 1rem;">🌐 Also Available On</h3>
+      <p data-lang="it" style="color: #6c757d; font-size: 1.1rem;">Prenota la tua camera attraverso le principali piattaforme di booking</p>
+      <p class="hidden" data-lang="en" style="color: #6c757d; font-size: 1.1rem;">Book your room through the main booking platforms</p>
+    </div>
+    
+    <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap;">
+      <a href="https://www.booking.com/Share-hZPEGQZ" target="_blank" style="background: #003580; color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease; box-shadow: 0 4px 15px rgba(0,53,128,0.3);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+        🏨 Booking.com
+      </a>
+      <a href="https://www.airbnb.it/users/show/470222530" target="_blank" style="background: #ff5a5f; color: white; padding: 1rem 2rem; border-radius: 12px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 0.5rem; transition: transform 0.3s ease; box-shadow: 0 4px 15px rgba(255,90,95,0.3);" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform='translateY(0)'">
+        🏠 Airbnb
+      </a>
+    </div>
+  </section>
+
+  <footer class="container" data-aos="fade-up" style="margin-bottom: 80px; background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%); color: white; padding: 3rem 2rem; border-radius: 16px; margin-top: 4rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-bottom: 2rem;">
+      <div>
+        <h4 style="color: #007bff; margin-bottom: 1rem;">🏨 AUROOMS Guest House</h4>
+        <p style="margin-bottom: 1rem;" data-lang="it">Il tuo rifugio di comfort e tranquillità nel cuore della Sicilia. Esperienze autentiche e ospitalità genuina.</p>
+        <p class="hidden" style="margin-bottom: 1rem;" data-lang="en">Your refuge of comfort and tranquility in the heart of Sicily. Authentic experiences and genuine hospitality.</p>
+        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+          <a href="https://wa.me/393758843175" style="background: #25d366; color: white; padding: 0.5rem; border-radius: 50%; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">📱</a>
+          <a href="tel:+393758843175" style="background: #007bff; color: white; padding: 0.5rem; border-radius: 50%; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">📞</a>
+          <a href="mailto:info@aurooms.it" style="background: #dc3545; color: white; padding: 0.5rem; border-radius: 50%; text-decoration: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px;">📧</a>
+        </div>
+      </div>
+      
+      <div>
+        <h4 style="color: #007bff; margin-bottom: 1rem;" data-lang="it">📍 Contatti</h4>
+        <h4 class="hidden" style="color: #007bff; margin-bottom: 1rem;" data-lang="en">📍 Contacts</h4>
+        <p style="margin-bottom: 0.5rem;"><strong data-lang="it">Telefono:</strong><strong class="hidden" data-lang="en">Phone:</strong> <a href="tel:+393758843175" style="color: #007bff;">+39 375 884 3175</a></p>
+        <p style="margin-bottom: 0.5rem;"><strong data-lang="it">Email:</strong><strong class="hidden" data-lang="en">Email:</strong> <a href="mailto:info@aurooms.it" style="color: #007bff;">info@aurooms.it</a></p>
+        <p style="margin-bottom: 0.5rem;"><strong data-lang="it">Indirizzo:</strong><strong class="hidden" data-lang="en">Address:</strong> Cinisi (PA), Sicilia</p>
+        <p style="margin-bottom: 0.5rem;"><strong data-lang="it">Check-in:</strong><strong class="hidden" data-lang="en">Check-in:</strong> 15:00-20:00</p>
+        <p><strong data-lang="it">Check-out:</strong><strong class="hidden" data-lang="en">Check-out:</strong> 11:00</p>
+      </div>
+      
+      <div>
+        <h4 style="color: #007bff; margin-bottom: 1rem;" data-lang="it">🔗 Link Utili</h4>
+        <h4 class="hidden" style="color: #007bff; margin-bottom: 1rem;" data-lang="en">🔗 Useful Links</h4>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #007bff; text-decoration: none;">🏠 Home</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#rooms" style="color: #007bff; text-decoration: none;">🛏️ <span data-lang="it">Camere</span><span class="hidden" data-lang="en">Rooms</span></a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="#booking" style="color: #007bff; text-decoration: none;">📅 <span data-lang="it">Prenota</span><span class="hidden" data-lang="en">Book</span></a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="https://wa.me/393758843175" style="color: #007bff; text-decoration: none;">💬 WhatsApp</a></li>
+          <li style="margin-bottom: 0.5rem;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
+        </ul>
+      </div>
+      
+      <div>
+        <h4 style="color: #007bff; margin-bottom: 1rem;" data-lang="it">🌟 Perché Sceglierci</h4>
+        <h4 class="hidden" style="color: #007bff; margin-bottom: 1rem;" data-lang="en">🌟 Why Choose Us</h4>
+        <ul style="list-style: none; padding: 0; font-size: 0.9rem;">
+          <li style="margin-bottom: 0.5rem;">✅ <span data-lang="it">Colazione inclusa</span><span class="hidden" data-lang="en">Breakfast included</span></li>
+          <li style="margin-bottom: 0.5rem;">✅ <span data-lang="it">Parcheggio gratuito</span><span class="hidden" data-lang="en">Free parking</span></li>
+          <li style="margin-bottom: 0.5rem;">✅ <span data-lang="it">Wi-Fi veloce</span><span class="hidden" data-lang="en">Fast Wi-Fi</span></li>
+          <li style="margin-bottom: 0.5rem;">✅ <span data-lang="it">Assistenza 24/7</span><span class="hidden" data-lang="en">24/7 assistance</span></li>
+          <li style="margin-bottom: 0.5rem;">✅ <span data-lang="it">Cancellazione flessibile</span><span class="hidden" data-lang="en">Flexible cancellation</span></li>
+        </ul>
+      </div>
+    </div>
+    
+    <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.2); margin: 2rem 0;">
+    
+    <div style="text-align: center;">
+      <small>
+        © 2025 AUROOMS Guest House - <span data-lang="it">Tutti i diritti riservati</span><span class="hidden" data-lang="en">All rights reserved</span><br>
+        <span data-lang="it">Realizzato con ❤️ in Sicilia</span><span class="hidden" data-lang="en">Made with ❤️ in Sicily</span>
+      </small>
+    </div>
   </footer>
 
   <!-- WhatsApp Floating Button -->
