@@ -3,333 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Le Nostre Camere - AUROOMS</title>
+  <title>Le Nostre Camere - AUROOMS Guest House</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/aos@2.3.1/dist/aos.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    .rooms-container {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 2rem;
-      margin-top: 2rem;
+    .room-hero {
+      background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+      color: white;
+      padding: 4rem 0;
+      text-align: center;
+      margin-bottom: 3rem;
     }
     .room-card {
-      border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 1.5rem;
-      margin-bottom: 2rem;
       background: var(--card-background-color);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 3rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .room-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
     }
     .room-gallery {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      gap: 0.5rem;
-      margin-bottom: 1.5rem;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-radius: 12px;
+      overflow: hidden;
     }
     .room-gallery img {
       width: 100%;
       height: 200px;
       object-fit: cover;
-      border-radius: 8px;
     }
     .room-gallery img:first-child {
       height: 100%;
       grid-row: span 2;
     }
-    .room-amenities {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-    .amenity-item {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .price-section {
-      background: var(--primary-background);
-      padding: 1rem;
-      border-radius: 8px;
+    .price-highlight {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      padding: 2.5rem;
+      border-radius: 16px;
       text-align: center;
+      margin: 2rem 0 0 0;
+      width: 100%;
+      box-shadow: 0 8px 25px rgba(0, 123, 255, 0.3);
+      clear: both;
     }
-    .price {
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--primary);
+    .price-highlight h3 {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+      font-weight: 800;
     }
-    .booking-sidebar {
-      background: var(--card-background-color);
+    .price-highlight p {
+      font-size: 1.1rem;
+      margin: 0;
+      opacity: 0.9;
+    }
+    
+    /* Stile per le liste delle caratteristiche */
+    .room-features {
+      margin: 2rem 0;
+    }
+    .room-features h4 {
+      color: #2d3748;
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      font-weight: 700;
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 0.5rem;
+    }
+    .room-features ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .room-features li {
+      background: #f8f9fa;
+      padding: 1.2rem 2rem;
+      border-radius: 12px;
+      border-left: 4px solid #007bff;
+      font-size: 1.1rem;
+      color: #2d3748;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .room-features li:hover {
+      transform: translateX(8px);
+      box-shadow: 0 4px 15px rgba(0, 123, 255, 0.2);
+      background: #ffffff;
+    }
+    
+    /* Griglia speciale per schermi grandi */
+    @media (min-width: 1024px) {
+      /* Non più necessario */
+    }
+    .booking-cta {
+      background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+      color: white;
+      padding: 3rem 2rem;
+      border-radius: 16px;
+      text-align: center;
+      margin: 4rem 0;
+    }
+    .features-section {
+      background: linear-gradient(135deg, #6f42c1 0%, #495057 100%);
+      color: white;
+      padding: 4rem 2rem;
+      border-radius: 16px;
+      margin: 4rem 0;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .feature-card {
+      background: rgba(255,255,255,0.1);
       padding: 2rem;
       border-radius: 12px;
-      border: 1px solid var(--border-color);
-      height: fit-content;
-      position: sticky;
-      top: 100px;
-    }
-    @media (max-width: 768px) {
-      .rooms-container {
-        grid-template-columns: 1fr;
-      }
-      .room-gallery {
-        grid-template-columns: 1fr;
-      }
-      .room-gallery img:first-child {
-        grid-row: auto;
-      }
-    }
-  </style>
-</head>
-
-<body>
-  <!-- Header -->
-  <nav class="sticky-nav">
-    <div class="nav-content">
-      <a href="index.html">
-        <h2 style="margin: 0; color: var(--primary);">AUROOMS</h2>
-      </a>
-      <div class="nav-links">
-        <a href="index.html" data-lang="it">Home</a>
-        <a href="index.html" class="hidden" data-lang="en">Home</a>
-        <a href="rooms.html" data-lang="it">Camere</a>
-        <a href="rooms.html" class="hidden" data-lang="en">Rooms</a>
-        <div class="auth-links" id="auth-links">
-          <!-- Will be populated by JavaScript -->
-        </div>
-        <div class="lang-switch">
-          <button onclick="switchLang('it')" data-lang="en">IT</button>
-          <button onclick="switchLang('en')" data-lang="it">EN</button>
-        </div>
-      </div>
-    </div>
-  </nav>
-
-  <main class="container">
-    <h1 data-lang="it">Le Nostre Camere</h1>
-    <h1 class="hidden" data-lang="en">Our Rooms</h1>
-    
-    <div class="rooms-container">
-      <div class="rooms-list">
-        <!-- Camera Doppia Comfort -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Doppia Comfort</h3>
-          <h3 class="hidden" data-lang="en">Comfort Double Room</h3>
-
-          <div class="room-gallery">
-            <img src="./attached_assets/Glicine1.jpg" alt="Camera Comfort" />
-            <img src="./attached_assets/Balcone.jpg" alt="Balcone" />
-            <img src="./attached_assets/Bagno.jpg" alt="Bagno" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👫</span>
-              <span data-lang="it">Fino a 2 ospiti</span>
-              <span class="hidden" data-lang="en">Up to 2 guests</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🚿</span>
-              <span data-lang="it">Bagno privato</span>
-              <span class="hidden" data-lang="en">Private bathroom</span>
-            </div>
-            <div class="amenity-item">
-              <span>🌅</span>
-              <span data-lang="it">Balcone</span>
-              <span class="hidden" data-lang="en">Balcony</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€65</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoomForBooking(1)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Prenota questa camera</span>
-            <span class="hidden" data-lang="en">Book this room</span>
-          </button>
-        </div>
-
-        <!-- Camera Matrimoniale Deluxe -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Matrimoniale Deluxe</h3>
-          <h3 class="hidden" data-lang="en">Deluxe Queen Room</h3>
-
-          <div class="room-gallery">
-            <img src="./attached_assets/Balcone.jpg" alt="Camera Deluxe" />
-            <img src="./attached_assets/Bagno.jpg" alt="Bagno con vasca" />
-            <img src="./attached_assets/Glicine1.jpg" alt="Vista mare" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👫</span>
-              <span data-lang="it">Fino a 2 ospiti</span>
-              <span class="hidden" data-lang="en">Up to 2 guests</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🛁</span>
-              <span data-lang="it">Bagno con vasca</span>
-              <span class="hidden" data-lang="en">Bathroom with tub</span>
-            </div>
-            <div class="amenity-item">
-              <span>🌊</span>
-              <span data-lang="it">Vista mare</span>
-              <span class="hidden" data-lang="en">Sea view</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€85</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoomForBooking(2)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Prenota questa camera</span>
-            <span class="hidden" data-lang="en">Book this room</span>
-          </button>
-        </div>
-
-        <!-- Camera Familiare -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Familiare</h3>
-          <h3 class="hidden" data-lang="en">Family Room</h3>
-
-          <div class="room-gallery">
-            <img src="./attached_assets/Bagno.jpg" alt="Camera Familiare" />
-            <img src="./attached_assets/Glicine1.jpg" alt="Secondo bagno" />
-            <img src="./attached_assets/Balcone.jpg" alt="Frigorifero" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👪</span>
-              <span data-lang="it">Fino a 4 ospiti</span>
-              <span class="hidden" data-lang="en">Up to 4 guests</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🚿🚿</span>
-              <span data-lang="it">2 Bagni</span>
-              <span class="hidden" data-lang="en">2 Bathrooms</span>
-            </div>
-            <div class="amenity-item">
-              <span>❄️</span>
-              <span data-lang="it">Frigorifero</span>
-              <span class="hidden" data-lang="en">Refrigerator</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€110</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoomForBooking(3)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Prenota questa camera</span>
-            <span class="hidden" data-lang="en">Book this room</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Booking Sidebar -->
-      <div class="booking-sidebar">
-        <h4 data-lang="it">Prenota la tua camera</h4>
-        <h4 class="hidden" data-lang="en">Book your room</h4>
-
-        <form id="rooms-booking-form" onsubmit="handleRoomsBooking(event)">
-          <div>
-            <label data-lang="it">Check-in</label>
-            <label class="hidden" data-lang="en">Check-in</label>
-            <input type="date" id="rooms-checkin" required />
-          </div>
-
-          <div>
-            <label data-lang="it">Check-out</label>
-            <label class="hidden" data-lang="en">Check-out</label>
-            <input type="date" id="rooms-checkout" required />
-          </div>
-
-          <div>
-            <label data-lang="it">Ospiti</label>
-            <label class="hidden" data-lang="en">Guests</label>
-            <select id="rooms-guests">
-              <option value="1">1</option>
-              <option value="2" selected>2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-            </select>
-          </div>
-
-          <div id="selected-room-info" class="hidden" style="margin: 1rem 0; padding: 1rem; background: var(--primary-background); border-radius: 8px;">
-            <h6 data-lang="it">Camera selezionata:</h6>
-            <h6 class="hidden" data-lang="en">Selected room:</h6>
-            <p id="selected-room-name"></p>
-            <p><strong id="room-total-price">€0</strong> <span data-lang="it">totale</span><span class="hidden" data-lang="en">total</span></p>
-          </div>
-
-          <button type="button" onclick="proceedToLogin()" id="proceed-btn" disabled style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Accedi per prenotare</span>
-            <span class="hidden" data-lang="en">Login to book</span>
-          </button>
-        </form>
-
-        <div style="margin-top: 2rem; text-align: center;">
-          <h5 data-lang="it">Contatti</h5>
-          <h5 class="hidden" data-lang="en">Contact</h5>
-          <a href="https://wa.me/393758843175" target="_blank" style="color: #25D366;">
-            📱 WhatsApp: +39 375 884 3175
-          </a>
-          <br>
-          <a href="tel:+393758843175">
-            📞 Tel: +39 375 884 3175
-          </a>
-        </div>
-      </div>
-    </div>
-  </main>
-      font-size: 2rem;
-      font-weight: bold;
-      color: var(--primary);
-    }
-    .booking-form {
-      background: var(--card-background-color);
-      padding: 1.5rem;
-      border-radius: 12px;
-      position: sticky;
-      top: 2rem;
+      backdrop-filter: blur(10px);
+      text-align: center;
     }
     @media (max-width: 768px) {
       .room-gallery {
@@ -338,17 +143,21 @@
       .room-gallery img:first-child {
         grid-row: span 1;
       }
+      .price-highlight {
+        padding: 2rem 1.5rem;
+        margin: 1.5rem 0 0 0;
+      }
     }
   </style>
 </head>
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
     </ul>
     <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="#" onclick="showLogin()">Accedi</a></li>
+      <li><a href="index.html#rooms">Camere</a></li>
+      <li><a href="index.html#booking" role="button">Prenota</a></li>
       <li class="lang-toggle">
         <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
         <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
@@ -356,454 +165,292 @@
     </ul>
   </nav>
 
+  <!-- Hero Section -->
+  <section class="room-hero">
+    <div class="container">
+      <hgroup>
+        <h1 data-lang="it">Le Nostre Camere</h1>
+        <h1 class="hidden" data-lang="en">Our Rooms</h1>
+        <p data-lang="it">Comfort, eleganza e tranquillità nel cuore della Sicilia</p>
+        <p class="hidden" data-lang="en">Comfort, elegance and tranquility in the heart of Sicily</p>
+      </hgroup>
+    </div>
+  </section>
+
   <main class="container">
-    <hgroup style="text-align: center; margin-bottom: 2rem;">
-      <h1 data-lang="it">Le Nostre Camere</h1>
-      <h1 class="hidden" data-lang="en">Our Rooms</h1>
-      <h3 data-lang="it">Scegli la camera perfetta per il tuo soggiorno</h3>
-      <h3 class="hidden" data-lang="en">Choose the perfect room for your stay</h3>
-    </hgroup>
-
-    <div class="grid">
-      <div>
-        <!-- Camera Glicine -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Glicine</h3>
-          <h3 class="hidden" data-lang="en">Glicine Room</h3>
-
-          <div class="room-gallery">
-            <img src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=800&q=80" alt="Camera Deluxe" />
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
-            <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80" alt="Vista" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👫</span>
-              <span data-lang="it">Perfetta per coppie</span>
-              <span class="hidden" data-lang="en">Perfect for couples</span>
-            </div>
-            <div class="amenity-item">
-              <span>🌊</span>
-              <span data-lang="it">Frigo Bar</span>
-              <span class="hidden" data-lang="en">Fridge bar</span>
-            </div>
-            <div class="amenity-item">
-              <span>❄️</span>
-              <span data-lang="it">Aria condizionata</span>
-              <span class="hidden" data-lang="en">Air conditioning</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>🚿</span>
-              <span data-lang="it">Bagno privato con doccia</span>
-              <span class="hidden" data-lang="en">Private bathroom with shower</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🍳</span>
-              <span data-lang="it">Colazione inclusa</span>
-              <span class="hidden" data-lang="en">Breakfast included</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€80</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoom('glicine', 80)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Seleziona questa camera</span>
-            <span class="hidden" data-lang="en">Select this room</span>
-          </button>
-        </div>
-
-        <!-- Camera Yellow -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Yellow</h3>
-          <h3 class="hidden" data-lang="en">Yellow Room</h3>
-
-          <div class="room-gallery">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Yellow" />
-            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
-            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=400&q=80" alt="Dettaglio" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👫</span>
-              <span data-lang="it">Perfetta per coppie</span>
-              <span class="hidden" data-lang="en">Perfect for couples</span>
-            </div>
-            <div class="amenity-item">
-              <span>🧊</span>
-              <span data-lang="it">Frigo Bar</span>
-              <span class="hidden" data-lang="en">Fridge bar</span>
-            </div>
-            <div class="amenity-item">
-              <span>❄️</span>
-              <span data-lang="it">Aria condizionata</span>
-              <span class="hidden" data-lang="en">Air conditioning</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>🚿</span>
-              <span data-lang="it">Bagno privato con vasca/doccia</span>
-              <span class="hidden" data-lang="en">Private bathroom with bath/shower</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🍳</span>
-              <span data-lang="it">Colazione inclusa</span>
-              <span class="hidden" data-lang="en">Breakfast included</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€85</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoom('yellow', 85)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Seleziona questa camera</span>
-            <span class="hidden" data-lang="en">Select this room</span>
-          </button>
-        </div>
-
-        <!-- Camera Blu -->
-        <div class="room-card">
-          <h3 data-lang="it">Camera Blu</h3>
-          <h3 class="hidden" data-lang="en">Blue Room</h3>
-
-          <div class="room-gallery">
-            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Camera Blu" />
-            <img src="https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80" alt="Bagno" />
-            <img src="https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?auto=format&fit=crop&w=400&q=80" alt="Dettaglio" />
-          </div>
-
-          <div class="room-amenities">
-            <div class="amenity-item">
-              <span>👪</span>
-              <span data-lang="it">Perfetta per Famiglie/Gruppi</span>
-              <span class="hidden" data-lang="en">Perfect for Families/Groups</span>
-            </div>
-            <div class="amenity-item">
-              <span>🧊</span>
-              <span data-lang="it">Frigo Bar</span>
-              <span class="hidden" data-lang="en">Fridge bar</span>
-            </div>
-            <div class="amenity-item">
-              <span>❄️</span>
-              <span data-lang="it">Aria condizionata</span>
-              <span class="hidden" data-lang="en">Air conditioning</span>
-            </div>
-            <div class="amenity-item">
-              <span>📺</span>
-              <span data-lang="it">TV</span>
-              <span class="hidden" data-lang="en">TV</span>
-            </div>
-            <div class="amenity-item">
-              <span>🚿</span>
-              <span data-lang="it">Bagno privato con doccia</span>
-              <span class="hidden" data-lang="en">Private bathroom with shower</span>
-            </div>
-            <div class="amenity-item">
-              <span>📶</span>
-              <span data-lang="it">Wi-Fi gratuito</span>
-              <span class="hidden" data-lang="en">Free Wi-Fi</span>
-            </div>
-            <div class="amenity-item">
-              <span>🌅</span>
-              <span data-lang="it">Balcone con vista panoramica</span>
-              <span class="hidden" data-lang="en">Balcony with panoramic view</span>
-            </div>
-            <div class="amenity-item">
-              <span>🍳</span>
-              <span data-lang="it">Colazione inclusa</span>
-              <span class="hidden" data-lang="en">Breakfast included</span>
-            </div>
-          </div>
-
-          <div class="price-section">
-            <div class="price">€108</div>
-            <small data-lang="it">per notte</small>
-            <small class="hidden" data-lang="en">per night</small>
-          </div>
-
-          <button onclick="selectRoom('blu', 108)" role="button" style="width: 100%; margin-top: 1rem;">
-            <span data-lang="it">Seleziona questa camera</span>
-            <span class="hidden" data-lang="en">Select this room</span>
-          </button>
-  <script src="script.js"></script>
-  <script>
-    let selectedRoomId = null;
-
-    function selectRoomForBooking(roomId) {
-      selectedRoomId = roomId;
-      const room = roomsData.find(r => r.id === roomId);
-      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
+    
+    <!-- Camera Matrimoniale Standard -->
+    <article class="room-card" data-aos="fade-up">
+      <h2 data-lang="it">🛏️ Camera Matrimoniale Standard</h2>
+      <h2 class="hidden" data-lang="en">🛏️ Standard Double Room</h2>
       
-      // Update selected room display
-      document.getElementById('selected-room-name').textContent = room.name[currentLang];
-      document.getElementById('selected-room-info').classList.remove('hidden');
-      
-      // Update total price if dates are selected
-      updateTotalPrice();
-      
-      // Enable proceed button
-      document.getElementById('proceed-btn').disabled = false;
-    }
+      <div class="room-gallery">
+        <img src="./attached_assets/Glicine1.jpg" alt="Camera Matrimoniale" />
+        <img src="./attached_assets/Balcone.jpg" alt="Balcone privato" />
+        <img src="./attached_assets/Bagno.jpg" alt="Bagno privato" />
+      </div>
 
-    function updateTotalPrice() {
-      if (!selectedRoomId) return;
+      <p data-lang="it">La nostra camera matrimoniale standard offre tutto il comfort necessario per un soggiorno rilassante. Perfetta per coppie che cercano un ambiente intimo e accogliente.</p>
+      <p class="hidden" data-lang="en">Our standard double room offers all the comfort needed for a relaxing stay. Perfect for couples looking for an intimate and welcoming environment.</p>
+
+      <h4 data-lang="it">✨ Caratteristiche della camera:</h4>
+      <h4 class="hidden" data-lang="en">✨ Room features:</h4>
+      <ul data-lang="it">
+        <li>🛏️ Letto matrimoniale king-size con biancheria di qualità superiore</li>
+        <li>🚿 Bagno privato con doccia idromassaggio</li>
+        <li>❄️ Aria condizionata e riscaldamento</li>
+        <li>📺 TV LED 32" con canali satellitari</li>
+        <li>� Wi-Fi gratuito ad alta velocità</li>
+        <li>🔒 Cassaforte digitale</li>
+        <li>🌅 Balcone privato con vista giardino</li>
+        <li>☕ Set per tè e caffè</li>
+        <li>🧴 Prodotti per l'igiene e asciugacapelli</li>
+        <li>👔 Armadio spazioso</li>
+      </ul>
+      <ul class="hidden" data-lang="en">
+        <li>🛏️ King-size double bed with high-quality linens</li>
+        <li>🚿 Private bathroom with hydromassage shower</li>
+        <li>❄️ Air conditioning and heating</li>
+        <li>📺 32" LED TV with satellite channels</li>
+        <li>📱 Free high-speed Wi-Fi</li>
+        <li>🔒 Digital safe</li>
+        <li>🌅 Private balcony with garden view</li>
+        <li>☕ Tea and coffee set</li>
+        <li>🧴 Hygiene products and hair dryer</li>
+        <li>👔 Spacious wardrobe</li>
+      </ul>
+
+      <div class="price-highlight">
+        <h3 data-lang="it">💰 A partire da €45/notte</h3>
+        <h3 class="hidden" data-lang="en">💰 Starting from €45/night</h3>
+        <p data-lang="it">Colazione inclusa • Check-in flessibile • Cancellazione gratuita</p>
+        <p class="hidden" data-lang="en">Breakfast included • Flexible check-in • Free cancellation</p>
+      </div>
+    </article>
+
+    <!-- Camera Tripla -->
+    <article class="room-card" data-aos="fade-up">
+      <h2 data-lang="it">👨‍👩‍👧 Camera Tripla</h2>
+      <h2 class="hidden" data-lang="en">👨‍👩‍👧 Triple Room</h2>
       
-      const checkin = document.getElementById('rooms-checkin').value;
-      const checkout = document.getElementById('rooms-checkout').value;
+      <div class="room-gallery">
+        <img src="./attached_assets/Glicine1.jpg" alt="Camera Tripla" />
+        <img src="./attached_assets/Balcone.jpg" alt="Spazio comune" />
+        <img src="./attached_assets/Bagno.jpg" alt="Bagno" />
+      </div>
+
+      <p data-lang="it">Ideale per piccole famiglie o gruppi di amici, questa camera offre spazio e comfort per tre persone senza rinunciare alla qualità del servizio.</p>
+      <p class="hidden" data-lang="en">Ideal for small families or groups of friends, this room offers space and comfort for three people without compromising on service quality.</p>
+
+      <h4 data-lang="it">✨ Caratteristiche della camera:</h4>
+      <h4 class="hidden" data-lang="en">✨ Room features:</h4>
+      <ul data-lang="it">
+        <li>🛏️ 1 letto matrimoniale + 1 letto singolo (o possibilità letti separati)</li>
+        <li>🚿 Bagno privato con doccia</li>
+        <li>❄️ Aria condizionata e riscaldamento</li>
+        <li>📺 TV LED 32"</li>
+        <li>📱 Wi-Fi gratuito</li>
+        <li>🧊 Frigobar</li>
+        <li>☕ Bollitore per tè e caffè</li>
+        <li>🧳 Spazio bagagli extra</li>
+        <li>🌅 Balcone o terrazza</li>
+        <li>🔒 Cassaforte</li>
+      </ul>
+      <ul class="hidden" data-lang="en">
+        <li>🛏️ 1 double bed + 1 single bed (or separate beds option)</li>
+        <li>🚿 Private bathroom with shower</li>
+        <li>❄️ Air conditioning and heating</li>
+        <li>📺 32" LED TV</li>
+        <li>📱 Free Wi-Fi</li>
+        <li>🧊 Minibar</li>
+        <li>☕ Tea and coffee maker</li>
+        <li>🧳 Extra luggage space</li>
+        <li>🌅 Balcony or terrace</li>
+        <li>🔒 Safe</li>
+      </ul>
+
+      <div class="price-highlight">
+        <h3 data-lang="it">💰 A partire da €65/notte</h3>
+        <h3 class="hidden" data-lang="en">💰 Starting from €65/night</h3>
+        <p data-lang="it">Perfetta per famiglie • Spazio extra • Tutti i comfort inclusi</p>
+        <p class="hidden" data-lang="en">Perfect for families • Extra space • All amenities included</p>
+      </div>
+    </article>
+
+    <!-- Camera Quadrupla -->
+    <article class="room-card" data-aos="fade-up">
+      <h2 data-lang="it">👨‍👩‍👧‍👦 Camera Quadrupla</h2>
+      <h2 class="hidden" data-lang="en">👨‍👩‍👧‍👦 Quadruple Room</h2>
       
-      if (checkin && checkout) {
-        const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-        const room = roomsData.find(r => r.id === selectedRoomId);
-        const totalPrice = room.price * nights;
+      <div class="room-gallery">
+        <img src="./attached_assets/Glicine1.jpg" alt="Camera Quadrupla" />
+        <img src="./attached_assets/Balcone.jpg" alt="Area living" />
+        <img src="./attached_assets/Bagno.jpg" alt="Bagno spazioso" />
+      </div>
+
+      <p data-lang="it">La soluzione perfetta per famiglie numerose o gruppi di amici. Ampia, confortevole e dotata di tutti i servizi per un soggiorno indimenticabile.</p>
+      <p class="hidden" data-lang="en">The perfect solution for large families or groups of friends. Spacious, comfortable and equipped with all services for an unforgettable stay.</p>
+
+      <h4 data-lang="it">✨ Caratteristiche della camera:</h4>
+      <h4 class="hidden" data-lang="en">✨ Room features:</h4>
+      <ul data-lang="it">
+        <li>🛏️ 2 letti matrimoniali in camere separate</li>
+        <li>🏠 Area soggiorno comune</li>
+        <li>🚿 Bagno spazioso privato</li>
+        <li>🍽️ Angolo cucina con microonde e frigorifero</li>
+        <li>☕ Macchina del caffè e bollitore</li>
+        <li>🍽️ Stoviglie e utensili base</li>
+        <li>💼 Tavolo da lavoro/studio</li>
+        <li>🛋️ Poltrone relax</li>
+        <li>📺 TV LED in area comune</li>
+        <li>📱 Wi-Fi gratuito</li>
+      </ul>
+      <ul class="hidden" data-lang="en">
+        <li>🛏️ 2 double beds in separate rooms</li>
+        <li>🏠 Common living area</li>
+        <li>🚿 Spacious private bathroom</li>
+        <li>🍽️ Kitchenette with microwave and refrigerator</li>
+        <li>☕ Coffee machine and kettle</li>
+        <li>🍽️ Basic tableware and utensils</li>
+        <li>💼 Work/study desk</li>
+        <li>🛋️ Relaxation armchairs</li>
+        <li>📺 LED TV in common area</li>
+        <li>📱 Free Wi-Fi</li>
+      </ul>
+
+      <div class="price-highlight">
+        <h3 data-lang="it">💰 A partire da €85/notte</h3>
+        <h3 class="hidden" data-lang="en">💰 Starting from €85/night</h3>
+        <p data-lang="it">Ideale per gruppi • Angolo cucina • Massimo comfort</p>
+        <p class="hidden" data-lang="en">Ideal for groups • Kitchenette • Maximum comfort</p>
+      </div>
+    </article>
+
+    <!-- Sezione Caratteristiche Generali -->
+    <section class="features-section" data-aos="fade-up">
+      <div class="container">
+        <hgroup style="text-align: center; margin-bottom: 2rem;">
+          <h2 data-lang="it">🏨 Servizi Inclusi in Tutte le Camere</h2>
+          <h2 class="hidden" data-lang="en">🏨 Services Included in All Rooms</h2>
+          <p data-lang="it">Comfort e qualità garantiti per ogni tipo di soggiorno</p>
+          <p class="hidden" data-lang="en">Comfort and quality guaranteed for every type of stay</p>
+        </hgroup>
         
-        document.getElementById('room-total-price').textContent = `€${totalPrice}`;
-      }
-    }
-
-    function proceedToLogin() {
-      if (!selectedRoomId) {
-        alert('Seleziona prima una camera');
-        return;
-      }
-      
-      const checkin = document.getElementById('rooms-checkin').value;
-      const checkout = document.getElementById('rooms-checkout').value;
-      const guests = parseInt(document.getElementById('rooms-guests').value);
-      
-      if (!checkin || !checkout) {
-        alert('Seleziona le date di check-in e check-out');
-        return;
-      }
-      
-      // Store booking attempt
-      const room = roomsData.find(r => r.id === selectedRoomId);
-      const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-      
-      sessionStorage.setItem('pending_booking', JSON.stringify({
-        roomId: selectedRoomId,
-        checkin,
-        checkout,
-        guests,
-        roomName: room.name.it,
-        pricePerNight: room.price,
-        nights
-      }));
-      
-      // Check if user is logged in
-      const currentUser = localStorage.getItem('aurooms_current_user');
-      if (currentUser) {
-        window.location.href = 'pagamento.html';
-      } else {
-        sessionStorage.setItem('returnUrl', 'pagamento.html');
-        window.location.href = 'login.html';
-      }
-    }
-
-    function updateAuthLinks() {
-      const authLinksContainer = document.getElementById('auth-links');
-      const currentUser = localStorage.getItem('aurooms_current_user');
-      
-      if (currentUser) {
-        const user = JSON.parse(currentUser);
-        authLinksContainer.innerHTML = `
-          <span>Ciao, ${user.firstName}!</span>
-          <a href="#" onclick="logout()">Logout</a>
-        `;
-        
-        // Update button text
-        const proceedBtn = document.getElementById('proceed-btn');
-        if (proceedBtn) {
-          proceedBtn.innerHTML = `
-            <span data-lang="it">Procedi al pagamento</span>
-            <span class="hidden" data-lang="en">Proceed to payment</span>
-          `;
-        }
-      } else {
-        authLinksContainer.innerHTML = `
-          <a href="login.html">
-            <span data-lang="it">Accedi</span>
-            <span class="hidden" data-lang="en">Login</span>
-          </a>
-        `;
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem('aurooms_current_user');
-      sessionStorage.clear();
-      window.location.reload();
-    }
-
-    // Initialize page
-    document.addEventListener('DOMContentLoaded', function() {
-      updateAuthLinks();
-      setMinDate();
-      updateCheckoutMinDate();
-      
-      // Add event listeners for date changes
-      document.getElementById('rooms-checkin').addEventListener('change', updateTotalPrice);
-      document.getElementById('rooms-checkout').addEventListener('change', updateTotalPrice);
-    });
-  </script>
-</body>
-</html>
+        <div class="features-grid">
+          <div class="feature-card">
+            <h3 data-lang="it">🍳 Colazione Siciliana</h3>
+            <h3 class="hidden" data-lang="en">🍳 Sicilian Breakfast</h3>
+            <p data-lang="it">Colazione tipica siciliana inclusa nel prezzo con prodotti locali e fatti in casa</p>
+            <p class="hidden" data-lang="en">Typical Sicilian breakfast included with local and homemade products</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3 data-lang="it">🚗 Parcheggio Gratuito</h3>
+            <h3 class="hidden" data-lang="en">🚗 Free Parking</h3>
+            <p data-lang="it">Parcheggio privato gratuito disponibile per tutti gli ospiti</p>
+            <p class="hidden" data-lang="en">Free private parking available for all guests</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3 data-lang="it">✈️ Transfer Aeroporto</h3>
+            <h3 class="hidden" data-lang="en">✈️ Airport Transfer</h3>
+            <p data-lang="it">Servizio transfer da/per l'aeroporto di Palermo disponibile su richiesta</p>
+            <p class="hidden" data-lang="en">Transfer service to/from Palermo airport available on request</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3 data-lang="it">🧹 Pulizia Giornaliera</h3>
+            <h3 class="hidden" data-lang="en">🧹 Daily Cleaning</h3>
+            <p data-lang="it">Servizio di pulizia e cambio biancheria disponibile</p>
+            <p class="hidden" data-lang="en">Cleaning service and linen change available</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3 data-lang="it">🗺️ Assistenza Turistica</h3>
+            <h3 class="hidden" data-lang="en">🗺️ Tourist Assistance</h3>
+            <p data-lang="it">Consigli e informazioni per scoprire le bellezze della Sicilia</p>
+            <p class="hidden" data-lang="en">Tips and information to discover the beauties of Sicily</p>
+          </div>
+          
+          <div class="feature-card">
+            <h3 data-lang="it">📞 Assistenza 24/7</h3>
+            <h3 class="hidden" data-lang="en">📞 24/7 Assistance</h3>
+            <p data-lang="it">Siamo sempre disponibili per qualsiasi necessità durante il soggiorno</p>
+            <p class="hidden" data-lang="en">We are always available for any need during your stay</p>
           </div>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Call-to-Action per Prenotazione -->
+    <section class="booking-cta" data-aos="fade-up">
+      <div class="container">
+        <hgroup>
+          <h2 data-lang="it">🎯 Pronto a Prenotare?</h2>
+          <h2 class="hidden" data-lang="en">🎯 Ready to Book?</h2>
+          <p data-lang="it">Scegli le tue date e scopri la disponibilità delle nostre camere</p>
+          <p class="hidden" data-lang="en">Choose your dates and discover the availability of our rooms</p>
+        </hgroup>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+          <a href="index.html#booking" role="button" style="background: white; color: #007bff; font-weight: bold; margin: 0.5rem;" data-lang="it">
+            📅 Verifica Disponibilità
+          </a>
+          <a href="index.html#booking" role="button" class="hidden" style="background: white; color: #007bff; font-weight: bold; margin: 0.5rem;" data-lang="en">
+            📅 Check Availability
+          </a>
+          <a href="https://wa.me/393758843175" role="button" class="secondary" style="margin: 0.5rem;" data-lang="it">
+            📱 Contatta su WhatsApp
+          </a>
+          <a href="https://wa.me/393758843175" role="button" class="secondary hidden" style="margin: 0.5rem;" data-lang="en">
+            📱 Contact on WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
   </main>
 
-  <!-- Login Modal -->
-  <dialog id="login-modal">
-    <article>
-      <header>
-        <a href="#close" aria-label="Close" class="close" onclick="closeLogin()"></a>
-        <p>
-          <strong data-lang="it">Accedi al tuo account</strong>
-          <strong class="hidden" data-lang="en">Login to your account</strong>
-        </p>
-      </header>
-      <form id="login-form">
-        <input type="email" placeholder="Email" required />
-        <input type="password" placeholder="Password" required />
-        <button type="submit" data-lang="it">Accedi</button>
-        <button type="submit" class="hidden" data-lang="en">Login</button>
-      </form>
-      <footer>>
-        <small>
-          <span data-lang="it">Non hai un account? </span>
-          <span class="hidden" data-lang="en">Don't have an account? </span>
-          <a href="#" onclick="showRegister()" data-lang="it">Registrati</a>
-          <a href="#" onclick="showRegister()" class="hidden" data-lang="en">Register</a>
-        </small>
-      </footer>
-    </article>
-  </dialog>
+  <footer class="container" data-aos="fade-up" style="margin-bottom: 80px;">
+    <small>
+      <strong>AUROOMS Guest House</strong><br>
+      <strong>Telefono:</strong> <a href="tel:+393758843175">+39 375 884 3175</a><br>
+      <strong>Indirizzo:</strong> Cinisi (PA), Sicilia<br>
+      <a href="index.html">Home</a> • <a href="#">Privacy</a> • <a href="#">Contatti</a>
+    </small>
+  </footer>
 
-  <script src="script.js"></script>
+  <!-- WhatsApp Floating Button -->
+  <a class="whatsapp-button" href="https://wa.me/393758843175" target="_blank" title="Contattaci su WhatsApp">
+    <img src="./attached_assets/whatsapplogo_1753691477533.png" alt="WhatsApp" style="width: 32px; height: 32px;">
+  </a>
+
+  <!-- JS Libraries -->
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
-    let selectedRoomType = null;
-    let selectedRoomPrice = 0;
+    // Initialize AOS
+    AOS.init({
+      duration: 800,
+      offset: 100
+    });
 
-    function selectRoom(type, price) {
-      selectedRoomType = type;
-      selectedRoomPrice = price;
-
-      const roomInfo = document.getElementById('room-info');
-      const selectedRoomDiv = document.getElementById('selected-room');
-      const bookBtn = document.getElementById('book-btn');
-
-      const roomNames = {
-        'glicine': {'it': 'Camera Glicine', 'en': 'Glicine Room'},
-        'yellow': {'it': 'Camera Yellow', 'en': 'Yellow Room'},
-        'blu': {'it': 'Camera Blu', 'en': 'Blue Room'}
-      };
-
-      const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
-      roomInfo.textContent = roomNames[type][currentLang] + ' - €' + price + (currentLang === 'it' ? ' per notte' : ' per night');
-
-      selectedRoomDiv.style.display = 'block';
-      bookBtn.disabled = false;
-      calculateTotal();
-    }
-
-    function calculateTotal() {
-      const checkin = document.getElementById('checkin').value;
-      const checkout = document.getElementById('checkout').value;
-      const rooms = parseInt(document.getElementById('rooms').value);
-
-      if (checkin && checkout && selectedRoomPrice) {
-        const nights = Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24));
-        if (nights > 0) {
-          const total = nights * selectedRoomPrice * rooms;
-          const currentLang = document.querySelector('[data-lang="it"]').classList.contains('hidden') ? 'en' : 'it';
-          document.getElementById('total-price').textContent = 
-            `${currentLang === 'it' ? 'Totale' : 'Total'}: €${total} (${nights} ${currentLang === 'it' ? 'notti' : 'nights'})`;
+    // Language switching function
+    function switchLang(lang) {
+      const elements = document.querySelectorAll('[data-lang]');
+      elements.forEach(el => {
+        if (el.getAttribute('data-lang') === lang) {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
         }
-      }
-    }
-
-    function proceedToBooking() {
-      if (!selectedRoomType) {
-        alert('Seleziona prima una camera');
-        return;
-      }
-
-      const checkin = document.getElementById('checkin').value;
-      const checkout = document.getElementById('checkout').value;
-      const guests = document.getElementById('guests').value;
-      const rooms = document.getElementById('rooms').value;
-
-      if (!checkin || !checkout) {
-        alert('Seleziona le date di check-in e check-out');
-        return;
-      }
-
-      // Store booking data
-      localStorage.setItem('selectedRoom', selectedRoomType);
-      localStorage.setItem('roomPrice', selectedRoomPrice);
-      localStorage.setItem('checkin', checkin);
-      localStorage.setItem('checkout', checkout);
-      localStorage.setItem('guests', guests);
-      localStorage.setItem('rooms', rooms);
-
-      window.location.href = 'checkout.html';
-    }
-
-    function showLogin() {
-      document.getElementById('login-modal').showModal();
-    }
-
-    function closeLogin() {
-      document.getElementById('login-modal').close();
-    }
-
-    function showRegister() {
-      alert('Funzione di registrazione in sviluppo');
-    }
-
-    // Set minimum date to today
-    document.addEventListener('DOMContentLoaded', function() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('checkin').min = today;
-      document.getElementById('checkout').min = today;
-
-      document.getElementById('checkin').addEventListener('change', function() {
-        const checkinDate = new Date(this.value);
-        checkinDate.setDate(checkinDate.getDate() + 1);
-        document.getElementById('checkout').min = checkinDate.toISOString().split('T')[0];
-        calculateTotal();
       });
+      localStorage.setItem('preferredLanguage', lang);
+    }
 
-      document.getElementById('checkout').addEventListener('change', calculateTotal);
-      document.getElementById('rooms').addEventListener('change', calculateTotal);
+    // Load preferred language
+    document.addEventListener('DOMContentLoaded', function() {
+      const savedLang = localStorage.getItem('preferredLanguage') || 'it';
+      switchLang(savedLang);
     });
   </script>
 </body>
