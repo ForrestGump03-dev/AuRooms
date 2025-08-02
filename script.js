@@ -1,3 +1,9 @@
+// Mobile menu toggle
+function toggleMobileMenu() {
+  const navMenu = document.getElementById('nav-menu');
+  navMenu.classList.toggle('active');
+}
+
 // Room booking system
 const roomsData = [
   {

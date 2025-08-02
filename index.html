@@ -9,28 +9,70 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css" />
   <link rel="stylesheet" href="style.css" />
   <style>
-    /* Responsive navigation senza hamburger */
+    /* Menu hamburger pulito */
+    nav {
+      position: relative;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .mobile-menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--primary);
+      cursor: pointer;
+      padding: 0.5rem;
+    }
+    
+    #nav-menu {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      gap: 1rem;
+    }
+    
     @media (max-width: 768px) {
-      nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 0.5rem;
+      .mobile-menu-toggle {
+        display: block;
       }
       
-      nav ul li {
-        margin: 0.25rem;
+      #nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: var(--card-background-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        margin: 0.5rem;
+        padding: 1rem;
+        flex-direction: column;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        z-index: 1000;
+        min-width: 200px;
       }
       
-      .lang-toggle {
-        order: -1;
-        width: 100%;
+      #nav-menu.active {
+        display: flex;
+      }
+      
+      #nav-menu li {
+        margin: 0.5rem 0;
         text-align: center;
-        margin-bottom: 0.5rem;
       }
       
-      nav ul li a[role="button"] {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
+      #nav-menu .auth-links {
+        display: none !important;
+      }
+    }
+    
+    @media (min-width: 769px) {
+      #nav-menu {
+        display: flex !important;
       }
     }
   </style>
@@ -40,19 +82,20 @@
     <ul>
       <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
     </ul>
-    <ul>
-      <li><a href="#rooms" data-lang="it">Camere</a></li>
-      <li><a href="#rooms" class="hidden" data-lang="en">Rooms</a></li>
-      <li class="auth-links">
-        <!-- Will be populated by JavaScript -->
-      </li>
-      <li><a href="#booking" role="button" data-lang="it">Prenota</a></li>
-      <li><a href="#booking" role="button" class="hidden" data-lang="en">Book Now</a></li>
-      <li class="lang-toggle">
-        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
-        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
-      </li>
-    </ul>
+    <div style="display: flex; align-items: center; gap: 1rem;">
+      <a href="#booking" role="button" data-lang="it">Prenota</a>
+      <a href="#booking" role="button" class="hidden" data-lang="en">Book Now</a>
+      <ul id="nav-menu">
+        <li class="auth-links">
+          <!-- Will be populated by JavaScript -->
+        </li>
+        <li class="lang-toggle">
+          <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+          <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+        </li>
+      </ul>
+      <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    </div>
   </nav>
 
   <main class="container">
@@ -82,10 +125,6 @@
             <div class="swiper-slide"><img  src="./attached_assets/Balcone.jpg" alt="Balcone" /></div>
             <div class="swiper-slide"><img  src="./attached_assets/Bagno.jpg" alt="Bagno" /></div>
           </div>
-        </div>
-        <div style="text-align: center; margin-top: 1.5rem;">
-          <a href="#booking" role="button" class="secondary" data-lang="it">Scopri le nostre camere</a>
-          <a href="#booking" role="button" class="secondary hidden" data-lang="en">Discover our rooms</a>
         </div>
       </section>
 
@@ -332,7 +371,6 @@
         <h4 class="hidden" style="color: #007bff; margin-bottom: 1rem;" data-lang="en">🔗 Useful Links</h4>
         <ul style="list-style: none; padding: 0;">
           <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #007bff; text-decoration: none;">🏠 Home</a></li>
-          <li style="margin-bottom: 0.5rem;"><a href="#rooms" style="color: #007bff; text-decoration: none;">🛏️ <span data-lang="it">Camere</span><span class="hidden" data-lang="en">Rooms</span></a></li>
           <li style="margin-bottom: 0.5rem;"><a href="#booking" style="color: #007bff; text-decoration: none;">📅 <span data-lang="it">Prenota</span><span class="hidden" data-lang="en">Book</span></a></li>
           <li style="margin-bottom: 0.5rem;"><a href="https://wa.me/393758843175" style="color: #007bff; text-decoration: none;">💬 WhatsApp</a></li>
           <li style="margin-bottom: 0.5rem;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
