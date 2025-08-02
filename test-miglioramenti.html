@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔧 Test Miglioramenti AuRooms Admin</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .feature {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .feature h3 {
+            color: #007bff;
+            margin-top: 0;
+        }
+        
+        .improvement {
+            display: flex;
+            align-items: center;
+            margin: 1rem 0;
+            padding: 1rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .improvement .icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+            width: 60px;
+            text-align: center;
+        }
+        
+        .improvement .text {
+            flex: 1;
+        }
+        
+        .improvement .text h4 {
+            margin: 0 0 0.5rem 0;
+            color: #2d3748;
+        }
+        
+        .improvement .text p {
+            margin: 0;
+            color: #4a5568;
+        }
+        
+        .test-buttons {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .test-btn {
+            display: block;
+            padding: 1rem;
+            background: #007bff;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            text-align: center;
+            transition: background 0.3s;
+            font-weight: 600;
+        }
+        
+        .test-btn:hover {
+            background: #0056b3;
+        }
+        
+        .test-btn.success {
+            background: #28a745;
+        }
+        
+        .test-btn.success:hover {
+            background: #1e7e34;
+        }
+        
+        .before-after {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .before, .after {
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        .before {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .after {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .contrast-demo {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .old-gray {
+            color: #6c757d;
+            text-decoration: line-through;
+        }
+        
+        .new-dark {
+            color: #2d3748;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 Miglioramenti Dashboard Admin AuRooms</h1>
+            <p>Test delle nuove funzionalità implementate</p>
+        </div>
+        
+        <div class="content">
+            <div class="feature">
+                <h3>📧 1. Sistema Email Admin</h3>
+                <div class="improvement">
+                    <div class="icon">📧</div>
+                    <div class="text">
+                        <h4>Email Configurabile</h4>
+                        <p>L'admin può configurare la sua email nelle Impostazioni per ricevere copia di tutte le prenotazioni</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">📋</div>
+                    <div class="text">
+                        <h4>Copia Automatica</h4>
+                        <p>Ogni prenotazione e pagamento invia automaticamente una copia dettagliata all'admin configurato</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">🧪</div>
+                    <div class="text">
+                        <h4>Test Connessione</h4>
+                        <p>Funzione di test per verificare che EmailJS funzioni correttamente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <h3>🎨 2. Miglioramento Contrasto</h3>
+                <p><strong>PRIMA vs DOPO</strong> - Confronto colori per migliore leggibilità:</p>
+                
+                <div class="contrast-demo">
+                    <div class="old-gray">❌ Vecchio colore: #6c757d (grigio - difficile da leggere)</div>
+                    <div class="new-dark">✅ Nuovo colore: #2d3748 (scuro - facile da leggere)</div>
+                </div>
+                
+                <div class="before-after">
+                    <div class="before">
+                        <h4>❌ Prima</h4>
+                        <p style="color: #6c757d;">Testo grigio difficile da leggere su sfondo bianco</p>
+                        <p style="color: #6c757d;">Contrasto insufficiente per accessibilità</p>
+                    </div>
+                    <div class="after">
+                        <h4>✅ Dopo</h4>
+                        <p style="color: #2d3748;">Testo scuro facilmente leggibile</p>
+                        <p style="color: #2d3748;">Contrasto ottimale per tutti gli utenti</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature">
+                <h3>⚙️ 3. Funzioni Complete</h3>
+                <div class="improvement">
+                    <div class="icon">🛏️</div>
+                    <div class="text">
+                        <h4>Gestione Camere</h4>
+                        <p>Aggiungi, modifica, elimina camere. Gestisci disponibilità e prezzi in tempo reale</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">🔑</div>
+                    <div class="text">
+                        <h4>Cambio Password</h4>
+                        <p>Sistema sicuro per cambiare la password admin con verifica della password corrente</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">📊</div>
+                    <div class="text">
+                        <h4>Export Clienti</h4>
+                        <p>Esporta database clienti in formato CSV con tutti i dettagli delle prenotazioni</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">💾</div>
+                    <div class="text">
+                        <h4>Backup Completo</h4>
+                        <p>Backup di tutti i dati: prenotazioni, pagamenti, camere, impostazioni in formato JSON</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">🏦</div>
+                    <div class="text">
+                        <h4>Coordinate Bancarie</h4>
+                        <p>Modifica IBAN, BIC e intestatario direttamente dalla dashboard</p>
+                    </div>
+                </div>
+                
+                <div class="improvement">
+                    <div class="icon">📈</div>
+                    <div class="text">
+                        <h4>Statistiche Tempo Reale</h4>
+                        <p>Giorni online, email inviate, dimensione dati - aggiornate automaticamente</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-buttons">
+                <a href="admin-login.html" class="test-btn">🔐 Test Login Admin</a>
+                <a href="admin-dashboard.html" class="test-btn success">📊 Test Dashboard</a>
+                <a href="pagamento.html" class="test-btn">💳 Test Pagamenti</a>
+                <a href="index.html" class="test-btn">🏠 Torna al Sito</a>
+            </div>
+            
+            <div class="feature">
+                <h3>🔧 Istruzioni Test</h3>
+                <ol>
+                    <li><strong>Login Admin:</strong> Usa credenziali: admin/admin, aurooms/aurooms, oppure aurooms_admin/AUROOMS2025!</li>
+                    <li><strong>Configurazione Email:</strong> Vai su Impostazioni → Inserisci tua email per ricevere copie</li>
+                    <li><strong>Test Email:</strong> Clicca "Test Connessione Email" per verificare funzionamento</li>
+                    <li><strong>Gestione Camere:</strong> Vai su Camere → Aggiungi nuove camere o modifica esistenti</li>
+                    <li><strong>Test Prenotazione:</strong> Fai una prenotazione da cliente per vedere email admin automatica</li>
+                    <li><strong>Export Dati:</strong> Prova l'export clienti e backup completo</li>
+                </ol>
+            </div>
+            
+            <div style="text-align: center; margin-top: 3rem; padding: 2rem; background: #f8f9fa; border-radius: 8px;">
+                <h3 style="color: #28a745;">✅ Tutti i Miglioramenti Implementati!</h3>
+                <p style="color: #4a5568;">
+                    La dashboard admin ora ha email configurabili, migliore contrasto visivo e tutte le funzionalità "in sviluppo" sono complete e funzionanti.
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

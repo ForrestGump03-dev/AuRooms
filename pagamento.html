@@ -478,6 +478,20 @@
         .then(function(response) {
           console.log('✅ Email inviata con successo!', response.status, response.text);
           
+          // Invia copia all'admin
+          sendAdminCopyEmail({
+            name: currentUser.name,
+            email: currentUser.email,
+            phone: currentUser.phone || 'N/D',
+            checkin: bookingData.checkin,
+            checkout: bookingData.checkout,
+            guests: bookingData.guests,
+            room: bookingData.roomName,
+            total: bookingData.totalPrice,
+            id: templateParams.booking_reference,
+            payment: 'Bonifico Bancario'
+          });
+          
           // Mostra conferma successo
           alert(getCurrentLanguage() === 'it' ? 
             `✅ Email inviata con successo a ${currentUser.email}!\n\n🏦 Le coordinate bancarie sono state inviate.\n📧 Controlla la tua casella di posta.\n\n💰 Importo da pagare: €${bookingData.totalPrice}\n🔢 Riferimento: ${templateParams.booking_reference}` :
@@ -523,6 +537,21 @@
       emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
         .then(function(response) {
           console.log('✅ Email di conferma inviata!', response.status);
+          
+          // Invia copia all'admin
+          sendAdminCopyEmail({
+            name: currentUser.name,
+            email: currentUser.email,
+            phone: currentUser.phone || 'N/D',
+            checkin: bookingData.checkin,
+            checkout: bookingData.checkout,
+            guests: bookingData.guests,
+            room: bookingData.roomName,
+            total: bookingData.totalPrice,
+            id: templateParams.booking_reference,
+            payment: templateParams.payment_method
+          });
+          
         }, function(error) {
           console.error('❌ Errore invio email conferma:', error);
         });
@@ -679,6 +708,41 @@
     
     // ========== FINE GESTIONE ADMIN ==========
     
+    // FUNZIONE HELPER: Invia copia email all'admin
+    function sendAdminCopyEmail(bookingData) {
+      const adminEmail = localStorage.getItem('admin_email');
+      if (!adminEmail) {
+        console.log('📧 Nessuna email admin configurata - salta invio copia');
+        return Promise.resolve();
+      }
+      
+      // Template parametri per copia admin
+      const adminParams = {
+        to_name: 'Amministratore AuRooms',
+        to_email: adminEmail,
+        from_name: 'Sistema AuRooms',
+        customer_name: bookingData.name || 'Cliente',
+        customer_email: bookingData.email || 'N/D',
+        customer_phone: bookingData.phone || 'N/D',
+        checkin_date: bookingData.checkin || 'N/D',
+        checkout_date: bookingData.checkout || 'N/D',
+        guests: bookingData.guests || 'N/D',
+        room_type: bookingData.room || 'N/D',
+        total_amount: bookingData.total || 'N/D',
+        booking_id: bookingData.id || 'N/D',
+        payment_method: bookingData.payment || 'N/D',
+        booking_date: new Date().toLocaleString('it-IT')
+      };
+      
+      return emailjs.send('service_oiuox5y', 'template_admin_copy', adminParams)
+        .then(function(response) {
+          console.log('✅ Copia admin inviata:', response);
+        })
+        .catch(function(error) {
+          console.error('❌ Errore copia admin:', error);
+        });
+    }
+
     function getCurrentLanguage() {
       return localStorage.getItem('aurooms_language') || 'it';
     }
