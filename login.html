@@ -182,13 +182,24 @@
         localStorage.setItem('aurooms_current_user', JSON.stringify(user));
         showSuccessMessage();
         
-        // Redirect after 2 seconds
+        // Clean redirect logic with explicit path checking
         setTimeout(() => {
           const pendingBooking = sessionStorage.getItem('pending_booking');
+          console.log('Login redirect - pendingBooking:', pendingBooking);
+          
+          // Clear any potential bad cache
+          if (location.href.includes('rooms.html')) {
+            console.warn('Detected old rooms.html reference, correcting...');
+          }
+          
           if (pendingBooking) {
-            window.location.href = 'pagamento.html';
+            console.log('Redirecting to pagamento.html');
+            // Force redirect with replace to avoid history issues
+            location.replace('pagamento.html');
           } else {
-            window.location.href = 'dashboard.html';
+            console.log('Redirecting to dashboard.html');
+            // Force redirect with replace to avoid history issues
+            location.replace('dashboard.html');
           }
         }, 2000);
       } else {
@@ -241,13 +252,24 @@
       
       showSuccessMessage();
       
-      // Redirect after 2 seconds
+      // Clean redirect logic with explicit path checking
       setTimeout(() => {
         const pendingBooking = sessionStorage.getItem('pending_booking');
+        console.log('Registration redirect - pendingBooking:', pendingBooking);
+        
+        // Clear any potential bad cache
+        if (location.href.includes('rooms.html')) {
+          console.warn('Detected old rooms.html reference, correcting...');
+        }
+        
         if (pendingBooking) {
-          window.location.href = 'pagamento.html';
+          console.log('Redirecting to pagamento.html');
+          // Force redirect with replace to avoid history issues
+          location.replace('pagamento.html');
         } else {
-          window.location.href = 'dashboard.html';
+          console.log('Redirecting to dashboard.html');
+          // Force redirect with replace to avoid history issues  
+          location.replace('dashboard.html');
         }
       }, 2000);
     }
@@ -276,6 +298,33 @@
       return localStorage.getItem('aurooms_language') || 'it';
     }
     
+    function clearOldReferences() {
+      // Clear any cached redirect references to rooms.html
+      console.log('Clearing any old references...');
+      
+      // Check and clean sessionStorage
+      const sessionKeys = Object.keys(sessionStorage);
+      sessionKeys.forEach(key => {
+        const value = sessionStorage.getItem(key);
+        if (value && value.includes && value.includes('rooms.html')) {
+          console.log(`Removing old reference in sessionStorage key: ${key}`);
+          sessionStorage.removeItem(key);
+        }
+      });
+      
+      // Check and clean localStorage for any room references (excluding our data)
+      const localKeys = Object.keys(localStorage);
+      localKeys.forEach(key => {
+        if (!key.startsWith('aurooms_')) {
+          const value = localStorage.getItem(key);
+          if (value && value.includes && value.includes('rooms.html')) {
+            console.log(`Removing old reference in localStorage key: ${key}`);
+            localStorage.removeItem(key);
+          }
+        }
+      });
+    }
+    
     function switchLang(lang) {
       localStorage.setItem('aurooms_language', lang);
       document.querySelectorAll('[data-lang]').forEach(el => {
@@ -289,18 +338,31 @@
     
     // Initialize page
     document.addEventListener('DOMContentLoaded', function() {
+      // Clear any old room references that might be cached
+      clearOldReferences();
+      
       const currentLang = getCurrentLanguage();
       switchLang(currentLang);
       
       // Check if user is already logged in
       const currentUser = localStorage.getItem('aurooms_current_user');
+      console.log('Page load - currentUser:', currentUser);
       if (currentUser) {
         // User already logged in, redirect to booking flow
         const pendingBooking = sessionStorage.getItem('pending_booking');
+        console.log('Page load - pendingBooking:', pendingBooking);
+        
+        // Clear any potential bad cache
+        if (location.href.includes('rooms.html')) {
+          console.warn('Detected old rooms.html reference, correcting...');
+        }
+        
         if (pendingBooking) {
-          window.location.href = 'pagamento.html';
+          console.log('Page load redirecting to pagamento.html');
+          location.replace('pagamento.html');
         } else {
-          window.location.href = 'dashboard.html';
+          console.log('Page load redirecting to dashboard.html');
+          location.replace('dashboard.html');
         }
       }
     });
