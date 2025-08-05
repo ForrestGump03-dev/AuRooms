@@ -35,11 +35,16 @@
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li>
+        <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+          <img src="./attached_assets/logo_aurooms.jpg" alt="AUROOMS Logo" style="height: 35px; width: auto; border-radius: 4px;">
+          <strong>AUROOMS</strong>
+        </a>
+      </li>
     </ul>
     <ul>
-      <li><a href="rooms.html" data-lang="it">← Torna alle camere</a></li>
-      <li><a href="rooms.html" class="hidden" data-lang="en">← Back to rooms</a></li>
+      <li><a href="index.html#booking" data-lang="it">← Torna alla prenotazione</a></li>
+      <li><a href="index.html#booking" class="hidden" data-lang="en">← Back to booking</a></li>
       <li><a href="index.html">Home</a></li>
       <li class="lang-toggle">
         <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
@@ -202,7 +207,7 @@
 
       if (!selectedRoom || !checkin || !checkout) {
         alert('Dati prenotazione mancanti. Verrai reindirizzato alla selezione camere.');
-        window.location.href = 'rooms.html';
+        window.location.href = 'index.html#booking';
         return;
       }
 

@@ -92,7 +92,12 @@
 <body>
   <nav class="container-fluid">
     <ul>
-      <li><strong><a href="index.html" style="text-decoration: none; color: inherit;">AUROOMS</a></strong></li>
+      <li>
+        <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+          <img src="./attached_assets/logo_aurooms.jpg" alt="AUROOMS Logo" style="height: 35px; width: auto; border-radius: 4px;">
+          <strong>AUROOMS</strong>
+        </a>
+      </li>
     </ul>
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -287,7 +292,11 @@
         guests: booking.guests,
         total_amount: booking.totalPrice,
         payment_method: 'Bonifico Bancario',
-        booking_reference: booking.bookingReference
+        booking_reference: booking.bookingReference,
+        logo_url: window.location.origin + '/attached_assets/logo_aurooms.jpg',
+        company_name: 'AUROOMS Guest House',
+        from_name: 'AUROOMS Guest House',
+        reply_to: 'info@aurooms.it'
       };
       
       emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
@@ -327,11 +336,16 @@
         return;
       }
       
+      // Ottieni coordinate bancarie aggiornate dal localStorage
+      const bankIban = localStorage.getItem('bank_iban') || "IT60 X054 2811 1010 0000 0123 456";
+      const bankBic = localStorage.getItem('bank_bic') || "BPMOIT22XXX";
+      const bankHolder = localStorage.getItem('bank_holder') || "AUROOMS Guest House";
+      
       const bankingDetails = `Dettagli Bonifico - ${bookingReference}
 
-🏦 IBAN: IT60 X054 2811 1010 0000 0123 456
-🏦 BIC: BPMOIT22XXX
-🏦 Intestatario: AUROOMS Guest House
+🏦 IBAN: ${bankIban}
+🏦 BIC: ${bankBic}
+🏦 Intestatario: ${bankHolder}
 💰 Importo: €${booking.totalPrice}
 📝 Causale: Prenotazione ${booking.roomName}
 🔢 Riferimento: ${bookingReference}

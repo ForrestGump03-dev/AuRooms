@@ -3,8 +3,8 @@
 ## 🔐 Accesso Admin
 
 ### Credenziali di Default
-- **Username**: `aurooms_admin`
-- **Password**: `AUROOMS2025!`
+- **Username**: `admin`
+- **Password**: `admin`
 
 ### Link di Accesso
 - **URL**: `admin-login.html`

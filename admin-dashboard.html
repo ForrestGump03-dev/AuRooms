@@ -49,7 +49,10 @@
 
   <div class="admin-layout">
     <div class="sidebar">
-      <h2>🏠 AuRooms Admin</h2>
+      <div style="padding: 0 1rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 0.5rem;">
+        <img src="./attached_assets/logo_aurooms.jpg" alt="AUROOMS Logo" style="height: 30px; width: auto; border-radius: 4px;">
+        <h2 style="margin: 0; color: #63b3ed;">AuRooms Admin</h2>
+      </div>
       <nav class="sidebar-menu">
         <a href="#" id="menu-dashboard" class="active" onclick="showSection('dashboard')">📊 Dashboard</a>
         <a href="#" id="menu-transfers" onclick="showSection('transfers')">🏦 Bonifici</a>
@@ -376,7 +379,11 @@
         guests: booking.guests,
         total_amount: booking.totalPrice,
         payment_method: 'Bonifico Bancario',
-        booking_reference: booking.bookingReference
+        booking_reference: booking.bookingReference,
+        logo_url: window.location.origin + '/attached_assets/logo_aurooms.jpg',
+        company_name: 'AUROOMS Guest House',
+        from_name: 'AUROOMS Guest House',
+        reply_to: 'info@aurooms.it'
       };
       
       emailjs.send('service_oiuox5y', 'payment_confirmation', templateParams)
@@ -451,7 +458,14 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
       localStorage.setItem('bank_bic', bic);
       localStorage.setItem('bank_holder', holder);
       
-      alert('✅ Coordinate bancarie salvate con successo!');
+      // Trigger evento per sincronizzazione
+      window.dispatchEvent(new StorageEvent('storage', {
+        key: 'bank_updated',
+        newValue: JSON.stringify({ iban, bic, holder }),
+        url: window.location.href
+      }));
+      
+      alert('✅ Coordinate bancarie salvate con successo!\n\n🔄 Tutte le pagine del sito sono ora aggiornate con le nuove coordinate.');
     }
     
     // Carica coordinate bancarie salvate
@@ -471,6 +485,7 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
       
       if (checkAuth()) {
         loadDashboardData();
+        loadBankDetails(); // Carica le coordinate bancarie salvate
       }
       
       // Controllo sessione ogni 30 secondi

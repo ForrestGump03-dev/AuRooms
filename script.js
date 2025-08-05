@@ -4,6 +4,35 @@ function toggleMobileMenu() {
   navMenu.classList.toggle('active');
 }
 
+// Funzione per ottenere le coordinate bancarie aggiornate
+function getBankingInfo() {
+  return {
+    iban: localStorage.getItem('bank_iban') || "IT60 X054 2811 1010 0000 0123 456",
+    bic: localStorage.getItem('bank_bic') || "BPMOIT22XXX", 
+    holder: localStorage.getItem('bank_holder') || "AUROOMS Guest House"
+  };
+}
+
+// Listener per cambiamenti nelle coordinate bancarie
+window.addEventListener('storage', function(e) {
+  if (e.key && e.key.startsWith('bank_')) {
+    console.log('🏦 Coordinate bancarie aggiornate:', e.key, e.newValue);
+    // Ricarica eventuali elementi che dipendono dalle coordinate bancarie
+    updateBankingDisplay();
+  }
+});
+
+// Funzione per aggiornare la visualizzazione delle coordinate bancarie
+function updateBankingDisplay() {
+  const bankingInfo = getBankingInfo();
+  console.log('🏦 Aggiornamento coordinate bancarie:', bankingInfo);
+  
+  // Puoi aggiungere qui logica specifica per aggiornare l'UI se necessario
+  if (typeof updatePaymentPage === 'function') {
+    updatePaymentPage(bankingInfo);
+  }
+}
+
 // Room booking system
 const roomsData = [
   {
@@ -351,14 +380,20 @@ function updateAuthUI() {
     if (currentUser) {
       const user = JSON.parse(currentUser);
       authContainer.innerHTML = `
-        <span style="margin-right: 1rem;">Ciao, ${user.firstName}!</span>
-        <a href="#" onclick="logout()" style="color: var(--del-color);">Logout</a>
+        <a href="dashboard.html" style="margin-right: 1rem; color: #007bff;">
+          <span data-lang="it">👤 ${user.firstName || user.name}</span>
+          <span class="hidden" data-lang="en">👤 ${user.firstName || user.name}</span>
+        </a>
+        <a href="#" onclick="logout()" style="color: var(--del-color);">
+          <span data-lang="it">Logout</span>
+          <span class="hidden" data-lang="en">Logout</span>
+        </a>
       `;
     } else {
       authContainer.innerHTML = `
-        <a href="login.html">
-          <span data-lang="it">Accedi</span>
-          <span class="hidden" data-lang="en">Login</span>
+        <a href="login.html" style="margin-right: 0.5rem;">
+          <span data-lang="it">🔑 Accedi</span>
+          <span class="hidden" data-lang="en">🔑 Login</span>
         </a>
       `;
     }

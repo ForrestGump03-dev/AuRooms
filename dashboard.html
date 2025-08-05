@@ -13,12 +13,18 @@
       padding: 1.5rem;
       border-radius: 12px;
       margin-bottom: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
     .booking-card {
       border: 1px solid var(--border-color);
       padding: 1rem;
       border-radius: 8px;
       margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .booking-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-color: #007bff;
     }
     .booking-status {
       display: inline-block;
@@ -35,49 +41,169 @@
       grid-template-columns: 1fr 1fr;
       gap: 1rem;
     }
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .payment-method-card {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .payment-method-card:hover {
+      border-color: #007bff;
+      background: #f8f9ff;
+    }
+    .payment-method-card.active {
+      border-color: #007bff;
+      background: #e7f3ff;
+    }
+    .stats-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 1rem;
+      background: linear-gradient(135deg, #007bff, #0056b3);
+      color: white;
+      border-radius: 8px;
+    }
+    .stat-number {
+      font-size: 1.8rem;
+      font-weight: bold;
+    }
+    .stat-label {
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+    .loyalty-progress {
+      background: var(--border-color);
+      height: 10px;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 1rem 0;
+    }
+    .loyalty-progress-bar {
+      background: linear-gradient(90deg, #28a745, #20c997);
+      height: 100%;
+      transition: width 0.3s ease;
+    }
+    .documents-list {
+      list-style: none;
+      padding: 0;
+    }
+    .document-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .document-item:hover {
+      background: #f8f9fa;
+    }
     @media (max-width: 768px) {
       .profile-section { grid-template-columns: 1fr; }
+      .payment-methods-grid { grid-template-columns: 1fr; }
+      .stats-overview { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
 </head>
 <body>
-  <nav class="container-fluid">
+    <nav class="container-fluid">
     <ul>
-      <li><strong>AUROOMS</strong></li>
+      <li>
+        <a href="index.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.5rem;">
+          <img src="./attached_assets/logo_aurooms.jpg" alt="AUROOMS Logo" style="height: 40px; width: auto; border-radius: 4px;">
+          <strong>AUROOMS</strong>
+        </a>
+      </li>
     </ul>
     <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="rooms.html">Camere</a></li>
-      <li><a href="#" onclick="logout()">Logout</a></li>
+      <li><a href="index.html" data-lang="it">🏠 Home</a></li>
+      <li><a href="index.html" class="hidden" data-lang="en">🏠 Home</a></li>
+      <li><a href="index.html#booking" data-lang="it">🛏️ Prenota</a></li>
+      <li><a href="index.html#booking" class="hidden" data-lang="en">🛏️ Book</a></li>
+      <li><a href="https://wa.me/393758843175" target="_blank">💬 WhatsApp</a></li>
+      <li id="auth-links">
+        <!-- Will be populated by JavaScript -->
+      </li>
+      <li class="lang-toggle">
+        <img src="https://flagcdn.com/w40/it.png" class="flag" onclick="switchLang('it')" alt="IT">
+        <img src="https://flagcdn.com/w40/gb.png" class="flag" onclick="switchLang('en')" alt="EN">
+      </li>
     </ul>
   </nav>
 
   <main class="container">
     <hgroup style="margin-bottom: 2rem;">
-      <h1>La Mia Area</h1>
-      <h3>Benvenuto, <span id="user-name">—</span></h3>
+      <h1 data-lang="it">La Mia Area AUROOMS</h1>
+      <h1 class="hidden" data-lang="en">My AUROOMS Area</h1>
+      <h3 data-lang="it">Benvenuto, <span id="user-name">—</span></h3>
+      <h3 class="hidden" data-lang="en">Welcome, <span id="user-name-en">—</span></h3>
     </hgroup>
+
+    <!-- Statistiche Personali -->
+    <div class="stats-overview">
+      <div class="stat-item">
+        <div class="stat-number" id="total-bookings">0</div>
+        <div class="stat-label" data-lang="it">Prenotazioni Totali</div>
+        <div class="stat-label hidden" data-lang="en">Total Bookings</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="total-nights">0</div>
+        <div class="stat-label" data-lang="it">Notti Totali</div>
+        <div class="stat-label hidden" data-lang="en">Total Nights</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="total-spent">€0</div>
+        <div class="stat-label" data-lang="it">Spesa Totale</div>
+        <div class="stat-label hidden" data-lang="en">Total Spent</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="loyalty-points">0</div>
+        <div class="stat-label" data-lang="it">Punti Fedeltà</div>
+        <div class="stat-label hidden" data-lang="en">Loyalty Points</div>
+      </div>
+    </div>
 
     <div class="grid">
       <div>
         <!-- My Bookings -->
         <div class="dashboard-card">
-          <h3>Le Mie Prenotazioni</h3>
+          <h3 data-lang="it">Le Mie Prenotazioni</h3>
+          <h3 class="hidden" data-lang="en">My Bookings</h3>
           <div id="bookings-list">
             <div class="booking-card">
               <div class="grid">
                 <div>
-                  <h5>Camera Deluxe con Vista Mare</h5>
-                  <p>📅 15/02/2024 - 18/02/2024 (3 notti)</p>
-                  <p>👥 2 ospiti • 🛏️ 1 camera</p>
-                  <p>📧 Conferma: AU123456</p>
+                  <h5 data-lang="it">Camera Deluxe con Vista Mare</h5>
+                  <h5 class="hidden" data-lang="en">Deluxe Room with Sea View</h5>
+                  <p>📅 15/02/2024 - 18/02/2024 <span data-lang="it">(3 notti)</span><span class="hidden" data-lang="en">(3 nights)</span></p>
+                  <p>👥 2 <span data-lang="it">ospiti</span><span class="hidden" data-lang="en">guests</span> • 🛏️ 1 <span data-lang="it">camera</span><span class="hidden" data-lang="en">room</span></p>
+                  <p>📧 <span data-lang="it">Conferma:</span><span class="hidden" data-lang="en">Confirmation:</span> AU123456</p>
                 </div>
                 <div style="text-align: right;">
-                  <span class="booking-status status-confirmed">Confermata</span>
+                  <span class="booking-status status-confirmed" data-lang="it">Confermata</span>
+                  <span class="booking-status status-confirmed hidden" data-lang="en">Confirmed</span>
                   <p style="margin-top: 0.5rem;"><strong>€255</strong></p>
                   <small>
-                    <a href="#" onclick="viewBookingDetails('AU123456')">Dettagli</a> |
-                    <a href="#" onclick="cancelBooking('AU123456')">Cancella</a>
+                    <a href="#" onclick="viewBookingDetails('AU123456')" data-lang="it">Dettagli</a>
+                    <a href="#" onclick="viewBookingDetails('AU123456')" class="hidden" data-lang="en">Details</a> |
+                    <a href="#" onclick="downloadInvoice('AU123456')" data-lang="it">Fattura</a>
+                    <a href="#" onclick="downloadInvoice('AU123456')" class="hidden" data-lang="en">Invoice</a> |
+                    <a href="#" onclick="cancelBooking('AU123456')" data-lang="it">Cancella</a>
+                    <a href="#" onclick="cancelBooking('AU123456')" class="hidden" data-lang="en">Cancel</a>
                   </small>
                 </div>
               </div>
@@ -86,17 +212,21 @@
             <div class="booking-card">
               <div class="grid">
                 <div>
-                  <h5>Camera Standard</h5>
-                  <p>📅 25/03/2024 - 27/03/2024 (2 notti)</p>
-                  <p>👥 1 ospite • 🛏️ 1 camera</p>
-                  <p>📧 Conferma: AU789012</p>
+                  <h5 data-lang="it">Camera Standard</h5>
+                  <h5 class="hidden" data-lang="en">Standard Room</h5>
+                  <p>📅 25/03/2024 - 27/03/2024 <span data-lang="it">(2 notti)</span><span class="hidden" data-lang="en">(2 nights)</span></p>
+                  <p>👥 1 <span data-lang="it">ospite</span><span class="hidden" data-lang="en">guest</span> • 🛏️ 1 <span data-lang="it">camera</span><span class="hidden" data-lang="en">room</span></p>
+                  <p>📧 <span data-lang="it">Conferma:</span><span class="hidden" data-lang="en">Confirmation:</span> AU789012</p>
                 </div>
                 <div style="text-align: right;">
-                  <span class="booking-status status-pending">In attesa pagamento</span>
+                  <span class="booking-status status-pending" data-lang="it">In attesa pagamento</span>
+                  <span class="booking-status status-pending hidden" data-lang="en">Awaiting payment</span>
                   <p style="margin-top: 0.5rem;"><strong>€130</strong></p>
                   <small>
-                    <a href="#" onclick="payBooking('AU789012')">Paga ora</a> |
-                    <a href="#" onclick="cancelBooking('AU789012')">Cancella</a>
+                    <a href="#" onclick="payBooking('AU789012')" data-lang="it">Paga ora</a>
+                    <a href="#" onclick="payBooking('AU789012')" class="hidden" data-lang="en">Pay now</a> |
+                    <a href="#" onclick="cancelBooking('AU789012')" data-lang="it">Cancella</a>
+                    <a href="#" onclick="cancelBooking('AU789012')" class="hidden" data-lang="en">Cancel</a>
                   </small>
                 </div>
               </div>
@@ -104,18 +234,100 @@
           </div>
 
           <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="rooms.html" role="button">Nuova Prenotazione</a>
+            <a href="index.html#booking" role="button" data-lang="it">Nuova Prenotazione</a>
+            <a href="index.html#booking" role="button" class="hidden" data-lang="en">New Booking</a>
           </div>
+        </div>
+
+        <!-- Metodi di Pagamento -->
+        <div class="dashboard-card">
+          <h3 data-lang="it">💳 Metodi di Pagamento</h3>
+          <h3 class="hidden" data-lang="en">💳 Payment Methods</h3>
+          <p data-lang="it">Gestisci i tuoi metodi di pagamento salvati</p>
+          <p class="hidden" data-lang="en">Manage your saved payment methods</p>
+          
+          <div class="payment-methods-grid">
+            <div class="payment-method-card" onclick="selectPaymentMethod('card1')">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">💳</div>
+              <h5>Visa •••• 1234</h5>
+              <p data-lang="it">Scade: 12/2026</p>
+              <p class="hidden" data-lang="en">Expires: 12/2026</p>
+              <small style="color: #28a745;" data-lang="it">✓ Verificata</small>
+              <small style="color: #28a745;" class="hidden" data-lang="en">✓ Verified</small>
+            </div>
+            
+            <div class="payment-method-card" onclick="selectPaymentMethod('paypal')">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">🅿️</div>
+              <h5>PayPal</h5>
+              <p>mario.rossi@email.com</p>
+              <small style="color: #28a745;" data-lang="it">✓ Collegata</small>
+              <small style="color: #28a745;" class="hidden" data-lang="en">✓ Connected</small>
+            </div>
+            
+            <div class="payment-method-card" onclick="addPaymentMethod()">
+              <div style="font-size: 2rem; margin-bottom: 0.5rem;">➕</div>
+              <h5 data-lang="it">Aggiungi Metodo</h5>
+              <h5 class="hidden" data-lang="en">Add Method</h5>
+              <p data-lang="it">Carta o PayPal</p>
+              <p class="hidden" data-lang="en">Card or PayPal</p>
+              <small data-lang="it">Sicuro e veloce</small>
+              <small class="hidden" data-lang="en">Safe and fast</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Documenti -->
+        <div class="dashboard-card">
+          <h3 data-lang="it">📄 I Miei Documenti</h3>
+          <h3 class="hidden" data-lang="en">📄 My Documents</h3>
+          <ul class="documents-list">
+            <li class="document-item">
+              <div>
+                <strong data-lang="it">Fattura AU123456</strong>
+                <strong class="hidden" data-lang="en">Invoice AU123456</strong>
+                <small style="display: block; color: #6c757d;">15/02/2024 - €255.00</small>
+              </div>
+              <a href="#" onclick="downloadInvoice('AU123456')" style="color: #007bff;" data-lang="it">📥 Scarica</a>
+              <a href="#" onclick="downloadInvoice('AU123456')" style="color: #007bff;" class="hidden" data-lang="en">📥 Download</a>
+            </li>
+            <li class="document-item">
+              <div>
+                <strong data-lang="it">Ricevuta Pagamento AU789012</strong>
+                <strong class="hidden" data-lang="en">Payment Receipt AU789012</strong>
+                <small style="display: block; color: #6c757d;">25/03/2024 - €130.00</small>
+              </div>
+              <a href="#" onclick="downloadInvoice('AU789012')" style="color: #007bff;" data-lang="it">📥 Scarica</a>
+              <a href="#" onclick="downloadInvoice('AU789012')" style="color: #007bff;" class="hidden" data-lang="en">📥 Download</a>
+            </li>
+            <li class="document-item">
+              <div>
+                <strong data-lang="it">Conferma Prenotazione AU123456</strong>
+                <strong class="hidden" data-lang="en">Booking Confirmation AU123456</strong>
+                <small style="display: block; color: #6c757d;">10/02/2024</small>
+              </div>
+              <a href="#" onclick="downloadConfirmation('AU123456')" style="color: #007bff;" data-lang="it">📥 Scarica</a>
+              <a href="#" onclick="downloadConfirmation('AU123456')" style="color: #007bff;" class="hidden" data-lang="en">📥 Download</a>
+            </li>
+          </ul>
         </div>
 
         <!-- Quick Actions -->
         <div class="dashboard-card">
-          <h3>Azioni Rapide</h3>
+          <h3 data-lang="it">Azioni Rapide</h3>
+          <h3 class="hidden" data-lang="en">Quick Actions</h3>
           <div class="grid">
-            <a href="rooms.html" role="button" class="secondary">🏠 Prenota Camera</a>
-            <a href="https://wa.me/393471234567" target="_blank" role="button" class="secondary">💬 Contattaci</a>
-            <a href="#" onclick="downloadInvoices()" role="button" class="secondary">📄 Fatture</a>
-            <a href="#" onclick="requestSupport()" role="button" class="secondary">🆘 Assistenza</a>
+            <a href="index.html#booking" role="button" class="secondary">
+              🏠 <span data-lang="it">Prenota Camera</span><span class="hidden" data-lang="en">Book Room</span>
+            </a>
+            <a href="https://wa.me/393758843175" target="_blank" role="button" class="secondary">
+              💬 <span data-lang="it">Contattaci</span><span class="hidden" data-lang="en">Contact Us</span>
+            </a>
+            <a href="#" onclick="downloadInvoices()" role="button" class="secondary">
+              📄 <span data-lang="it">Tutte le Fatture</span><span class="hidden" data-lang="en">All Invoices</span>
+            </a>
+            <a href="#" onclick="requestSupport()" role="button" class="secondary">
+              🆘 <span data-lang="it">Assistenza</span><span class="hidden" data-lang="en">Support</span>
+            </a>
           </div>
         </div>
       </div>
@@ -123,15 +335,18 @@
       <!-- Profile Section -->
       <div>
         <div class="dashboard-card">
-          <h3>Il Mio Profilo</h3>
+          <h3 data-lang="it">👤 Il Mio Profilo</h3>
+          <h3 class="hidden" data-lang="en">👤 My Profile</h3>
           <form id="profile-form">
             <div class="profile-section">
               <div>
-                <label>Nome</label>
+                <label data-lang="it">Nome</label>
+                <label class="hidden" data-lang="en">First Name</label>
                 <input type="text" id="profile-nome" value="Mario" />
               </div>
               <div>
-                <label>Cognome</label>
+                <label data-lang="it">Cognome</label>
+                <label class="hidden" data-lang="en">Last Name</label>
                 <input type="text" id="profile-cognome" value="Rossi" />
               </div>
             </div>
@@ -139,56 +354,254 @@
             <label>Email</label>
             <input type="email" id="profile-email" value="mario.rossi@email.com" />
             
-            <label>Telefono</label>
+            <label data-lang="it">Telefono</label>
+            <label class="hidden" data-lang="en">Phone</label>
             <input type="tel" id="profile-telefono" value="+39 333 123 4567" />
             
-            <label>Data di nascita</label>
+            <label data-lang="it">Data di nascita</label>
+            <label class="hidden" data-lang="en">Date of birth</label>
             <input type="date" id="profile-data-nascita" value="1985-05-15" />
             
-            <label>Cittadinanza</label>
+            <label data-lang="it">Cittadinanza</label>
+            <label class="hidden" data-lang="en">Nationality</label>
             <input type="text" id="profile-cittadinanza" value="Italiana" />
             
-            <button type="button" onclick="saveProfile()">Salva Modifiche</button>
+            <label data-lang="it">Documento di Identità</label>
+            <label class="hidden" data-lang="en">Identity Document</label>
+            <select id="profile-documento-tipo">
+              <option value="carta-identita" data-lang="it">Carta d'Identità</option>
+              <option value="patente" data-lang="it">Patente di Guida</option>
+              <option value="passaporto" data-lang="it">Passaporto</option>
+              <option value="carta-identita" class="hidden" data-lang="en">Identity Card</option>
+              <option value="patente" class="hidden" data-lang="en">Driving License</option>
+              <option value="passaporto" class="hidden" data-lang="en">Passport</option>
+            </select>
+            
+            <label data-lang="it">Numero Documento</label>
+            <label class="hidden" data-lang="en">Document Number</label>
+            <input type="text" id="profile-documento-numero" placeholder="Es. AB1234567" />
+            
+            <label data-lang="it">Indirizzo di Fatturazione</label>
+            <label class="hidden" data-lang="en">Billing Address</label>
+            <input type="text" id="profile-indirizzo" placeholder="Via, Numero Civico" />
+            
+            <div class="profile-section">
+              <div>
+                <label data-lang="it">Città</label>
+                <label class="hidden" data-lang="en">City</label>
+                <input type="text" id="profile-citta" placeholder="Roma" />
+              </div>
+              <div>
+                <label data-lang="it">CAP</label>
+                <label class="hidden" data-lang="en">ZIP Code</label>
+                <input type="text" id="profile-cap" placeholder="00100" />
+              </div>
+            </div>
+            
+            <label data-lang="it">Codice Fiscale</label>
+            <label class="hidden" data-lang="en">Tax Code</label>
+            <input type="text" id="profile-codice-fiscale" placeholder="RSSMRA85E15H501Z" />
+            
+            <button type="button" onclick="saveProfile()">
+              💾 <span data-lang="it">Salva Modifiche</span><span class="hidden" data-lang="en">Save Changes</span>
+            </button>
           </form>
         </div>
 
-        <!-- Preferences -->
+        <!-- Sicurezza Account -->
         <div class="dashboard-card">
-          <h3>Preferenze</h3>
+          <h3 data-lang="it">🔐 Sicurezza Account</h3>
+          <h3 class="hidden" data-lang="en">🔐 Account Security</h3>
           
+          <div style="margin-bottom: 1rem;">
+            <label data-lang="it">Password Attuale</label>
+            <label class="hidden" data-lang="en">Current Password</label>
+            <input type="password" id="current-password" placeholder="••••••••" />
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <label data-lang="it">Nuova Password</label>
+            <label class="hidden" data-lang="en">New Password</label>
+            <input type="password" id="new-password" placeholder="••••••••" />
+          </div>
+          
+          <div style="margin-bottom: 1rem;">
+            <label data-lang="it">Conferma Nuova Password</label>
+            <label class="hidden" data-lang="en">Confirm New Password</label>
+            <input type="password" id="confirm-password" placeholder="••••••••" />
+          </div>
+          
+          <button type="button" onclick="changePassword()" class="secondary">
+            🔑 <span data-lang="it">Cambia Password</span><span class="hidden" data-lang="en">Change Password</span>
+          </button>
+          
+          <hr style="margin: 1.5rem 0;">
+          
+          <h5 data-lang="it">Autenticazione a Due Fattori</h5>
+          <h5 class="hidden" data-lang="en">Two-Factor Authentication</h5>
+          <label>
+            <input type="checkbox" id="enable-2fa" />
+            <span data-lang="it">Abilita 2FA via SMS (+39 333 123 4567)</span>
+            <span class="hidden" data-lang="en">Enable 2FA via SMS (+39 333 123 4567)</span>
+          </label>
+          
+          <div style="margin-top: 1rem;">
+            <button type="button" onclick="setup2FA()" class="secondary">
+              📱 <span data-lang="it">Configura 2FA</span><span class="hidden" data-lang="en">Setup 2FA</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preferenze -->
+        <div class="dashboard-card">
+          <h3 data-lang="it">⚙️ Preferenze</h3>
+          <h3 class="hidden" data-lang="en">⚙️ Preferences</h3>
+          
+          <h5 data-lang="it">Notifiche Email</h5>
+          <h5 class="hidden" data-lang="en">Email Notifications</h5>
           <label>
             <input type="checkbox" checked />
-            Email per nuove offerte
+            📧 <span data-lang="it">Conferme prenotazione</span><span class="hidden" data-lang="en">Booking confirmations</span>
           </label>
           
           <label>
             <input type="checkbox" checked />
-            Promemoria prenotazioni
+            💌 <span data-lang="it">Offerte speciali e promozioni</span><span class="hidden" data-lang="en">Special offers and promotions</span>
           </label>
           
           <label>
             <input type="checkbox" />
-            SMS di conferma
+            📅 <span data-lang="it">Promemoria check-in (24h prima)</span><span class="hidden" data-lang="en">Check-in reminders (24h before)</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" />
+            💰 <span data-lang="it">Aggiornamenti su sconti e tariffe</span><span class="hidden" data-lang="en">Updates on discounts and rates</span>
+          </label>
+          
+          <hr style="margin: 1.5rem 0;">
+          
+          <h5 data-lang="it">Notifiche SMS</h5>
+          <h5 class="hidden" data-lang="en">SMS Notifications</h5>
+          <label>
+            <input type="checkbox" />
+            📱 <span data-lang="it">SMS di conferma prenotazione</span><span class="hidden" data-lang="en">Booking confirmation SMS</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" />
+            📱 <span data-lang="it">Codici di accesso camera</span><span class="hidden" data-lang="en">Room access codes</span>
+          </label>
+          
+          <hr style="margin: 1.5rem 0;">
+          
+          <h5>Privacy</h5>
+          <label>
+            <input type="checkbox" checked />
+            🔒 <span data-lang="it">Mantieni privato il mio profilo</span><span class="hidden" data-lang="en">Keep my profile private</span>
+          </label>
+          
+          <label>
+            <input type="checkbox" />
+            📊 <span data-lang="it">Condividi dati per migliorare l'esperienza</span><span class="hidden" data-lang="en">Share data to improve experience</span>
           </label>
           
           <div style="margin-top: 1rem;">
-            <button type="button" onclick="savePreferences()" class="secondary">Salva Preferenze</button>
+            <button type="button" onclick="savePreferences()" class="secondary">
+              💾 <span data-lang="it">Salva Preferenze</span><span class="hidden" data-lang="en">Save Preferences</span>
+            </button>
           </div>
         </div>
 
         <!-- Loyalty Program -->
         <div class="dashboard-card">
-          <h3>Programma Fedeltà</h3>
+          <h3 data-lang="it">⭐ Programma Fedeltà AUROOMS</h3>
+          <h3 class="hidden" data-lang="en">⭐ AUROOMS Loyalty Program</h3>
           <div style="text-align: center;">
-            <div style="font-size: 2rem; color: var(--primary);">⭐ BRONZE</div>
-            <p>Livello attuale</p>
-            <div style="background: var(--primary-background); padding: 1rem; border-radius: 8px; margin: 1rem 0;">
-              <p><strong>3/5 soggiorni</strong> per raggiungere il livello Silver</p>
-              <div style="background: var(--border-color); height: 8px; border-radius: 4px;">
-                <div style="background: var(--primary); height: 8px; width: 60%; border-radius: 4px;"></div>
-              </div>
+            <div style="font-size: 2rem; color: #CD7F32; margin-bottom: 0.5rem;">🥉 BRONZE</div>
+            <p data-lang="it"><strong>Livello attuale</strong></p>
+            <p class="hidden" data-lang="en"><strong>Current Level</strong></p>
+            
+            <div class="loyalty-progress">
+              <div class="loyalty-progress-bar" style="width: 60%"></div>
             </div>
-            <small>Vantaggi Bronze: 5% sconto, Check-in prioritario</small>
+            
+            <p data-lang="it"><strong>3/5 soggiorni</strong> per raggiungere il livello Silver</p>
+            <p class="hidden" data-lang="en"><strong>3/5 stays</strong> to reach Silver level</p>
+            
+            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin: 1rem 0;">
+              <h5 data-lang="it">Vantaggi Bronze:</h5>
+              <h5 class="hidden" data-lang="en">Bronze Benefits:</h5>
+              <ul style="text-align: left; margin: 0;">
+                <li data-lang="it">✅ 5% di sconto su tutte le prenotazioni</li>
+                <li data-lang="it">✅ Check-in prioritario</li>
+                <li data-lang="it">✅ Wi-Fi premium gratuito</li>
+                <li data-lang="it">✅ Late check-out gratuito (fino alle 13:00)</li>
+                <li class="hidden" data-lang="en">✅ 5% discount on all bookings</li>
+                <li class="hidden" data-lang="en">✅ Priority check-in</li>
+                <li class="hidden" data-lang="en">✅ Free premium Wi-Fi</li>
+                <li class="hidden" data-lang="en">✅ Free late check-out (until 1:00 PM)</li>
+              </ul>
+            </div>
+            
+            <div style="background: #e9ecef; padding: 1rem; border-radius: 8px;">
+              <h5 data-lang="it">Prossimo livello - Silver:</h5>
+              <h5 class="hidden" data-lang="en">Next level - Silver:</h5>
+              <ul style="text-align: left; margin: 0;">
+                <li data-lang="it">💎 10% di sconto</li>
+                <li data-lang="it">💎 Upgrade camera (quando disponibile)</li>
+                <li data-lang="it">💎 Colazione gratuita</li>
+                <li data-lang="it">💎 Cancellazione flessibile</li>
+                <li class="hidden" data-lang="en">💎 10% discount</li>
+                <li class="hidden" data-lang="en">💎 Room upgrade (when available)</li>
+                <li class="hidden" data-lang="en">💎 Free breakfast</li>
+                <li class="hidden" data-lang="en">💎 Flexible cancellation</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Supporto -->
+        <div class="dashboard-card">
+          <h3 data-lang="it">🆘 Centro Assistenza</h3>
+          <h3 class="hidden" data-lang="en">🆘 Help Center</h3>
+          
+          <div style="margin-bottom: 1rem;">
+            <h5 data-lang="it">Contatti Rapidi</h5>
+            <h5 class="hidden" data-lang="en">Quick Contacts</h5>
+            <div class="grid">
+              <a href="https://wa.me/393758843175" target="_blank" role="button" class="secondary">
+                💬 WhatsApp
+              </a>
+              <a href="tel:+393758843175" role="button" class="secondary">
+                📞 <span data-lang="it">Telefono</span><span class="hidden" data-lang="en">Phone</span>
+              </a>
+            </div>
+          </div>
+          
+          <div>
+            <h5 data-lang="it">FAQ Comuni</h5>
+            <h5 class="hidden" data-lang="en">Common FAQ</h5>
+            <details style="margin-bottom: 0.5rem;">
+              <summary data-lang="it">Come posso modificare una prenotazione?</summary>
+              <summary class="hidden" data-lang="en">How can I modify a booking?</summary>
+              <p data-lang="it">Puoi modificare la tua prenotazione fino a 24 ore prima del check-in contattandoci via WhatsApp o telefono.</p>
+              <p class="hidden" data-lang="en">You can modify your booking up to 24 hours before check-in by contacting us via WhatsApp or phone.</p>
+            </details>
+            
+            <details style="margin-bottom: 0.5rem;">
+              <summary data-lang="it">Politiche di cancellazione</summary>
+              <summary class="hidden" data-lang="en">Cancellation policies</summary>
+              <p data-lang="it">Cancellazione gratuita fino a 24 ore prima dell'arrivo. Per cancellazioni tardive, contattaci per valutare insieme la situazione.</p>
+              <p class="hidden" data-lang="en">Free cancellation up to 24 hours before arrival. For late cancellations, contact us to evaluate the situation together.</p>
+            </details>
+            
+            <details style="margin-bottom: 0.5rem;">
+              <summary data-lang="it">Dove trovo le fatture?</summary>
+              <summary class="hidden" data-lang="en">Where can I find invoices?</summary>
+              <p data-lang="it">Tutte le tue fatture sono disponibili nella sezione "I Miei Documenti" di questa pagina.</p>
+              <p class="hidden" data-lang="en">All your invoices are available in the "My Documents" section of this page.</p>
+            </details>
           </div>
         </div>
       </div>
@@ -199,18 +612,19 @@
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       // Check if user is logged in (in production, verify with backend)
-      const userLoggedIn = localStorage.getItem('userLoggedIn');
-      if (!userLoggedIn) {
+      const currentUser = localStorage.getItem('aurooms_current_user');
+      if (!currentUser) {
         window.location.href = 'login.html';
         return;
       }
       
       // Load user data
-      const userData = JSON.parse(localStorage.getItem('userData') || '{"nome": "Utente"}');
-      document.getElementById('user-name').textContent = userData.nome;
+      const userData = JSON.parse(currentUser);
+      document.getElementById('user-name').textContent = userData.firstName || userData.name || 'Utente';
       
       // Load user bookings from localStorage (in production, fetch from backend)
       loadUserBookings();
+      loadUserStatistics();
     });
 
     function loadUserBookings() {
@@ -224,19 +638,30 @@
     }
 
     function viewBookingDetails(bookingId) {
-      alert(`Visualizzazione dettagli prenotazione ${bookingId}`);
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        `Viewing booking details ${bookingId}` : 
+        `Visualizzazione dettagli prenotazione ${bookingId}`);
       // In production, open modal or redirect to details page
     }
 
     function cancelBooking(bookingId) {
-      if (confirm('Sei sicuro di voler cancellare questa prenotazione?')) {
-        alert(`Prenotazione ${bookingId} cancellata. Ti contatteremo per confermare il rimborso.`);
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      if (confirm(isEnglish ? 
+        'Are you sure you want to cancel this booking?' : 
+        'Sei sicuro di voler cancellare questa prenotazione?')) {
+        alert(isEnglish ? 
+          `Booking ${bookingId} cancelled. We will contact you to confirm the refund.` : 
+          `Prenotazione ${bookingId} cancellata. Ti contatteremo per confermare il rimborso.`);
         // In production, send cancellation request to backend
       }
     }
 
     function payBooking(bookingId) {
-      alert(`Reindirizzamento al pagamento per ${bookingId}`);
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        `Redirecting to payment for ${bookingId}` : 
+        `Reindirizzamento al pagamento per ${bookingId}`);
       // In production, redirect to payment page
     }
 
@@ -251,26 +676,127 @@
       };
       
       localStorage.setItem('userData', JSON.stringify(profileData));
-      alert('Profilo aggiornato con successo!');
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 'Profile updated successfully!' : 'Profilo aggiornato con successo!');
     }
 
     function savePreferences() {
-      alert('Preferenze salvate!');
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 'Preferences saved!' : 'Preferenze salvate!');
     }
 
     function downloadInvoices() {
-      alert('Download fatture in sviluppo');
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 'Download invoices in development' : 'Download fatture in sviluppo');
     }
 
     function requestSupport() {
-      const message = "Ciao! Ho bisogno di assistenza per il mio account AUROOMS.";
-      window.open(`https://wa.me/393471234567?text=${encodeURIComponent(message)}`, '_blank');
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      const message = isEnglish ? 
+        "Hello! I need assistance with my AUROOMS account." : 
+        "Ciao! Ho bisogno di assistenza per il mio account AUROOMS.";
+      window.open(`https://wa.me/393758843175?text=${encodeURIComponent(message)}`, '_blank');
     }
 
     function logout() {
-      localStorage.removeItem('userLoggedIn');
-      localStorage.removeItem('userData');
+      localStorage.removeItem('aurooms_current_user');
+      sessionStorage.clear();
       window.location.href = 'index.html';
+    }
+
+    // New enhanced functions for dashboard
+    function loadUserStatistics() {
+      // Calculate user statistics
+      const confirmedBookings = JSON.parse(localStorage.getItem('aurooms_confirmed_bookings') || '[]');
+      const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+      
+      const userBookings = confirmedBookings.filter(b => b.customerEmail === currentUser.email);
+      
+      const totalBookings = userBookings.length;
+      const totalNights = userBookings.reduce((sum, booking) => sum + (booking.nights || 0), 0);
+      const totalSpent = userBookings.reduce((sum, booking) => sum + (booking.totalPrice || 0), 0);
+      const loyaltyPoints = totalBookings * 100 + totalNights * 10;
+      
+      document.getElementById('total-bookings').textContent = totalBookings;
+      document.getElementById('total-nights').textContent = totalNights;
+      document.getElementById('total-spent').textContent = `€${totalSpent}`;
+      document.getElementById('loyalty-points').textContent = loyaltyPoints;
+    }
+
+    function changePassword() {
+      const currentPassword = document.getElementById('current-password').value;
+      const newPassword = document.getElementById('new-password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      
+      // Get current language for messages
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      
+      if (!currentPassword || !newPassword || !confirmPassword) {
+        alert(isEnglish ? '❌ Fill in all fields' : '❌ Compila tutti i campi');
+        return;
+      }
+      
+      if (newPassword !== confirmPassword) {
+        alert(isEnglish ? '❌ New passwords do not match' : '❌ Le nuove password non coincidono');
+        return;
+      }
+      
+      if (newPassword.length < 6) {
+        alert(isEnglish ? '❌ New password must be at least 6 characters' : '❌ La nuova password deve essere di almeno 6 caratteri');
+        return;
+      }
+      
+      // Update password
+      const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+      currentUser.password = newPassword;
+      localStorage.setItem('aurooms_current_user', JSON.stringify(currentUser));
+      
+      // Clear password fields
+      document.getElementById('current-password').value = '';
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      
+      alert(isEnglish ? '✅ Password changed successfully!' : '✅ Password cambiata con successo!');
+    }
+
+    function setup2FA() {
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        '🔐 2FA setup in development\n\nWill be available in future versions.' : 
+        '🔐 Configurazione 2FA in sviluppo\n\nSarà disponibile nelle prossime versioni.');
+    }
+
+    function selectPaymentMethod(methodId) {
+      document.querySelectorAll('.payment-method-card').forEach(card => {
+        card.classList.remove('active');
+      });
+      
+      event.currentTarget.classList.add('active');
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        `Payment method selected: ${methodId}` : 
+        `Metodo di pagamento selezionato: ${methodId}`);
+    }
+
+    function addPaymentMethod() {
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        '🔐 Add payment method\n\nYou will be redirected to the secure page to add a new payment method.' : 
+        '🔐 Aggiunta metodo di pagamento\n\nSarai reindirizzato alla pagina sicura per aggiungere un nuovo metodo di pagamento.');
+    }
+
+    function downloadConfirmation(bookingId) {
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        `Download confirmation for booking ${bookingId}` : 
+        `Download conferma per prenotazione ${bookingId}`);
+    }
+
+    function downloadInvoice(invoiceId) {
+      const isEnglish = !document.querySelector('[data-lang="en"]').classList.contains('hidden');
+      alert(isEnglish ? 
+        `Download invoice ${invoiceId}` : 
+        `Download fattura ${invoiceId}`);
     }
   </script>
 </body>
