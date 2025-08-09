@@ -201,6 +201,12 @@
 
         <!-- Payment Methods -->
         <div class="payment-methods">
+          <!-- Saved Methods (dynamic) -->
+          <div id="saved-methods" style="display:none;">
+            <h4 data-lang="it">Metodi salvati</h4>
+            <h4 class="hidden" data-lang="en">Saved methods</h4>
+            <div id="saved-methods-list" class="payment-methods" style="margin: .5rem 0 1rem 0;"></div>
+          </div>
           <!-- Credit Card -->
           <div class="payment-method" onclick="selectPaymentMethod('card')">
             <input type="radio" name="payment-method" value="card" id="payment-card">
@@ -237,7 +243,7 @@
           </div>
         </div>
 
-        <!-- Credit Card Form -->
+  <!-- Credit Card Form -->
         <div id="card-form" class="payment-form">
           <h4 data-lang="it">Dettagli Carta di Credito</h4>
           <h4 class="hidden" data-lang="en">Credit Card Details</h4>
@@ -264,17 +270,29 @@
               <label for="cardName" class="hidden" data-lang="en">Name on Card</label>
               <input type="text" id="cardName" placeholder="Mario Rossi" required>
             </div>
+            <label style="display:flex; gap:.5rem; align-items:center; margin-top:.5rem;">
+              <input type="checkbox" id="save-card-for-future"> <span data-lang="it">Salva per prenotazioni future</span><span class="hidden" data-lang="en">Save for future bookings</span>
+            </label>
           </form>
         </div>
 
         <!-- PayPal Form -->
         <div id="paypal-form" class="payment-form">
-          <div style="text-align: center; padding: 2rem;">
-            <div style="font-size: 4rem; margin-bottom: 1rem;">🅿️</div>
-            <h4>PayPal</h4>
-            <p data-lang="it">Sarai reindirizzato a PayPal per completare il pagamento</p>
-            <p class="hidden" data-lang="en">You will be redirected to PayPal to complete the payment</p>
-          </div>
+          <form id="paypalForm">
+            <div class="form-group" style="text-align:center;">
+              <div style="font-size: 4rem; margin-bottom: 1rem;">🅿️</div>
+              <h4>PayPal</h4>
+              <p data-lang="it">Inserisci la tua email PayPal</p>
+              <p class="hidden" data-lang="en">Enter your PayPal email</p>
+            </div>
+            <div class="form-group">
+              <label>Email PayPal</label>
+              <input type="email" id="paypalEmail" placeholder="nome@email.com" />
+            </div>
+            <label style="display:flex; gap:.5rem; align-items:center; margin-top:.5rem;">
+              <input type="checkbox" id="save-paypal-for-future"> <span data-lang="it">Salva per prenotazioni future</span><span class="hidden" data-lang="en">Save for future bookings</span>
+            </label>
+          </form>
         </div>
 
         <!-- Bank Transfer Form -->
@@ -316,8 +334,46 @@
       emailjs.init("JdlaY1LThC-wKEczu"); // La tua chiave pubblica EmailJS
     })();
     
-    let selectedPaymentMethod = null;
+  let selectedPaymentMethod = null;
+  let selectedSavedIndex = null;
     
+    function getUserPMKey() {
+      const user = JSON.parse(localStorage.getItem('aurooms_current_user')||'{}');
+      return user.email ? `au_pm_${user.email}` : null;
+    }
+    function getSavedPaymentMethods() {
+      const key = getUserPMKey();
+      if (!key) return [];
+      return JSON.parse(localStorage.getItem(key) || '[]');
+    }
+    function renderSavedMethods() {
+      const saved = getSavedPaymentMethods();
+      const wrap = document.getElementById('saved-methods');
+      const list = document.getElementById('saved-methods-list');
+      if (!wrap || !list) return;
+      if (!saved.length) { wrap.style.display = 'none'; return; }
+      wrap.style.display = 'block';
+      list.innerHTML = '';
+      saved.forEach((pm, idx) => {
+        const el = document.createElement('div');
+        el.className = 'payment-method' + (pm.default ? ' selected' : '');
+        el.onclick = () => selectSavedMethod(idx);
+        el.innerHTML = `
+          <input type="radio" name="payment-method" value="saved-${idx}">
+          <div class="payment-icon">${pm.type==='paypal'?'🅿️':'💳'}</div>
+          <div class="payment-details">
+            <h4>${pm.type==='paypal'?'PayPal':'Carta'} ${pm.default?'• Predefinito':''}</h4>
+            <p>${pm.type==='paypal'?(pm.email||''):(pm.mask||'•••• •••• ••••')}</p>
+          </div>`;
+        list.appendChild(el);
+      });
+    }
+    function selectSavedMethod(idx) {
+      selectedSavedIndex = idx;
+      selectedPaymentMethod = 'saved';
+      document.querySelectorAll('.payment-form').forEach(f=>f.classList.remove('active'));
+      updatePaymentButton();
+    }
     function selectPaymentMethod(method) {
       selectedPaymentMethod = method;
       
@@ -336,7 +392,9 @@
       document.querySelectorAll('.payment-form').forEach(form => {
         form.classList.remove('active');
       });
-      document.getElementById(`${method}-form`).classList.add('active');
+      if (document.getElementById(`${method}-form`)) {
+        document.getElementById(`${method}-form`).classList.add('active');
+      }
       
       // Update button
       updatePaymentButton();
@@ -347,7 +405,9 @@
       if (selectedPaymentMethod) {
         button.disabled = false;
         
-        if (selectedPaymentMethod === 'card') {
+        if (selectedPaymentMethod === 'saved') {
+          button.innerHTML = getCurrentLanguage() === 'it' ? '✅ Usa metodo salvato' : '✅ Use saved method';
+        } else if (selectedPaymentMethod === 'card') {
           button.innerHTML = getCurrentLanguage() === 'it' ? 
             '💳 Paga con Carta' : '💳 Pay with Card';
         } else if (selectedPaymentMethod === 'paypal') {
@@ -374,12 +434,32 @@
       button.disabled = true;
       
       // Handle different payment methods
-      if (selectedPaymentMethod === 'paypal') {
+      if (selectedPaymentMethod === 'saved') {
+        const saved = getSavedPaymentMethods();
+        const pm = saved[selectedSavedIndex] || saved.find(p=>p.default) || saved[0];
+        if (!pm) { alert('Metodo salvato non disponibile'); button.disabled=false; updatePaymentButton(); return; }
+        // Procedi come se fosse carta o PayPal a seconda del tipo salvato
+        selectedPaymentMethod = pm.type === 'paypal' ? 'paypal' : 'card';
+        processPayment();
+        return;
+      } else if (selectedPaymentMethod === 'paypal') {
         // PayPal redirect
         button.innerHTML = getCurrentLanguage() === 'it' ? 
           '🅿️ Reindirizzamento a PayPal...' : '🅿️ Redirecting to PayPal...';
         
         setTimeout(() => {
+          // Salva PayPal se richiesto
+          const savePP = document.getElementById('save-paypal-for-future')?.checked;
+          const ppEmail = document.getElementById('paypalEmail')?.value;
+          if (savePP && ppEmail && /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ppEmail)) {
+            const user = JSON.parse(localStorage.getItem('aurooms_current_user')||'{}');
+            if (user.email) {
+              const key = `au_pm_${user.email}`;
+              const list = JSON.parse(localStorage.getItem(key)||'[]');
+              list.push({ type:'paypal', label:'PayPal', email: ppEmail, default: list.length===0 });
+              localStorage.setItem(key, JSON.stringify(list));
+            }
+          }
           // Simulate PayPal redirect
           const paypalUrl = `https://www.paypal.com/checkout?amount=${getBookingTotal()}&currency=EUR&item_name=AUROOMS%20Booking`;
           window.open(paypalUrl, '_blank');
@@ -390,7 +470,7 @@
           }, 3000);
         }, 1500);
         
-      } else if (selectedPaymentMethod === 'transfer') {
+  } else if (selectedPaymentMethod === 'transfer') {
         // Bank transfer with email
         button.innerHTML = getCurrentLanguage() === 'it' ? 
           '📧 Invio istruzioni...' : '📧 Sending instructions...';
@@ -406,6 +486,19 @@
           button.disabled = false;
           updatePaymentButton();
           return;
+        }
+        // Salva carta se richiesto
+        const saveForFuture = document.getElementById('save-card-for-future')?.checked;
+        if (saveForFuture) {
+          const num = document.getElementById('cardNumber').value.replace(/\s/g,'');
+          const exp = document.getElementById('expiryDate').value;
+          const mask = `•••• •••• •••• ${num.slice(-4)}`;
+          const key = getUserPMKey();
+          if (key) {
+            const list = JSON.parse(localStorage.getItem(key)||'[]');
+            list.push({ type:'card', label:'Carta', mask, exp, default: list.length===0 });
+            localStorage.setItem(key, JSON.stringify(list));
+          }
         }
         
         button.innerHTML = getCurrentLanguage() === 'it' ? 
@@ -525,7 +618,7 @@
         });
     }
     
-    function sendConfirmationEmail(paymentMethod) {
+  function sendConfirmationEmail(paymentMethod, refOverride) {
       const bookingData = JSON.parse(sessionStorage.getItem('pending_booking'));
       const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
       
@@ -534,7 +627,8 @@
         return;
       }
       
-      const templateParams = {
+  const bookingRef = refOverride || `CONF-${Date.now()}`;
+  const templateParams = {
         to_name: currentUser.name,
         to_email: currentUser.email,
         customer_name: currentUser.name,
@@ -546,7 +640,7 @@
         total_amount: bookingData.totalPrice,
         payment_method: paymentMethod === 'card' ? 'Carta di Credito' : 
                       paymentMethod === 'paypal' ? 'PayPal' : 'Bonifico Bancario',
-        booking_reference: `CONF-${Date.now()}`,
+  booking_reference: bookingRef,
         logo_url: window.location.origin + '/attached_assets/logo_aurooms.jpg',
         company_name: 'AUROOMS Guest House',
         to_name: currentUser.name,
@@ -592,7 +686,28 @@
       // Per bonifico bancario NON inviare subito conferma pagamento
       if (selectedPaymentMethod !== 'transfer') {
         // Solo per carta e PayPal invia conferma immediata
-        sendConfirmationEmail(selectedPaymentMethod);
+        const bookingData = JSON.parse(sessionStorage.getItem('pending_booking'));
+        const currentUser = JSON.parse(localStorage.getItem('aurooms_current_user'));
+        const ref = `CONF-${Date.now()}`;
+        sendConfirmationEmail(selectedPaymentMethod, ref);
+
+        // Salva come prenotazione confermata
+        const confirmed = JSON.parse(localStorage.getItem('aurooms_confirmed_bookings') || '[]');
+        confirmed.push({
+          roomName: bookingData.roomName,
+          checkin: bookingData.checkin,
+          checkout: bookingData.checkout,
+          nights: bookingData.nights,
+          guests: bookingData.guests,
+          totalPrice: bookingData.totalPrice,
+          status: 'confirmed',
+          paymentMethod: selectedPaymentMethod === 'card' ? 'card' : 'paypal',
+          customerEmail: currentUser.email,
+          bookingDate: new Date().toISOString(),
+          confirmationDate: new Date().toISOString(),
+          bookingReference: ref
+        });
+        localStorage.setItem('aurooms_confirmed_bookings', JSON.stringify(confirmed));
         
         // Messaggio standard per pagamenti immediati
         document.getElementById('success-title').textContent = 
@@ -887,25 +1002,21 @@
     }
     
     // Format card number with spaces
-    document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function() {
       const currentLang = getCurrentLanguage();
       switchLang(currentLang);
       
-      // Aggiungi utente di test se non esiste
+      // Login obbligatorio
       const currentUser = localStorage.getItem('aurooms_current_user');
       if (!currentUser) {
-        const testUser = {
-          firstName: "Mario",
-          lastName: "Rossi", 
-          name: "Mario Rossi",
-          email: "mario.rossi@email.com",
-          phone: "+39 123 456 7890"
-        };
-        localStorage.setItem('aurooms_current_user', JSON.stringify(testUser));
-        console.log('👤 Utente di test creato:', testUser);
+        sessionStorage.setItem('returnUrl', 'pagamento.html');
+        alert(currentLang==='it' ? 'Effettua l\'accesso per completare il pagamento' : 'Please log in to complete payment');
+        window.location.href = 'login.html';
+        return;
       }
       
-      loadBookingDetails();
+  loadBookingDetails();
+  renderSavedMethods();
       
       // Format card number input
       const cardNumberInput = document.getElementById('cardNumber');
@@ -937,6 +1048,8 @@
           e.target.value = e.target.value.replace(/\D/g, '');
         });
       }
+
+  // Salvataggio PayPal on change (no-op, placeholder)
     });
   </script>
 </body>

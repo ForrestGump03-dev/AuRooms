@@ -374,7 +374,8 @@ document.addEventListener('DOMContentLoaded', function() {
 // Authentication functions
 function updateAuthUI() {
   const currentUser = localStorage.getItem('aurooms_current_user');
-  const authContainer = document.querySelector('.auth-links');
+  let authContainer = document.querySelector('#auth-links');
+  if (!authContainer) authContainer = document.querySelector('.auth-links');
   
   if (authContainer) {
     if (currentUser) {
