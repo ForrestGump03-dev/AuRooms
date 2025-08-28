@@ -949,8 +949,17 @@
       }
       if (!booking.nights) booking.nights = 2; // fallback
       
-      // CALCOLA IL TOTALE DINAMICAMENTE
-      booking.totalPrice = booking.pricePerNight * booking.nights;
+      // CALCOLA IL TOTALE DINAMICAMENTE (usa motore prezzi da script.js se disponibile)
+      try {
+        if (typeof calculateDynamicTotal === 'function') {
+          booking.totalPrice = calculateDynamicTotal(booking.pricePerNight, booking.checkin, booking.checkout, booking.nights);
+        } else {
+          booking.totalPrice = booking.pricePerNight * booking.nights;
+        }
+      } catch (e) {
+        console.warn('Errore calcolo prezzi dinamici, uso fallback:', e);
+        booking.totalPrice = booking.pricePerNight * booking.nights;
+      }
       
       // Salva i dati aggiornati
       sessionStorage.setItem('pending_booking', JSON.stringify(booking));

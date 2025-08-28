@@ -151,6 +151,75 @@
           
           <button onclick="saveBankDetails()" class="btn-primary">💾 Salva Coordinate</button>
         </div>
+
+        <div class="content-card" style="margin-top: 1.5rem;">
+          <h3 style="color: #2d3748; margin-bottom: 1rem;">💶 Prezzi Dinamici</h3>
+          <p style="color:#4a5568; margin-top:0;">Configura sconti/aumenti per stagioni, weekend e soggiorni lunghi. I prezzi si applicano automaticamente nella ricerca e in pagamento.</p>
+
+          <details open style="margin-bottom:1rem;">
+            <summary><strong>Stagionalità</strong></summary>
+            <div class="form-group" style="margin-top:1rem;">
+              <label>Mesi Alta Stagione</label>
+              <div id="high-months" style="display:flex; flex-wrap:wrap; gap:.5rem;"></div>
+              <small style="color:#6c757d;">Seleziona i mesi con domanda alta (es. Giugno, Luglio, Agosto)</small>
+            </div>
+            <div class="form-group">
+              <label>Variazione Alta Stagione (%)</label>
+              <input type="number" id="high-percent" placeholder="es. 25" />
+            </div>
+            <div class="form-group">
+              <label>Mesi Bassa Stagione</label>
+              <div id="low-months" style="display:flex; flex-wrap:wrap; gap:.5rem;"></div>
+            </div>
+            <div class="form-group">
+              <label>Variazione Bassa Stagione (%)</label>
+              <input type="number" id="low-percent" placeholder="es. -20" />
+            </div>
+          </details>
+
+          <details open style="margin-bottom:1rem;">
+            <summary><strong>Weekend</strong></summary>
+            <div class="form-group" style="margin-top:1rem;">
+              <label>Giorni considerati weekend</label>
+              <div id="weekend-days" style="display:flex; gap:.5rem; flex-wrap:wrap;"></div>
+            </div>
+            <div class="form-group">
+              <label>Variazione Weekend (%)</label>
+              <input type="number" id="weekend-percent" placeholder="es. 10" />
+            </div>
+          </details>
+
+          <details open style="margin-bottom:1rem;">
+            <summary><strong>Soggiorni lunghi</strong></summary>
+            <div class="form-group" style="margin-top:1rem; display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+              <div>
+                <label>Soglia notti</label>
+                <input type="number" id="long-threshold" placeholder="es. 5" />
+              </div>
+              <div>
+                <label>Variazione (%)</label>
+                <input type="number" id="long-percent" placeholder="es. -10" />
+              </div>
+            </div>
+          </details>
+
+          <div class="form-group">
+            <label>Arrotondamento</label>
+            <select id="rounding-mode">
+              <option value="round">Arrotonda per eccesso/difetto</option>
+              <option value="floor">Sempre per difetto</option>
+              <option value="ceil">Sempre per eccesso</option>
+            </select>
+          </div>
+
+          <div style="display:flex; gap:.5rem; flex-wrap:wrap;">
+            <button onclick="savePricingSettings()" class="btn-primary">💾 Salva Prezzi Dinamici</button>
+            <button onclick="resetPricingSettings()" class="contrast">♻️ Ripristina Default</button>
+            <button onclick="previewPricing()" class="secondary">🔍 Anteprima</button>
+          </div>
+
+          <div id="pricing-preview" style="margin-top:1rem; color:#2d3748;"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -238,7 +307,7 @@
     }
     
     // Carica dati sezione
-    function loadSectionData(sectionName) {
+  function loadSectionData(sectionName) {
       switch(sectionName) {
         case 'dashboard':
           loadDashboardData();
@@ -247,7 +316,8 @@
           loadTransfersData();
           break;
         case 'settings':
-          loadBankDetails();
+      loadBankDetails();
+      setTimeout(loadPricingSettings, 0);
           break;
       }
     }
@@ -477,6 +547,160 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
       if (savedIban) document.getElementById('bank-iban').value = savedIban;
       if (savedBic) document.getElementById('bank-bic').value = savedBic;
       if (savedHolder) document.getElementById('bank-holder').value = savedHolder;
+    }
+
+    // ===================== PREZZI DINAMICI (ADMIN) =====================
+    function getDefaultPricingSettings() {
+      return {
+        season: { lowMonths: [1,2,3,11,12], lowPercent: -20, highMonths: [6,7,8], highPercent: 25 },
+        weekend: { days: [5,6], percent: 10 },
+        longStay: { threshold: 5, percent: -10 },
+        rounding: { mode: 'round' }
+      };
+    }
+
+    function monthLabels() {
+      return ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+    }
+
+    function renderMonthCheckboxes(containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+      const labels = monthLabels();
+      for (let i = 1; i <= 12; i++) {
+        const lbl = labels[i-1];
+        const id = `${containerId}-${i}`;
+        const wrap = document.createElement('label');
+        wrap.style.display = 'inline-flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.gap = '.35rem';
+        wrap.style.border = '1px solid #e2e8f0';
+        wrap.style.borderRadius = '6px';
+        wrap.style.padding = '.25rem .5rem';
+        wrap.innerHTML = `<input type="checkbox" id="${id}" data-month="${i}"><span>${lbl}</span>`;
+        container.appendChild(wrap);
+      }
+    }
+
+    function renderWeekendDays() {
+      const container = document.getElementById('weekend-days');
+      container.innerHTML = '';
+      const days = [
+        {v:0,l:'Dom'}, {v:1,l:'Lun'}, {v:2,l:'Mar'}, {v:3,l:'Mer'}, {v:4,l:'Gio'}, {v:5,l:'Ven'}, {v:6,l:'Sab'}
+      ];
+      days.forEach(d => {
+        const id = `wd-${d.v}`;
+        const wrap = document.createElement('label');
+        wrap.style.display = 'inline-flex';
+        wrap.style.alignItems = 'center';
+        wrap.style.gap = '.35rem';
+        wrap.style.border = '1px solid #e2e8f0';
+        wrap.style.borderRadius = '6px';
+        wrap.style.padding = '.25rem .5rem';
+        wrap.innerHTML = `<input type="checkbox" id="${id}" data-day="${d.v}"><span>${d.l}</span>`;
+        container.appendChild(wrap);
+      });
+    }
+
+    function loadPricingSettings() {
+      // Build controls if not present
+      renderMonthCheckboxes('high-months');
+      renderMonthCheckboxes('low-months');
+      renderWeekendDays();
+
+      const saved = localStorage.getItem('aurooms_pricing_settings');
+      const s = saved ? JSON.parse(saved) : getDefaultPricingSettings();
+
+      // Months
+      (s.season?.highMonths || []).forEach(m => {
+        const el = document.querySelector(`#high-months [data-month="${m}"]`);
+        if (el) el.checked = true;
+      });
+      (s.season?.lowMonths || []).forEach(m => {
+        const el = document.querySelector(`#low-months [data-month="${m}"]`);
+        if (el) el.checked = true;
+      });
+      // Percents
+      document.getElementById('high-percent').value = s.season?.highPercent ?? 25;
+      document.getElementById('low-percent').value = s.season?.lowPercent ?? -20;
+
+      // Weekend
+      (s.weekend?.days || [5,6]).forEach(d => {
+        const el = document.querySelector(`#weekend-days [data-day="${d}"]`);
+        if (el) el.checked = true;
+      });
+      document.getElementById('weekend-percent').value = s.weekend?.percent ?? 10;
+
+      // Long stay
+      document.getElementById('long-threshold').value = s.longStay?.threshold ?? 5;
+      document.getElementById('long-percent').value = s.longStay?.percent ?? -10;
+
+      // Rounding
+      document.getElementById('rounding-mode').value = s.rounding?.mode || 'round';
+    }
+
+    function savePricingSettings() {
+      const highMonths = Array.from(document.querySelectorAll('#high-months [data-month]:checked')).map(el => parseInt(el.getAttribute('data-month')));
+      const lowMonths = Array.from(document.querySelectorAll('#low-months [data-month]:checked')).map(el => parseInt(el.getAttribute('data-month')));
+      const highPercent = parseFloat(document.getElementById('high-percent').value || '0');
+      const lowPercent = parseFloat(document.getElementById('low-percent').value || '0');
+      const weekendDays = Array.from(document.querySelectorAll('#weekend-days [data-day]:checked')).map(el => parseInt(el.getAttribute('data-day')));
+      const weekendPercent = parseFloat(document.getElementById('weekend-percent').value || '0');
+      const threshold = parseInt(document.getElementById('long-threshold').value || '0');
+      const longPercent = parseFloat(document.getElementById('long-percent').value || '0');
+      const rounding = document.getElementById('rounding-mode').value || 'round';
+
+      const settings = {
+        season: { highMonths, highPercent, lowMonths, lowPercent },
+        weekend: { days: weekendDays, percent: weekendPercent },
+        longStay: { threshold, percent: longPercent },
+        rounding: { mode: rounding }
+      };
+
+      localStorage.setItem('aurooms_pricing_settings', JSON.stringify(settings));
+
+      alert('✅ Impostazioni prezzi dinamici salvate');
+    }
+
+    function resetPricingSettings() {
+      localStorage.removeItem('aurooms_pricing_settings');
+      loadPricingSettings();
+      alert('♻️ Impostazioni ripristinate ai valori predefiniti');
+    }
+
+    function previewPricing() {
+      const base = 100;
+      const today = new Date();
+      const in3 = new Date(today);
+      in3.setDate(in3.getDate() + 3);
+      const s = JSON.parse(localStorage.getItem('aurooms_pricing_settings') || JSON.stringify(getDefaultPricingSettings()));
+      // Calcolo semplice qui replicando formula (senza dipendere da script.js)
+      function calc(basePrice, start, end) {
+        const totalNights = Math.max(1, Math.ceil((end - start) / 86400000));
+        let subtotal = 0;
+        const d = new Date(start);
+        for (let i = 0; i < totalNights; i++) {
+          const m = d.getMonth() + 1;
+          const dow = d.getDay();
+          let pct = 0;
+          if ((s.season.highMonths||[]).includes(m)) pct += (s.season.highPercent||0);
+          else if ((s.season.lowMonths||[]).includes(m)) pct += (s.season.lowPercent||0);
+          if ((s.weekend.days||[]).includes(dow)) pct += (s.weekend.percent||0);
+          subtotal += basePrice * (1 + pct/100);
+          d.setDate(d.getDate() + 1);
+        }
+        if (s.longStay.threshold && totalNights >= s.longStay.threshold) {
+          subtotal *= (1 + (s.longStay.percent||0)/100);
+        }
+        const mode = s.rounding?.mode || 'round';
+        if (mode === 'floor') return Math.floor(subtotal);
+        if (mode === 'ceil') return Math.ceil(subtotal);
+        return Math.round(subtotal);
+      }
+
+      const total = calc(base, today, in3);
+      document.getElementById('pricing-preview').textContent = `Anteprima: base €${base} per 3 notti → totale €${total}`;
     }
     
     // Inizializzazione

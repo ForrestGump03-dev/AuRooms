@@ -3,7 +3,7 @@
 ## 🚀 Setup Completo
 
 ### 1. **Registrazione EmailJS**
-1. Vai su [https://www.emailjs.com/](https://www.emailjs.com/)
+1. Vai su [https://www.emailjs.com/]
 2. Crea un account gratuito
 3. Verifica la tua email
 

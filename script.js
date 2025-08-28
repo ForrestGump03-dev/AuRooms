@@ -73,6 +73,99 @@ const roomsData = [
   }
 ];
 
+// ===================== DYNAMIC PRICING ENGINE =====================
+// Settings schema (localStorage key: 'aurooms_pricing_settings'):
+// {
+//   season: { lowMonths:[1,2,3,11,12], lowPercent:-20, highMonths:[6,7,8], highPercent:25 },
+//   weekend: { days:[5,6], percent:10 }, // 0=Sun ... 6=Sat; default Fri+Sat
+//   longStay: { threshold:5, percent:-10 },
+//   rounding: { mode:'round'|'floor'|'ceil' }
+// }
+
+function getDefaultPricingSettings() {
+  return {
+    season: {
+      lowMonths: [1, 2, 3, 11, 12],
+      lowPercent: -20,
+      highMonths: [6, 7, 8],
+      highPercent: 25
+    },
+    weekend: { days: [5, 6], percent: 10 },
+    longStay: { threshold: 5, percent: -10 },
+    rounding: { mode: 'round' }
+  };
+}
+
+function getPricingSettings() {
+  try {
+    const saved = localStorage.getItem('aurooms_pricing_settings');
+    if (!saved) return getDefaultPricingSettings();
+    const parsed = JSON.parse(saved);
+    // Merge with defaults to ensure all keys exist
+    const d = getDefaultPricingSettings();
+    return {
+      season: { ...d.season, ...(parsed.season || {}) },
+      weekend: { ...d.weekend, ...(parsed.weekend || {}) },
+      longStay: { ...d.longStay, ...(parsed.longStay || {}) },
+      rounding: { ...d.rounding, ...(parsed.rounding || {}) }
+    };
+  } catch (e) {
+    console.warn('Invalid pricing settings, using defaults', e);
+    return getDefaultPricingSettings();
+  }
+}
+
+function getSeasonPercentForDate(date, settings) {
+  const m = date.getMonth() + 1; // 1..12
+  const { highMonths = [], highPercent = 0, lowMonths = [], lowPercent = 0 } = settings.season || {};
+  if (highMonths.includes(m)) return highPercent || 0;
+  if (lowMonths.includes(m)) return lowPercent || 0;
+  return 0;
+}
+
+function getWeekendPercentForDate(date, settings) {
+  const d = date.getDay(); // 0..6
+  const { days = [5, 6], percent = 0 } = settings.weekend || {};
+  return days.includes(d) ? (percent || 0) : 0;
+}
+
+function applyRounding(value, settings) {
+  const mode = (settings.rounding && settings.rounding.mode) || 'round';
+  if (mode === 'floor') return Math.floor(value);
+  if (mode === 'ceil') return Math.ceil(value);
+  return Math.round(value);
+}
+
+// Calculate dynamic total for a stay given base price per night and dates
+function calculateDynamicTotal(basePrice, checkinISO, checkoutISO, nights) {
+  const settings = getPricingSettings();
+  const start = new Date(checkinISO);
+  const end = new Date(checkoutISO);
+  const totalNights = nights || Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+  let subtotal = 0;
+
+  const day = new Date(start);
+  for (let i = 0; i < totalNights; i++) {
+    const seasonPct = getSeasonPercentForDate(day, settings);
+    const weekendPct = getWeekendPercentForDate(day, settings);
+    const pct = seasonPct + weekendPct; // additive
+    const nightly = basePrice * (1 + pct / 100);
+    subtotal += nightly;
+    day.setDate(day.getDate() + 1);
+  }
+
+  // Long stay discount/surcharge applied on subtotal
+  const { threshold = 0, percent = 0 } = settings.longStay || {};
+  if (threshold && totalNights >= threshold && percent) {
+    subtotal = subtotal * (1 + percent / 100);
+  }
+
+  return applyRounding(subtotal, settings);
+}
+
+// Expose for other pages
+window.calculateDynamicTotal = calculateDynamicTotal;
+
 // Enhanced booking form handler
 function handleBookingSearch(e) {
   e.preventDefault();
@@ -121,7 +214,7 @@ function displaySearchResults(rooms, nights, checkin, checkout, guests) {
     `;
   } else {
     rooms.forEach(room => {
-      const totalPrice = room.price * nights;
+  const totalPrice = calculateDynamicTotal(room.price, checkin, checkout, nights);
       const roomCard = createRoomCard(room, totalPrice, nights, checkin, checkout, guests, currentLang);
       roomsList.appendChild(roomCard);
     });
@@ -140,6 +233,8 @@ function createRoomCard(room, totalPrice, nights, checkin, checkout, guests, lan
   const nightsText = lang === 'it' ? 
     `${nights} ${nights > 1 ? 'notti' : 'notte'}` : 
     `${nights} ${nights > 1 ? 'nights' : 'night'}`;
+  const perNight = Math.max(1, Math.round(totalPrice / Math.max(1, nights)));
+  const perNightLabel = lang === 'it' ? `${perNight} € / notte` : `${perNight} € / night`;
   
   card.innerHTML = `
     <img src="${room.image}" alt="${room.name[lang]}" class="room-image">
@@ -152,6 +247,7 @@ function createRoomCard(room, totalPrice, nights, checkin, checkout, guests, lan
     </div>
     <div class="room-price">
       <span class="price-amount">€${totalPrice}</span>
+      <span class="price-per-night" style="display:block; color: var(--muted-color); font-size: .9rem; margin-top:.15rem;">${perNightLabel}</span>
       <span class="price-unit">${nightsText}</span>
       <button class="book-room-btn" onclick="bookRoom(${room.id}, '${checkin}', '${checkout}', ${guests})">
         ${lang === 'it' ? 'Prenota' : 'Book Now'}
@@ -186,7 +282,8 @@ function bookRoom(roomId, checkin, checkout, guests) {
     roomId, checkin, checkout, guests,
     roomName: room.name[currentLang],
     pricePerNight: room.price,
-    nights: Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24))
+    nights: Math.ceil((new Date(checkout) - new Date(checkin)) / (1000 * 60 * 60 * 24)),
+    totalPrice: calculateDynamicTotal(room.price, checkin, checkout)
   }));
   
   window.location.href = 'pagamento.html';
