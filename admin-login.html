@@ -6,6 +6,7 @@
   <title>Login Admin - AUROOMS</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <link rel="stylesheet" href="style.css">
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <style>
     .login-container {
       max-width: 400px;
@@ -130,25 +131,14 @@
           <p>Area Amministrazione</p>
         </div>
         
-        <div id="error-message" class="error-message">
-          Credenziali non valide. Riprova.
+        <div id="error-message" class="error-message" style="display:none;">
+          Accesso consentito solo agli admin.
         </div>
-        
-        <form id="admin-login-form">
-          <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" required autocomplete="username">
-          </div>
-          
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required autocomplete="current-password">
-          </div>
-          
-          <button type="submit" class="login-button" id="login-btn">
-            🔑 Accedi all'Amministrazione
-          </button>
-        </form>
+
+        <div style="margin: .75rem 0; text-align:center; color:#a0aec0;">oppure</div>
+        <button id="netlify-login-btn" class="login-button" style="background:#0ea5e9;">
+          🔐 Accedi con Netlify Identity
+        </button>
         
         <div class="security-note">
           🔒 Accesso riservato al personale autorizzato
@@ -162,145 +152,67 @@
   </main>
 
   <script>
-    // Configurazione admin - credenziali semplici per demo
-    const ADMIN_CREDENTIALS = {
-      username: 'admin',
-      password: 'admin' // Password in chiaro per semplicità
-    };
-    
-    // Event listener per il form
-    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const username = document.getElementById('username').value.trim();
-      const password = document.getElementById('password').value;
-      const loginBtn = document.getElementById('login-btn');
-      const errorMsg = document.getElementById('error-message');
-      
-      // Reset UI
-      errorMsg.style.display = 'none';
-      loginBtn.disabled = true;
-      loginBtn.textContent = '🔄 Verificando...';
-      
-      // Debug completo
-      console.log('=== DEBUG LOGIN ===');
-      console.log('Username inserito:', `"${username}"`);
-      console.log('Password inserita:', `"${password}"`);
-      console.log('Username atteso:', `"${ADMIN_CREDENTIALS.username}"`);
-      console.log('Password attesa:', `"${ADMIN_CREDENTIALS.password}"`);
-      console.log('Username match:', username === ADMIN_CREDENTIALS.username);
-      console.log('Password match:', password === ADMIN_CREDENTIALS.password);
-      console.log('Username length:', username.length, 'Expected:', ADMIN_CREDENTIALS.username.length);
-      console.log('Password length:', password.length, 'Expected:', ADMIN_CREDENTIALS.password.length);
-      
-      // BYPASS TEMPORANEO - accetta qualsiasi combinazione di admin/password
-      const isValidLogin = (
-        (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) ||
-        (username === 'admin' && password === 'admin') ||
-        (username === 'aurooms' && password === 'aurooms') ||
-        (username.toLowerCase().includes('admin') && password.length > 3)
-      );
-      
-      // Simula verifica credenziali
-      setTimeout(() => {
-        if (isValidLogin) {
-          // Login riuscito
-          console.log('✅ Login ACCETTATO');
-          const adminSession = {
-            username: username,
-            loginTime: new Date().toISOString(),
-            sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-          };
-          
-          // Salva sessione
-          sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
-          
-          // Feedback positivo
-          loginBtn.textContent = '✅ Accesso riuscito!';
-          loginBtn.style.background = '#28a745';
-          
-          // Reindirizza al dashboard
-          setTimeout(() => {
+    // ---- Netlify Identity integrazione ----
+    function hasAdminRole(user){
+      try {
+        const roles = (user && user.app_metadata && user.app_metadata.roles) || [];
+        return roles.includes('admin');
+      } catch { return false; }
+    }
+    function setAdminSessionFromIdentity(user){
+      if(!user) return;
+      const adminSession = {
+        username: user.email || (user.user_metadata && user.user_metadata.full_name) || 'admin',
+        loginTime: new Date().toISOString(),
+        identity: true
+      };
+      sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
+    }
+    document.addEventListener('DOMContentLoaded', function(){
+      if (window.netlifyIdentity) {
+        netlifyIdentity.on('init', (user)=>{
+          if (user && hasAdminRole(user)) {
+            setAdminSessionFromIdentity(user);
             window.location.href = 'admin-dashboard.html';
-          }, 1000);
-          
-        } else {
-          // Login fallito
-          console.log('❌ Login RIFIUTATO');
-          console.log('Prova con: admin/admin oppure aurooms/aurooms');
-          errorMsg.innerHTML = `
-            Credenziali non valide. Prova:<br>
-            • <strong>admin</strong> / <strong>admin</strong><br>
-            • <strong>aurooms</strong> / <strong>aurooms</strong><br>
-            • <strong>aurooms_admin</strong> / <strong>AUROOMS2025!</strong>
-          `;
-          errorMsg.style.display = 'block';
-          loginBtn.disabled = false;
-          loginBtn.textContent = '🔑 Accedi all\'Amministrazione';
-          
-          // Reset campi
-          document.getElementById('password').value = '';
-          document.getElementById('password').focus();
-        }
-      }, 800); // Ridotto il tempo di attesa
+          }
+        });
+        netlifyIdentity.on('login', (user)=>{
+          if (hasAdminRole(user)) {
+            setAdminSessionFromIdentity(user);
+            window.location.href = 'admin-dashboard.html';
+          } else {
+            const msg = document.getElementById('error-message');
+            if (msg) { msg.style.display = 'block'; }
+            netlifyIdentity.logout();
+          }
+        });
+        netlifyIdentity.on('logout', ()=>{
+          sessionStorage.removeItem('aurooms_admin_session');
+        });
+        netlifyIdentity.init();
+        const nb = document.getElementById('netlify-login-btn');
+        if (nb) nb.addEventListener('click', ()=> netlifyIdentity.open('login'));
+      }
     });
-    
-    // Auto-focus sul campo username
+    // Se già loggato via Identity, reindirizza al dashboard
     document.addEventListener('DOMContentLoaded', function() {
-      document.getElementById('username').focus();
-      
-      // Mostra le credenziali di test nella console
-      console.log('🔑 CREDENZIALI DI TEST DISPONIBILI:');
-      console.log('1. admin / admin');
-      console.log('2. aurooms / aurooms');
-      console.log('3. aurooms_admin / AUROOMS2025!');
-      
-      // Se già loggato, reindirizza
       const adminSession = sessionStorage.getItem('aurooms_admin_session');
       if (adminSession) {
-        const session = JSON.parse(adminSession);
-        const loginTime = new Date(session.loginTime);
-        const now = new Date();
-        const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-        
-        // Sessione valida per 8 ore
-        if (hoursSinceLogin < 8) {
-          console.log('Sessione valida trovata, reindirizzamento...');
-          window.location.href = 'admin-dashboard.html';
-        } else {
-          // Sessione scaduta
-          console.log('Sessione scaduta, rimuovo...');
+        try {
+          const session = JSON.parse(adminSession);
+          const loginTime = new Date(session.loginTime);
+          const now = new Date();
+          const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+          if (hoursSinceLogin < 8) {
+            window.location.href = 'admin-dashboard.html';
+          } else {
+            sessionStorage.removeItem('aurooms_admin_session');
+          }
+        } catch {
           sessionStorage.removeItem('aurooms_admin_session');
         }
       }
     });
-    
-    // Gestione tasto Invio
-    document.addEventListener('keypress', function(e) {
-      if (e.key === 'Enter') {
-        document.getElementById('admin-login-form').dispatchEvent(new Event('submit'));
-      }
-    });
-    
-    // Funzione di bypass per test immediato
-    function bypassLogin() {
-      const adminSession = {
-        username: 'admin',
-        loginTime: new Date().toISOString(),
-        sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-      };
-      sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
-      window.location.href = 'admin-dashboard.html';
-    }
-    
-    // Aggiungi pulsante di bypass (temporaneo)
-    setTimeout(() => {
-      const bypassBtn = document.createElement('button');
-      bypassBtn.textContent = '🚀 Test Bypass (Clicca qui se il login non funziona)';
-      bypassBtn.style.cssText = 'width: 100%; margin-top: 1rem; padding: 0.5rem; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 0.9rem;';
-      bypassBtn.onclick = bypassLogin;
-      document.querySelector('.login-card').appendChild(bypassBtn);
-    }, 2000);
   </script>
 </body>
 </html>

@@ -381,7 +381,7 @@
           <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #007bff; text-decoration: none;">🏠 Home</a></li>
           <li style="margin-bottom: 0.5rem;"><a href="#booking" style="color: #007bff; text-decoration: none;">📅 <span data-lang="it">Prenota</span><span class="hidden" data-lang="en">Book</span></a></li>
           <li style="margin-bottom: 0.5rem;"><a href="https://wa.me/393758843175" style="color: #007bff; text-decoration: none;">💬 WhatsApp</a></li>
-          <li style="margin-bottom: 0.5rem;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
+          <li id="admin-link-item" style="margin-bottom: 0.5rem; display:none;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
         </ul>
       </div>
       
@@ -417,5 +417,33 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <script src="script.js"></script>
+  <script>
+    // Mostra link Admin solo a utenti admin (sessione locale o Netlify Identity con ruolo admin)
+    (function(){
+      function showAdminLink(){
+        var item = document.getElementById('admin-link-item');
+        if (!item) return;
+        try {
+          var sess = sessionStorage.getItem('aurooms_admin_session');
+          if (sess) { item.style.display = 'list-item'; return; }
+          if (window.netlifyIdentity && window.netlifyIdentity.currentUser) {
+            var u = window.netlifyIdentity.currentUser();
+            var roles = (u && u.app_metadata && u.app_metadata.roles) || [];
+            if (roles.includes('admin')) { item.style.display = 'list-item'; return; }
+          }
+          item.style.display = 'none';
+        } catch(e){ item.style.display = 'none'; }
+      }
+      showAdminLink();
+      try {
+        if (window.netlifyIdentity) {
+          netlifyIdentity.on('init', showAdminLink);
+          netlifyIdentity.on('login', showAdminLink);
+          netlifyIdentity.on('logout', showAdminLink);
+          netlifyIdentity.init();
+        }
+      } catch {}
+    })();
+  </script>
 </body>
 </html>

@@ -1,0 +1,48 @@
+# Netlify config per mettere in sicurezza le pagine admin su hosting statico
+# 1) Di default: blocca /admin-*.html con 401 e reindirizza a /admin-login.html
+# 2) Se abiliti Netlify Identity e assegni il ruolo "admin", consenti l'accesso
+#    (il widget Identity imposta un cookie nf_jwt che Netlify usa per i redirect Role-based)
+
+# --- Redirects (ordine importante) ---
+
+# Consenti la pagina di login admin sempre
+[[redirects]]
+  from = "/admin-login.html"
+  to = "/admin-login.html"
+  status = 200
+
+# Consenti admin solo a utenti con ruolo Netlify Identity = admin
+[[redirects]]
+  from = "/admin-:page"
+  to = "/admin-:page"
+  status = 200
+  force = true
+  conditions = { Role = ["admin"] }
+
+# Fallback: blocca accesso a tutte le pagine admin e manda al login con 401
+[[redirects]]
+  from = "/admin-:page"
+  to = "/admin-login.html"
+  status = 401
+  force = true
+
+# Anche nel caso in futuro sposti l'area in /admin/*
+[[redirects]]
+  from = "/admin/*"
+  to = "/admin-login.html"
+  status = 401
+  force = true
+
+# --- Security headers base per tutto il sito ---
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Strict-Transport-Security = "max-age=31536000; includeSubDomains; preload"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+
+# Note:
+# - Per usare i redirect basati su ruolo devi abilitare Netlify Identity e fare login con widget/netlify-identity-widget
+#   in modo che Netlify imposti il cookie nf_jwt; senza Identity, le pagine admin resteranno bloccate (401), più sicuro.
+# - In alternativa puoi lasciare le pagine admin escluse dal deploy o usare Cloudflare Access per proteggere /admin-*.
