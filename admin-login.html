@@ -168,15 +168,31 @@
       };
       sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
     }
-    document.addEventListener('DOMContentLoaded', function(){
+  document.addEventListener('DOMContentLoaded', function(){
       if (window.netlifyIdentity) {
+        function handleTokens(){
+          try {
+            var h = (window.location.hash||'');
+            if (/invite_token|confirmation_token|recovery_token|access_token/.test(h)) {
+              netlifyIdentity.open();
+            }
+            else {
+              // se non ci sono token e non c'è sessione, apri direttamente il login per velocizzare
+              var hasSession = !!sessionStorage.getItem('aurooms_admin_session');
+              if (!hasSession) {
+                setTimeout(function(){ try { netlifyIdentity.open('login'); } catch(_){} }, 100);
+              }
+            }
+          } catch {}
+        }
         netlifyIdentity.on('init', (user)=>{
           if (user && hasAdminRole(user)) {
             setAdminSessionFromIdentity(user);
             window.location.href = 'admin-dashboard.html';
           }
+          handleTokens();
         });
-        netlifyIdentity.on('login', (user)=>{
+  netlifyIdentity.on('login', (user)=>{
           if (hasAdminRole(user)) {
             setAdminSessionFromIdentity(user);
             window.location.href = 'admin-dashboard.html';
@@ -194,7 +210,7 @@
         if (nb) nb.addEventListener('click', ()=> netlifyIdentity.open('login'));
       }
     });
-    // Se già loggato via Identity, reindirizza al dashboard
+  // Se già loggato via Identity, reindirizza al dashboard
     document.addEventListener('DOMContentLoaded', function() {
       const adminSession = sessionStorage.getItem('aurooms_admin_session');
       if (adminSession) {
@@ -202,8 +218,8 @@
           const session = JSON.parse(adminSession);
           const loginTime = new Date(session.loginTime);
           const now = new Date();
-          const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-          if (hoursSinceLogin < 8) {
+      const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
+      if (hoursSinceLogin < 24) {
             window.location.href = 'admin-dashboard.html';
           } else {
             sessionStorage.removeItem('aurooms_admin_session');

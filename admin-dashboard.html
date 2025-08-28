@@ -235,7 +235,7 @@
     // Verifica autenticazione
     function checkAuth() {
       console.log('🔍 Verifica autenticazione...');
-      const adminSession = sessionStorage.getItem('aurooms_admin_session');
+  const adminSession = sessionStorage.getItem('aurooms_admin_session');
       if (!adminSession) {
         // Prova Netlify Identity se disponibile
         if (window.netlifyIdentity && window.netlifyIdentity.currentUser) {
@@ -244,6 +244,8 @@
           if (roles.includes('admin')) {
             const sess = { username: user.email||'admin', loginTime: new Date().toISOString(), identity:true };
             sessionStorage.setItem('aurooms_admin_session', JSON.stringify(sess));
+    // Dopo aver creato la sessione locale, ricarica per proseguire
+    window.location.replace('admin-dashboard.html');
           } else {
             console.log('❌ Nessuna sessione');
             window.location.replace('admin-login.html');
@@ -262,10 +264,9 @@
         const now = new Date();
         const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
         
-        if (hoursSinceLogin > 8) {
+  if (hoursSinceLogin > 24) {
           console.log('❌ Sessione scaduta');
           sessionStorage.removeItem('aurooms_admin_session');
-          alert('Sessione scaduta. Effettua nuovamente il login.');
           window.location.replace('admin-login.html');
           return false;
         }
@@ -278,9 +279,8 @@
         
         return true;
       } catch (error) {
-        console.log('❌ Errore sessione:', error);
-        sessionStorage.removeItem('aurooms_admin_session');
-        alert('Sessione corrotta. Effettua il login.');
+  console.log('❌ Errore sessione:', error);
+  sessionStorage.removeItem('aurooms_admin_session');
         window.location.replace('admin-login.html');
         return false;
       }
@@ -728,15 +728,14 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
         loadBankDetails(); // Carica le coordinate bancarie salvate
       }
       
-      // Controllo sessione ogni 30 secondi
+      // Controllo sessione periodico leggero
       setInterval(function() {
         const adminSession = sessionStorage.getItem('aurooms_admin_session');
         if (!adminSession) {
-          console.log('🚨 Sessione rimossa - Reindirizzamento immediato');
-          alert('Sessione terminata. Accesso negato.');
+          console.log('🚨 Sessione rimossa - Reindirizzamento');
           window.location.replace('admin-login.html');
         }
-      }, 30000);
+      }, 60000);
     });
   </script>
 </body>

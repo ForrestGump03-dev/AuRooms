@@ -381,7 +381,7 @@
           <li style="margin-bottom: 0.5rem;"><a href="index.html" style="color: #007bff; text-decoration: none;">🏠 Home</a></li>
           <li style="margin-bottom: 0.5rem;"><a href="#booking" style="color: #007bff; text-decoration: none;">📅 <span data-lang="it">Prenota</span><span class="hidden" data-lang="en">Book</span></a></li>
           <li style="margin-bottom: 0.5rem;"><a href="https://wa.me/393758843175" style="color: #007bff; text-decoration: none;">💬 WhatsApp</a></li>
-          <li id="admin-link-item" style="margin-bottom: 0.5rem; display:none;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
+          <li id="admin-link-item" style="margin-bottom: 0.5rem; display:list-item;"><a href="admin-login.html" style="color: #6c757d; font-size: 0.8rem;" title="Area Admin">⚙️ <span data-lang="it">Admin</span><span class="hidden" data-lang="en">Admin</span></a></li>
         </ul>
       </div>
       
@@ -412,35 +412,45 @@
   <a class="whatsapp-button" href="https://wa.me/393758843175" target="_blank" title="Contattaci su WhatsApp">
     <img src="./attached_assets/whatsapplogo_1753691477533.png" alt="WhatsApp" style="width: 32px; height: 32px;">
   </a>
+    <!-- Quick Admin Login (solo visivo, apre il widget Identity) -->
+    <button id="quick-admin-login" title="Login Admin" style="position: fixed; bottom: 96px; right: 20px; background:#0ea5e9; color:white; border:none; border-radius:999px; padding:.6rem .9rem; font-size:.9rem; box-shadow:0 4px 10px rgba(0,0,0,.2); cursor:pointer;">
+      ⚙️ Admin
+    </button>
 
   <!-- JS Libraries -->
+  <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
   <script src="script.js"></script>
   <script>
-    // Mostra link Admin solo a utenti admin (sessione locale o Netlify Identity con ruolo admin)
+    // Link Admin sempre visibile; manteniamo auto-handling dei token Identity e redirect post-login
     (function(){
-      function showAdminLink(){
-        var item = document.getElementById('admin-link-item');
-        if (!item) return;
+        // Fallback button apre il widget Identity se presente
         try {
-          var sess = sessionStorage.getItem('aurooms_admin_session');
-          if (sess) { item.style.display = 'list-item'; return; }
-          if (window.netlifyIdentity && window.netlifyIdentity.currentUser) {
-            var u = window.netlifyIdentity.currentUser();
-            var roles = (u && u.app_metadata && u.app_metadata.roles) || [];
-            if (roles.includes('admin')) { item.style.display = 'list-item'; return; }
-          }
-          item.style.display = 'none';
-        } catch(e){ item.style.display = 'none'; }
-      }
-      showAdminLink();
+          var btn = document.getElementById('quick-admin-login');
+          if (btn) btn.addEventListener('click', function(){
+            if (window.netlifyIdentity) { netlifyIdentity.open('login'); } else { window.location.href = 'admin-login.html'; }
+          });
+        } catch {}
       try {
         if (window.netlifyIdentity) {
-          netlifyIdentity.on('init', showAdminLink);
-          netlifyIdentity.on('login', showAdminLink);
-          netlifyIdentity.on('logout', showAdminLink);
+          function handleTokens(){
+            var h = (window.location.hash||'');
+            if (/invite_token|confirmation_token|recovery_token|access_token/.test(h)) {
+              netlifyIdentity.open();
+            }
+          }
+          netlifyIdentity.on('init', function(){ handleTokens(); });
           netlifyIdentity.init();
+          netlifyIdentity.on('login', function(user){
+            try {
+              var roles = (user && user.app_metadata && user.app_metadata.roles) || [];
+              if (roles.includes('admin')) {
+                sessionStorage.setItem('aurooms_admin_session', JSON.stringify({ username: user.email||'admin', loginTime: new Date().toISOString(), identity:true }));
+                window.location.href = 'admin-dashboard.html';
+              }
+            } catch {}
+          });
         }
       } catch {}
     })();
