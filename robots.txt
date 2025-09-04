@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+
+# Evita indicizzazione area admin
+Disallow: /admin-*.html
+
+Sitemap: https://example.com/sitemap.xml

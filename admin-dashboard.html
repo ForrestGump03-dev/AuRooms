@@ -235,27 +235,11 @@
     // Verifica autenticazione
     function checkAuth() {
       console.log('🔍 Verifica autenticazione...');
-  const adminSession = sessionStorage.getItem('aurooms_admin_session');
+      const adminSession = sessionStorage.getItem('aurooms_admin_session');
       if (!adminSession) {
-        // Prova Netlify Identity se disponibile
-        if (window.netlifyIdentity && window.netlifyIdentity.currentUser) {
-          const user = window.netlifyIdentity.currentUser();
-          const roles = (user && user.app_metadata && user.app_metadata.roles) || [];
-          if (roles.includes('admin')) {
-            const sess = { username: user.email||'admin', loginTime: new Date().toISOString(), identity:true };
-            sessionStorage.setItem('aurooms_admin_session', JSON.stringify(sess));
-    // Dopo aver creato la sessione locale, ricarica per proseguire
-    window.location.replace('admin-dashboard.html');
-          } else {
-            console.log('❌ Nessuna sessione');
-            window.location.replace('admin-login.html');
-            return false;
-          }
-        } else {
-          console.log('❌ Nessuna sessione');
-          window.location.replace('admin-login.html');
-          return false;
-        }
+        console.log('❌ Nessuna sessione');
+        window.location.replace('admin-login.html');
+        return false;
       }
       
       try {
@@ -264,9 +248,10 @@
         const now = new Date();
         const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
         
-  if (hoursSinceLogin > 24) {
+        if (hoursSinceLogin > 8) {
           console.log('❌ Sessione scaduta');
           sessionStorage.removeItem('aurooms_admin_session');
+          alert('Sessione scaduta. Effettua nuovamente il login.');
           window.location.replace('admin-login.html');
           return false;
         }
@@ -279,18 +264,18 @@
         
         return true;
       } catch (error) {
-  console.log('❌ Errore sessione:', error);
-  sessionStorage.removeItem('aurooms_admin_session');
+        console.log('❌ Errore sessione:', error);
+        sessionStorage.removeItem('aurooms_admin_session');
+        alert('Sessione corrotta. Effettua il login.');
         window.location.replace('admin-login.html');
         return false;
       }
     }
     
     // Logout
-  function logout() {
+    function logout() {
       if (confirm('Sei sicuro di voler effettuare il logout?')) {
         sessionStorage.removeItem('aurooms_admin_session');
-    try { if (window.netlifyIdentity) netlifyIdentity.logout(); } catch {}
         window.location.href = 'admin-login.html';
       }
     }
@@ -721,21 +706,21 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
     // Inizializzazione
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🚀 Inizializzazione dashboard...');
-      try { if (window.netlifyIdentity) netlifyIdentity.init(); } catch {}
       
       if (checkAuth()) {
         loadDashboardData();
         loadBankDetails(); // Carica le coordinate bancarie salvate
       }
       
-      // Controllo sessione periodico leggero
+      // Controllo sessione ogni 30 secondi
       setInterval(function() {
         const adminSession = sessionStorage.getItem('aurooms_admin_session');
         if (!adminSession) {
-          console.log('🚨 Sessione rimossa - Reindirizzamento');
+          console.log('🚨 Sessione rimossa - Reindirizzamento immediato');
+          alert('Sessione terminata. Accesso negato.');
           window.location.replace('admin-login.html');
         }
-      }, 60000);
+      }, 30000);
     });
   </script>
 </body>
