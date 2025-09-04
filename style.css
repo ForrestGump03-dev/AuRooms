@@ -224,10 +224,11 @@ nav a:focus, nav a:hover {
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #25D366;
-  color: white;
+  background-color: #ffffff; /* white background to highlight green logo */
+  color: #25D366;
   padding: 12px;
   border-radius: 50%;
+  border: 2px solid #25D366;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   text-decoration: none;
@@ -348,14 +349,14 @@ nav a:focus, nav a:hover {
   .whatsapp-button {
     bottom: 15px;
     right: 15px;
-    width: 48px;
-    height: 48px;
-    padding: 10px;
+  width: 52px;
+  height: 52px;
+  padding: 8px;
   }
   
   .whatsapp-button img {
-    width: 24px !important;
-    height: 24px !important;
+  width: 28px !important;
+  height: 28px !important;
   }
   
   #why_us {

@@ -4,4 +4,4 @@ Allow: /
 # Evita indicizzazione area admin
 Disallow: /admin-*.html
 
-Sitemap: https://example.com/sitemap.xml
+Sitemap: https://aurooms.it/sitemap.xml

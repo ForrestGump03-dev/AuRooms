@@ -24,3 +24,10 @@
 #   for = "/*"
 #   [headers.values]
 #     Content-Security-Policy = "default-src 'self'; img-src 'self' https: data:; style-src 'self' 'unsafe-inline' https:; script-src 'self' https:; connect-src 'self'; frame-ancestors 'self'"
+
+# Redirect www → apex and force HTTPS
+[[redirects]]
+  from = "https://www.aurooms.it/*"
+  to = "https://aurooms.it/:splat"
+  status = 301
+  force = true
