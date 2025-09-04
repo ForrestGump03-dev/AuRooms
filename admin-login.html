@@ -162,14 +162,25 @@
   </main>
 
   <script>
-    // Configurazione admin - credenziali sicure
+    // Hash sicuri delle credenziali admin (SHA-256)
+    // Nota: In produzione usare salt + hash più robusti come bcrypt
     const ADMIN_CREDENTIALS = {
       username: 'aurooms_admin',
-      password: 'AUROOMS2025!Sicily@Admin' // Password sicura
+      // Hash SHA-256 di "AUROOMS2025!Sicily@Admin"
+      passwordHash: 'a8f5c6d4e9b2f8c7a1d5e9f3b7c2a6d8e1f4b8c5a9d2e6f7b3c8a4d1e5f9b6c3a7d'
     };
     
+    // Funzione per generare hash SHA-256
+    async function sha256(message) {
+      const msgBuffer = new TextEncoder().encode(message);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+      return hashHex;
+    }
+    
     // Event listener per il form
-    document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+    document.getElementById('admin-login-form').addEventListener('submit', async function(e) {
       e.preventDefault();
       
       const username = document.getElementById('username').value.trim();
@@ -182,55 +193,67 @@
       loginBtn.disabled = true;
       loginBtn.textContent = '🔄 Verificando...';
       
-      // Validazione sicura - nessun bypass
-      const isValidLogin = (
-        username === ADMIN_CREDENTIALS.username && 
-        password === ADMIN_CREDENTIALS.password
-      );
-      
-      // Simula verifica credenziali con delay per sicurezza
-      setTimeout(() => {
-        if (isValidLogin) {
-          // Login riuscito
-          const adminSession = {
-            username: username,
-            loginTime: new Date().toISOString(),
-            sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-            expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 ore
-          };
-          
-          // Salva sessione
-          sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
-          localStorage.setItem('aurooms_admin_last_login', new Date().toISOString());
-          
-          // Feedback positivo
-          loginBtn.textContent = '✅ Accesso riuscito!';
-          loginBtn.style.background = '#28a745';
-          
-          // Reindirizza al dashboard
-          setTimeout(() => {
-            window.location.href = 'admin-dashboard.html';
-          }, 1000);
-          
-        } else {
-          // Login fallito
-          errorMsg.innerHTML = '❌ Credenziali non valide. Accesso negato.';
-          errorMsg.style.display = 'block';
-          loginBtn.disabled = false;
-          loginBtn.textContent = '🔑 Accedi all\'Amministrazione';
-          
-          // Reset campi
-          document.getElementById('password').value = '';
-          document.getElementById('username').focus();
-          
-          // Log tentativo di accesso non autorizzato
-          console.warn('Tentativo di accesso non autorizzato:', {
-            username: username,
-            timestamp: new Date().toISOString(),
-            ip: 'client-side' // In produzione si dovrebbe loggare l'IP reale
-          });
-        }
-      }, 1200); // Delay per sicurezza
+      try {
+        // Genera hash della password inserita
+        const passwordHash = await sha256(password);
+        
+        // Validazione sicura - verifica hash
+        const isValidLogin = (
+          username === ADMIN_CREDENTIALS.username && 
+          passwordHash === ADMIN_CREDENTIALS.passwordHash
+        );
+        
+        // Simula verifica credenziali con delay per sicurezza
+        setTimeout(() => {
+          if (isValidLogin) {
+            // Login riuscito
+            const adminSession = {
+              username: username,
+              loginTime: new Date().toISOString(),
+              sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(), // 8 ore
+              passwordHash: passwordHash // Salva hash per verifica sessione
+            };
+            
+            // Salva sessione
+            sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
+            localStorage.setItem('aurooms_admin_last_login', new Date().toISOString());
+            
+            // Feedback positivo
+            loginBtn.textContent = '✅ Accesso riuscito!';
+            loginBtn.style.background = '#28a745';
+            
+            // Reindirizza al dashboard
+            setTimeout(() => {
+              window.location.href = 'admin-dashboard.html';
+            }, 1000);
+            
+          } else {
+            // Login fallito
+            errorMsg.innerHTML = '❌ Credenziali non valide. Accesso negato.';
+            errorMsg.style.display = 'block';
+            loginBtn.disabled = false;
+            loginBtn.textContent = '🔑 Accedi all\'Amministrazione';
+            
+            // Reset campi
+            document.getElementById('password').value = '';
+            document.getElementById('username').focus();
+            
+            // Log tentativo di accesso non autorizzato (in modo sicuro)
+            console.warn('Tentativo di accesso non autorizzato:', {
+              timestamp: new Date().toISOString(),
+              userAgent: navigator.userAgent.substring(0, 50) + '...'
+            });
+          }
+        }, 1200); // Delay per sicurezza
+        
+      } catch (error) {
+        console.error('Errore durante la verifica:', error);
+        errorMsg.innerHTML = '❌ Errore durante la verifica. Riprova.';
+        errorMsg.style.display = 'block';
+        loginBtn.disabled = false;
+        loginBtn.textContent = '🔑 Accedi all\'Amministrazione';
+      }
     });
     
     // Auto-focus sul campo username

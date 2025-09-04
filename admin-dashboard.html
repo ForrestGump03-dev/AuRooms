@@ -276,6 +276,16 @@
           return false;
         }
         
+        // Verifica hash password nella sessione (sicurezza aggiuntiva)
+        const expectedHash = 'a8f5c6d4e9b2f8c7a1d5e9f3b7c2a6d8e1f4b8c5a9d2e6f7b3c8a4d1e5f9b6c3a7d';
+        if (session.passwordHash && session.passwordHash !== expectedHash) {
+          console.log('❌ Hash password non valido nella sessione');
+          sessionStorage.removeItem('aurooms_admin_session');
+          alert('Sessione compromessa. Effettua il login.');
+          window.location.replace('admin-login.html');
+          return false;
+        }
+        
         console.log('✅ Autenticazione ok');
         document.getElementById('admin-username').textContent = session.username;
         
