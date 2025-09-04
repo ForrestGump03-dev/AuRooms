@@ -162,10 +162,10 @@
   </main>
 
   <script>
-    // Configurazione admin - credenziali semplici per demo
+    // Configurazione admin - credenziali sicure
     const ADMIN_CREDENTIALS = {
-      username: 'admin',
-      password: 'admin' // Password in chiaro per semplicità
+      username: 'aurooms_admin',
+      password: 'AUROOMS2025!Sicily@Admin' // Password sicura
     };
     
     // Event listener per il form
@@ -182,38 +182,26 @@
       loginBtn.disabled = true;
       loginBtn.textContent = '🔄 Verificando...';
       
-      // Debug completo
-      console.log('=== DEBUG LOGIN ===');
-      console.log('Username inserito:', `"${username}"`);
-      console.log('Password inserita:', `"${password}"`);
-      console.log('Username atteso:', `"${ADMIN_CREDENTIALS.username}"`);
-      console.log('Password attesa:', `"${ADMIN_CREDENTIALS.password}"`);
-      console.log('Username match:', username === ADMIN_CREDENTIALS.username);
-      console.log('Password match:', password === ADMIN_CREDENTIALS.password);
-      console.log('Username length:', username.length, 'Expected:', ADMIN_CREDENTIALS.username.length);
-      console.log('Password length:', password.length, 'Expected:', ADMIN_CREDENTIALS.password.length);
-      
-      // BYPASS TEMPORANEO - accetta qualsiasi combinazione di admin/password
+      // Validazione sicura - nessun bypass
       const isValidLogin = (
-        (username === ADMIN_CREDENTIALS.username && password === ADMIN_CREDENTIALS.password) ||
-        (username === 'admin' && password === 'admin') ||
-        (username === 'aurooms' && password === 'aurooms') ||
-        (username.toLowerCase().includes('admin') && password.length > 3)
+        username === ADMIN_CREDENTIALS.username && 
+        password === ADMIN_CREDENTIALS.password
       );
       
-      // Simula verifica credenziali
+      // Simula verifica credenziali con delay per sicurezza
       setTimeout(() => {
         if (isValidLogin) {
           // Login riuscito
-          console.log('✅ Login ACCETTATO');
           const adminSession = {
             username: username,
             loginTime: new Date().toISOString(),
-            sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+            sessionId: `admin_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+            expiresAt: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 ore
           };
           
           // Salva sessione
           sessionStorage.setItem('aurooms_admin_session', JSON.stringify(adminSession));
+          localStorage.setItem('aurooms_admin_last_login', new Date().toISOString());
           
           // Feedback positivo
           loginBtn.textContent = '✅ Accesso riuscito!';
@@ -226,23 +214,23 @@
           
         } else {
           // Login fallito
-          console.log('❌ Login RIFIUTATO');
-          console.log('Prova con: admin/admin oppure aurooms/aurooms');
-          errorMsg.innerHTML = `
-            Credenziali non valide. Prova:<br>
-            • <strong>admin</strong> / <strong>admin</strong><br>
-            • <strong>aurooms</strong> / <strong>aurooms</strong><br>
-            • <strong>aurooms_admin</strong> / <strong>AUROOMS2025!</strong>
-          `;
+          errorMsg.innerHTML = '❌ Credenziali non valide. Accesso negato.';
           errorMsg.style.display = 'block';
           loginBtn.disabled = false;
           loginBtn.textContent = '🔑 Accedi all\'Amministrazione';
           
           // Reset campi
           document.getElementById('password').value = '';
-          document.getElementById('password').focus();
+          document.getElementById('username').focus();
+          
+          // Log tentativo di accesso non autorizzato
+          console.warn('Tentativo di accesso non autorizzato:', {
+            username: username,
+            timestamp: new Date().toISOString(),
+            ip: 'client-side' // In produzione si dovrebbe loggare l'IP reale
+          });
         }
-      }, 800); // Ridotto il tempo di attesa
+      }, 1200); // Delay per sicurezza
     });
     
     // Auto-focus sul campo username

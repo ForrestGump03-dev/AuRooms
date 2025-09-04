@@ -244,14 +244,34 @@
       
       try {
         const session = JSON.parse(adminSession);
-        const loginTime = new Date(session.loginTime);
         const now = new Date();
+        
+        // Verifica scadenza della sessione
+        if (session.expiresAt && new Date(session.expiresAt) < now) {
+          console.log('❌ Sessione scaduta (expiresAt)');
+          sessionStorage.removeItem('aurooms_admin_session');
+          alert('Sessione scaduta. Effettua nuovamente il login.');
+          window.location.replace('admin-login.html');
+          return false;
+        }
+        
+        // Verifica fallback basata su tempo di login (8 ore)
+        const loginTime = new Date(session.loginTime);
         const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
         
         if (hoursSinceLogin > 8) {
-          console.log('❌ Sessione scaduta');
+          console.log('❌ Sessione scaduta (8 ore)');
           sessionStorage.removeItem('aurooms_admin_session');
           alert('Sessione scaduta. Effettua nuovamente il login.');
+          window.location.replace('admin-login.html');
+          return false;
+        }
+        
+        // Verifica che l'username sia quello corretto
+        if (session.username !== 'aurooms_admin') {
+          console.log('❌ Username non valido nella sessione');
+          sessionStorage.removeItem('aurooms_admin_session');
+          alert('Sessione non valida. Effettua il login.');
           window.location.replace('admin-login.html');
           return false;
         }
