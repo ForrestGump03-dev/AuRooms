@@ -1,0 +1,20 @@
+{
+  "name": "aurooms-netlify-functions",
+  "version": "1.0.0",
+  "description": "Netlify Functions for AuRooms booking system",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "pg": "^8.11.3",
+    "stripe": "^13.6.0",
+    "jsonwebtoken": "^9.0.2",
+    "bcryptjs": "^2.4.3",
+    "googleapis": "^126.0.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {},
+  "author": "AuRooms",
+  "license": "MIT"
+}
