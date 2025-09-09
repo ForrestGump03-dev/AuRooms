@@ -232,81 +232,11 @@
     
     let currentSection = 'dashboard';
     
-    // Verifica autenticazione
-    function checkAuth() {
-      console.log('🔍 Verifica autenticazione...');
-      const adminSession = sessionStorage.getItem('aurooms_admin_session');
-      if (!adminSession) {
-        console.log('❌ Nessuna sessione');
-        window.location.replace('admin-login.html');
-        return false;
-      }
-      
-      try {
-        const session = JSON.parse(adminSession);
-        const now = new Date();
-        
-        // Verifica scadenza della sessione
-        if (session.expiresAt && new Date(session.expiresAt) < now) {
-          console.log('❌ Sessione scaduta (expiresAt)');
-          sessionStorage.removeItem('aurooms_admin_session');
-          alert('Sessione scaduta. Effettua nuovamente il login.');
-          window.location.replace('admin-login.html');
-          return false;
-        }
-        
-        // Verifica fallback basata su tempo di login (8 ore)
-        const loginTime = new Date(session.loginTime);
-        const hoursSinceLogin = (now - loginTime) / (1000 * 60 * 60);
-        
-        if (hoursSinceLogin > 8) {
-          console.log('❌ Sessione scaduta (8 ore)');
-          sessionStorage.removeItem('aurooms_admin_session');
-          alert('Sessione scaduta. Effettua nuovamente il login.');
-          window.location.replace('admin-login.html');
-          return false;
-        }
-        
-        // Verifica che l'username sia quello corretto
-        if (session.username !== 'aurooms_admin') {
-          console.log('❌ Username non valido nella sessione');
-          sessionStorage.removeItem('aurooms_admin_session');
-          alert('Sessione non valida. Effettua il login.');
-          window.location.replace('admin-login.html');
-          return false;
-        }
-        
-        // Verifica hash password nella sessione (sicurezza aggiuntiva)
-        const expectedHash = 'a8f5c6d4e9b2f8c7a1d5e9f3b7c2a6d8e1f4b8c5a9d2e6f7b3c8a4d1e5f9b6c3a7d';
-        if (session.passwordHash && session.passwordHash !== expectedHash) {
-          console.log('❌ Hash password non valido nella sessione');
-          sessionStorage.removeItem('aurooms_admin_session');
-          alert('Sessione compromessa. Effettua il login.');
-          window.location.replace('admin-login.html');
-          return false;
-        }
-        
-        console.log('✅ Autenticazione ok');
-        document.getElementById('admin-username').textContent = session.username;
-        
-        document.getElementById('auth-loading').style.display = 'none';
-        document.getElementById('admin-body').style.display = 'block';
-        
-        return true;
-      } catch (error) {
-        console.log('❌ Errore sessione:', error);
-        sessionStorage.removeItem('aurooms_admin_session');
-        alert('Sessione corrotta. Effettua il login.');
-        window.location.replace('admin-login.html');
-        return false;
-      }
-    }
-    
-    // Logout
+    // Logout semplificato - ricarica la pagina per "uscire"
     function logout() {
-      if (confirm('Sei sicuro di voler effettuare il logout?')) {
-        sessionStorage.removeItem('aurooms_admin_session');
-        window.location.href = 'admin-login.html';
+      if (confirm('Sei sicuro di voler uscire dall\'area admin?')) {
+        // Reindirizza alla home page
+        window.location.href = '/';
       }
     }
     
@@ -733,24 +663,20 @@ Date: ${new Date(booking.checkin).toLocaleDateString('it-IT')} → ${new Date(bo
       document.getElementById('pricing-preview').textContent = `Anteprima: base €${base} per 3 notti → totale €${total}`;
     }
     
-    // Inizializzazione
+    // Inizializzazione semplificata
     document.addEventListener('DOMContentLoaded', function() {
       console.log('🚀 Inizializzazione dashboard...');
       
-      if (checkAuth()) {
-        loadDashboardData();
-        loadBankDetails(); // Carica le coordinate bancarie salvate
-      }
+      // Imposta username di default
+      document.getElementById('admin-username').textContent = 'aurooms_admin';
       
-      // Controllo sessione ogni 30 secondi
-      setInterval(function() {
-        const adminSession = sessionStorage.getItem('aurooms_admin_session');
-        if (!adminSession) {
-          console.log('🚨 Sessione rimossa - Reindirizzamento immediato');
-          alert('Sessione terminata. Accesso negato.');
-          window.location.replace('admin-login.html');
-        }
-      }, 30000);
+      // Mostra immediatamente la dashboard (senza controlli di autenticazione)
+      document.getElementById('auth-loading').style.display = 'none';
+      document.getElementById('admin-body').style.display = 'block';
+      
+      // Carica i dati
+      loadDashboardData();
+      loadBankDetails(); // Carica le coordinate bancarie salvate
     });
   </script>
 </body>

@@ -1,10 +1,9 @@
 # Hide admin pages from direct access
-/admin-login.html    /404.html    404
 /admin-dashboard.html    /404.html    404
 
-# Secret admin access path (change 'pannello' to your desired secret path)
-/pannello/login    /admin-login.html    200
-/pannello/dashboard    /admin-dashboard.html    200
+# Secret admin access path - direct access to dashboard
+/pannello    /admin-dashboard.html    200
+/pannello/    /admin-dashboard.html    200
 
 # Redirect www to apex domain
 https://www.aurooms.it/*    https://aurooms.it/:splat    301!
