@@ -49,7 +49,7 @@ exports.handler = async (event, context) => {
       ORDER BY table_name;
     `;
     
-    const tablesResult = await tablesQuery ? await client.query(tablesQuery) : { rows: [] };
+    const tablesResult = await client.query(tablesQuery);
     
     const response = {
       status: 'success',
