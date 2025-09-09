@@ -1,0 +1,32 @@
+# 🔧 VARIABILI NETLIFY DA AGGIUNGERE ORA
+
+## 1. DATABASE (✅ HAI GIÀ QUESTO)
+DATABASE_URL=postgresql://postgres:Abcde01030915?@db.khpamatawazugmttayui.supabase.co:5432/postgres
+
+## 2. JWT & SECURITY (AGGIUNGI QUESTI)
+JWT_SECRET=aurooms_super_secret_jwt_key_2025_sicilia_cinisi_palermo_32chars
+FLASK_SECRET_KEY=aurooms_flask_secret_key_2025_super_secure
+
+## 3. STRIPE (DA OTTENERE - VAI SU STRIPE.COM)
+STRIPE_SECRET_KEY=sk_test_51xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxxxxxxxxx
+
+## 4. GOOGLE OAUTH (DA OTTENERE - VAI SU GOOGLE CLOUD CONSOLE)
+GOOGLE_CLIENT_ID=xxxxxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOxxxxxxxxxx-xxxxxxxxxx
+GOOGLE_REDIRECT_URI=https://aurooms.netlify.app/.netlify/functions/auth/callback
+
+## 5. CONFIGURAZIONI SISTEMA
+ENVIRONMENT=production
+ALLOWED_ORIGINS=https://aurooms.netlify.app,https://aurooms.it
+ADMIN_SECRET_PATH=pannello
+ADMIN_EMAIL=info@aurooms.it
+
+## ⚡ PRIORITÀ IMMEDIATE:
+1. ✅ Aggiungi DATABASE_URL (hai già tutto)
+2. ✅ Aggiungi JWT_SECRET e FLASK_SECRET_KEY (copia da sopra)
+3. ⏳ Stripe e Google li configuriamo dopo
+
+## 🧪 DOPO AVER AGGIUNTO DATABASE_URL:
+Testa subito con la test-dashboard per vedere se il database funziona!

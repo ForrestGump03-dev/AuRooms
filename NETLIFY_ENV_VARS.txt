@@ -1,0 +1,35 @@
+# Variabili d'Ambiente OBBLIGATORIE per Netlify
+# Copia e incolla questi valori nel tuo Netlify Dashboard
+
+## DATABASE
+DATABASE_URL=postgresql://username:password@host:port/database_name
+# Esempio: postgresql://user:pass@db.railway.app:5432/aurooms_db
+
+## GOOGLE OAUTH
+GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+GOOGLE_REDIRECT_URI=https://aurooms.netlify.app/.netlify/functions/auth/callback
+
+## STRIPE PAGAMENTI
+STRIPE_SECRET_KEY=sk_test_51xxxxxxxxxxxxxxxxx
+STRIPE_PUBLISHABLE_KEY=pk_test_xxxxxxxxxxxxxxxxx
+STRIPE_WEBHOOK_SECRET=whsec_xxxxxxxxxxxxxxxx
+
+## JWT & SECURITY
+JWT_SECRET=your_super_secret_jwt_key_here_minimum_32_characters
+FLASK_SECRET_KEY=your_flask_secret_key_here
+
+## EMAILJS (se usato nel backend)
+EMAILJS_SERVICE_ID=your_emailjs_service_id
+EMAILJS_TEMPLATE_ID=your_emailjs_template_id
+EMAILJS_USER_ID=your_emailjs_user_id
+
+## ADMIN CONFIG
+ADMIN_SECRET_PATH=pannello
+ADMIN_EMAIL=your_admin_email@example.com
+
+## CORS & SECURITY
+ALLOWED_ORIGINS=https://aurooms.netlify.app,https://aurooms.it
+ENVIRONMENT=production
+
+# IMPORTANTE: Sostituisci tutti i "your_xxx" con i valori reali!
