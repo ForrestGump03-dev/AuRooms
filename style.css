@@ -1,3 +1,110 @@
+/* Authentication Styles */
+.error-message {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.success-message {
+  background-color: #28a745;
+  color: white;
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.auth-form {
+  background: var(--card-background-color);
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  margin: 2rem 0;
+}
+
+/* Google Sign-In Button Styling */
+.g_id_signin {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: center !important;
+}
+
+/* Dashboard Styles */
+.dashboard-container {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.dashboard-card {
+  background: var(--card-background-color);
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.profile-picture {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+.profile-info h3 {
+  margin: 0;
+  color: #007bff;
+}
+
+.profile-info p {
+  margin: 0.25rem 0;
+  color: var(--muted-color);
+}
+
+.booking-history-item {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background: var(--secondary-background);
+}
+
+.booking-status {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-confirmed {
+  background: #28a745;
+  color: white;
+}
+
+.status-pending {
+  background: #ffc107;
+  color: #212529;
+}
+
+.status-cancelled {
+  background: #dc3545;
+  color: white;
+}
+
 html {
   height: 100%;
   width: 100%;

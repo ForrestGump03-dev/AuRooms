@@ -310,6 +310,53 @@
               💾 <span data-lang="it">Salva Modifiche</span><span class="hidden" data-lang="en">Save Changes</span>
             </button>
           </form>
+          
+          <!-- Change Password Button -->
+          <div style="text-align: center; margin-top: 1rem;">
+            <button type="button" class="secondary" onclick="showChangePassword()" id="change-password-btn">
+              <span data-lang="it">🔑 Cambia Password</span>
+              <span class="hidden" data-lang="en">🔑 Change Password</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Change Password Section -->
+        <div class="dashboard-card" id="change-password-section" style="display: none;">
+          <h3 data-lang="it">🔑 Cambia Password</h3>
+          <h3 class="hidden" data-lang="en">🔑 Change Password</h3>
+          <form id="change-password-form" onsubmit="handleChangePassword(event)">
+            <div class="form-group">
+              <label for="current-password" data-lang="it">Password Attuale</label>
+              <label for="current-password" class="hidden" data-lang="en">Current Password</label>
+              <input type="password" id="current-password" required placeholder="••••••••" />
+            </div>
+
+            <div class="form-group">
+              <label for="new-password" data-lang="it">Nuova Password</label>
+              <label for="new-password" class="hidden" data-lang="en">New Password</label>
+              <input type="password" id="new-password" required minlength="6" placeholder="••••••••" />
+            </div>
+
+            <div class="form-group">
+              <label for="confirm-new-password" data-lang="it">Conferma Nuova Password</label>
+              <label for="confirm-new-password" class="hidden" data-lang="en">Confirm New Password</label>
+              <input type="password" id="confirm-new-password" required minlength="6" placeholder="••••••••" />
+            </div>
+
+            <div id="password-error" class="error-message" style="display: none;"></div>
+            <div id="password-success" class="success-message" style="display: none;"></div>
+
+            <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+              <button type="submit" class="primary">
+                <span data-lang="it">🔒 Cambia Password</span>
+                <span class="hidden" data-lang="en">🔒 Change Password</span>
+              </button>
+              <button type="button" class="secondary" onclick="hideChangePassword()">
+                <span data-lang="it">Annulla</span>
+                <span class="hidden" data-lang="en">Cancel</span>
+              </button>
+            </div>
+          </form>
         </div>
 
   <!-- Sicurezza Account (2FA rimosso) -->
