@@ -119,6 +119,21 @@ def login_required(f):
     return decorated_function
 
 # Routes
+@app.route('/')
+def home():
+    return jsonify({
+        'status': 'healthy', 
+        'message': 'AUROOMS Backend API is running',
+        'version': '1.0',
+        'endpoints': {
+            'health': '/health',
+            'auth': '/api/auth/*',
+            'user': '/api/user/*',
+            'bookings': '/api/bookings',
+            'payments': '/api/payments/*'
+        }
+    })
+
 @app.route('/health')
 def health():
     return jsonify({'status': 'healthy', 'message': 'AUROOMS API is running'})
@@ -477,5 +492,5 @@ if __name__ == '__main__':
     with app.app_context():
         db.create_all()
     
-    port = int(os.environ.get('PORT', 8000))
+    port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)

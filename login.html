@@ -250,8 +250,8 @@
   <script>
     // Configuration
     const API_BASE_URL = window.location.hostname.includes('localhost') 
-      ? 'http://localhost:8000/api' 
-      : 'https://your-replit-url.replit.app/api';
+      ? 'http://localhost:5000/api' 
+      : `${window.location.origin}/api`;
 
     // Google Login Handler
     function handleGoogleLogin(response) {
