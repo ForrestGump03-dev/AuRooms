@@ -31,3 +31,24 @@
   to = "https://aurooms.it/:splat"
   status = 301
   force = true
+
+# Protect admin pages - only accessible by IP or with specific auth
+[[headers]]
+  for = "/admin-*"
+  [headers.values]
+    # Add additional security headers for admin pages
+    X-Robots-Tag = "noindex, nofollow, noarchive, nosnippet"
+    Cache-Control = "no-cache, no-store, must-revalidate"
+
+# Hide admin pages from search engines and bots
+[[redirects]]
+  from = "/admin-*"
+  to = "/404.html"
+  status = 404
+  conditions = {Role = ["!admin"]}
+
+# Optional: Create a secret path for admin access (replace 'your-secret-path' with something secure)
+[[redirects]]
+  from = "/pannello-controllo-aurooms-2025/*"
+  to = "/admin-:splat"
+  status = 200
