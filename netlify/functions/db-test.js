@@ -28,16 +28,9 @@ exports.handler = async (event, context) => {
   let client;
   
   try {
-    // Parse URL manually to avoid potential issues with connectionString parsing
-    const url = new URL(process.env.DATABASE_URL);
-    
-    // Test connection with manual configuration
+    // Test connection
     client = new Client({
-      user: url.username,
-      password: url.password,
-      host: url.hostname,
-      port: parseInt(url.port) || 5432,
-      database: url.pathname.slice(1), // Remove leading slash
+      connectionString: process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false
       }

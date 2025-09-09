@@ -17,10 +17,15 @@ Settings → Database → Connection parameters
 - **Database:** postgres  
 - **Password:** Abcde01030915?
 
-#### ✅ LA TUA DATABASE_URL COMPLETA:
+#### ✅ LA TUA DATABASE_URL AGGIORNATA:
 ```
-postgresql://postgres:Abcde01030915?@db.khpamatawazugmttayui.supabase.co:5432/postgres
+postgresql://postgres:Abcde01030915@db.khpamatawazugmttayui.supabase.co:5432/postgres
 ```
+
+#### � PROSSIMI PASSI:
+1. ✅ Password cambiata in Supabase: Abcde01030915
+2. ⏳ Aggiorna DATABASE_URL in Netlify con l'URL sopra
+3. ⏳ Testa il database
 
 #### 🚀 COPIA QUESTA URL E METTILA IN NETLIFY ENVIRONMENT VARIABLES!
 

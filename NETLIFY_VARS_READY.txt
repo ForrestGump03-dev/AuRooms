@@ -1,7 +1,7 @@
 # 🔧 VARIABILI NETLIFY DA AGGIUNGERE ORA
 
-## 1. DATABASE (✅ HAI GIÀ QUESTO)
-DATABASE_URL=postgresql://postgres:Abcde01030915?@db.khpamatawazugmttayui.supabase.co:5432/postgres
+## 1. DATABASE (✅ AGGIORNATO - SENZA ?)
+DATABASE_URL=postgresql://postgres:Abcde01030915@db.khpamatawazugmttayui.supabase.co:5432/postgres
 
 ## 2. JWT & SECURITY (AGGIUNGI QUESTI)
 JWT_SECRET=aurooms_super_secret_jwt_key_2025_sicilia_cinisi_palermo_32chars
