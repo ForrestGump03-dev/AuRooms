@@ -398,6 +398,8 @@ function salvaPrenotazione(e) {
 }
 
 // Backend API base URL (Flask su Render)
+// Imposta in Netlify come variabile environment FRONTEND: BACKEND_BASE_URL = https://<render-app>.onrender.com/api
+// In locale puoi fare: window.BACKEND_BASE_URL='http://127.0.0.1:5000/api' prima di caricare questo script
 const BACKEND_BASE_URL = window.BACKEND_BASE_URL || 'https://AUROOMS_BACKEND_URL_DA_METTERE.onrender.com/api';
 
 async function sendBookingToBackend(bookingPayload) {

@@ -22,33 +22,45 @@ STRIPE_PUBLISHABLE_KEY=pk_live_or_test
 STRIPE_WEBHOOK_SECRET=whsec_xxx (quando aggiungeremo il webhook)
 GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com (futuro)
 GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx (futuro)
-GOOGLE_REDIRECT_URI=https://<frontend-domain>/auth/google/callback (da allineare al blueprint Flask quando implementato)
+GOOGLE_REDIRECT_URI=https://<frontend-domain>/auth/google/callback
 
 ### Frontend (Netlify – solo ciò che serve davvero ora)
 BACKEND_BASE_URL=https://<render-app>.onrender.com/api
 STRIPE_PUBLISHABLE_KEY=pk_live_or_test (se usato client-side)
-EMAILJS_SERVICE_ID=<id opzionale>
-EMAILJS_TEMPLATE_ID=<id opzionale>
-EMAILJS_PUBLIC_KEY=<public key opzionale>
 
-### Note sicurezza
-- Evitare di lasciare in repo variabili reali (usare Netlify + Render dashboard).
-- Rimuovere vecchie variabili Supabase inutilizzate.
-- Password legacy Supabase NON più necessaria: Abcde01030915 (non riutilizzare in produzione per sicurezza).
+## Guida Deploy su Render (dettagliata)
+1. Collegare repo GitHub a Render.
+2. New + Web Service.
+3. Root directory: `backend`.
+4. Build Command: `pip install -r requirements.txt`.
+5. Start Command: `gunicorn wsgi:app`.
+6. Runtime: Python 3.x.
+7. Aggiungere variabili ambiente (vedi sopra).
+8. Deploy. Attendere URL finale: es. https://aurooms-backend.onrender.com.
+9. Test: `curl https://<render-app>.onrender.com/api/health`.
+10. Aggiorna `BACKEND_BASE_URL` in Netlify env e (opzionale) nel tuo `script.js` locale.
 
-## Stato Pulizia Documenti
-- Obsoleti da rimuovere: SUPABASE_SETUP.md, HOW_TO_GET_DATABASE_URL.md, ENVIRONMENT_VARIABLES.md, GOOGLE_OAUTH_SETUP.md (verrà reinserito dopo implementazione reale), STRIPE_SETUP.md (contenuto integrato qui / README backend), DEBUG_GUIDE.md, TEST_PLAN.md, replit.md, ADMIN_ACCESS.md.
-- Conservare solo: MIGRATION_SUMMARY.md, backend/README.md.
+### Creare Database Postgres (Render)
+1. New + PostgreSQL.
+2. Piano Free.
+3. Copia Internal Connection String → incolla come DATABASE_URL (modificando `postgres://` in `postgresql://` se necessario).
+4. (Opzionale) Usa psql per creare estensioni future.
+
+## Guida Variabili Netlify
+1. Site Settings → Environment Variables.
+2. Aggiungi:
+   - BACKEND_BASE_URL=https://<render-app>.onrender.com/api
+   - STRIPE_PUBLISHABLE_KEY=(se necessario)
+3. Rimuovi: SUPABASE_* , DATABASE_URL (non più usata lato frontend), GOOGLE_* (per ora finché non reimplementato), STRIPE_SECRET_KEY (tenere solo sul backend), JWT_SECRET (solo backend).
+4. Trigger redeploy.
 
 ## Schema & Modelli
 Schema DB in `backend/schema.sql`. Modelli: Customer, Booking, Payment.
 
 ## Prossimi Step
-1. Creare servizio Render Postgres e aggiornare DATABASE_URL.
-2. Eseguire migrazione iniziale (Flask-Migrate) se introdotta più avanti.
-3. Aggiornare `script.js` con BACKEND_BASE_URL reale.
-4. Implementare Google OAuth sul backend (sostituendo vecchie function Netlify).
-5. Implementare endpoint webhook Stripe (server side) e rimuovere completamente vecchio stripe-webhook.
-6. Aggiungere test rapidi curl nel README backend.
+1. Implementare Google OAuth.
+2. Endpoint Stripe webhook server side.
+3. Hardening sicurezza (limitare CORS, rate limiting, logging strutturato).
+4. Aggiungere test automatici.
 
 Ultimo aggiornamento: 16-09-2025
