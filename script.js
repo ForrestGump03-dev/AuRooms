@@ -397,6 +397,28 @@ function salvaPrenotazione(e) {
   window.location.href = "conferma.html";
 }
 
+// Backend API base URL (Flask su Render)
+const BACKEND_BASE_URL = window.BACKEND_BASE_URL || 'https://AUROOMS_BACKEND_URL_DA_METTERE.onrender.com/api';
+
+async function sendBookingToBackend(bookingPayload) {
+  try {
+    const res = await fetch(`${BACKEND_BASE_URL}/bookings`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(bookingPayload)
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      console.warn('Errore backend prenotazione', err);
+      return null;
+    }
+    return await res.json();
+  } catch (e) {
+    console.warn('Backend non raggiungibile (fallback solo locale)', e);
+    return null;
+  }
+}
+
 // Initialize libraries when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
   // Check authentication and update UI
