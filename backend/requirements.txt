@@ -6,3 +6,6 @@ psycopg2-binary==2.9.10
 PyJWT==2.8.0
 stripe==10.8.0
 gunicorn==21.2.0
+google-auth==2.23.4
+google-auth-oauthlib==1.0.0
+requests==2.31.0

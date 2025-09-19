@@ -5,9 +5,11 @@ class Customer(db.Model):
     __tablename__ = 'customers'
 
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(80), nullable=False)
-    last_name = db.Column(db.String(80), nullable=False)
+    first_name = db.Column(db.String(80), nullable=True)
+    last_name = db.Column(db.String(80), nullable=True)
+    name = db.Column(db.String(160), nullable=True)  # Nome completo da Google
     email = db.Column(db.String(120), unique=True, nullable=False)
+    google_id = db.Column(db.String(100), unique=True, nullable=True)  # Google user ID
     phone = db.Column(db.String(30), nullable=True)
     country = db.Column(db.String(80), nullable=True)
     document_type = db.Column(db.String(30), nullable=True)  # es: ID, Passport
@@ -21,6 +23,7 @@ class Customer(db.Model):
             'id': self.id,
             'first_name': self.first_name,
             'last_name': self.last_name,
+            'name': self.name,
             'email': self.email,
             'phone': self.phone,
             'country': self.country,
