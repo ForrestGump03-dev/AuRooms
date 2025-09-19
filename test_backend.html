@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Backend AuRooms</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .result { margin: 10px 0; padding: 10px; border-radius: 3px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        button { padding: 10px 15px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Backend AuRooms</h1>
+    
+    <div class="test-section">
+        <h3>1. Test Health Endpoint</h3>
+        <button onclick="testHealth()">Test /api/health</button>
+        <div id="health-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Test Google OAuth Start</h3>
+        <button onclick="testOAuthStart()">Test /api/auth/google/start</button>
+        <div id="oauth-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Test All Routes (Debugging)</h3>
+        <button onclick="testAllRoutes()">Test Multiple Endpoints</button>
+        <div id="routes-result"></div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://aurooms-backend-cre8.onrender.com';
+
+        async function testHealth() {
+            const resultDiv = document.getElementById('health-result');
+            resultDiv.innerHTML = '🔄 Testing...';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/health`);
+                const data = await response.json();
+                
+                resultDiv.innerHTML = `
+                    <div class="result success">
+                        <strong>✅ Success (${response.status})</strong><br>
+                        Response: ${JSON.stringify(data, null, 2)}
+                    </div>
+                `;
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ Error</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testOAuthStart() {
+            const resultDiv = document.getElementById('oauth-result');
+            resultDiv.innerHTML = '🔄 Testing OAuth...';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/auth/google/start`);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    resultDiv.innerHTML = `
+                        <div class="result success">
+                            <strong>✅ Success (${response.status})</strong><br>
+                            Response: ${JSON.stringify(data, null, 2)}<br>
+                            <strong>Auth URL:</strong> ${data.auth_url ? 'Present ✅' : 'Missing ❌'}
+                        </div>
+                    `;
+                } else {
+                    const errorText = await response.text();
+                    resultDiv.innerHTML = `
+                        <div class="result error">
+                            <strong>❌ HTTP ${response.status}</strong><br>
+                            Response: ${errorText}
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `
+                    <div class="result error">
+                        <strong>❌ Network Error</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        async function testAllRoutes() {
+            const resultDiv = document.getElementById('routes-result');
+            resultDiv.innerHTML = '🔄 Testing multiple endpoints...';
+            
+            const endpoints = [
+                '/api/health',
+                '/api/auth/google/start',
+                '/api/auth/token',
+                '/api/bookings',
+                '/'
+            ];
+            
+            let results = [];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(`${BACKEND_URL}${endpoint}`);
+                    results.push({
+                        endpoint,
+                        status: response.status,
+                        ok: response.ok,
+                        statusText: response.statusText
+                    });
+                } catch (error) {
+                    results.push({
+                        endpoint,
+                        status: 'ERROR',
+                        ok: false,
+                        statusText: error.message
+                    });
+                }
+            }
+            
+            const resultHtml = results.map(r => `
+                <div class="result ${r.ok ? 'success' : 'error'}">
+                    <strong>${r.endpoint}</strong>: ${r.status} ${r.statusText}
+                </div>
+            `).join('');
+            
+            resultDiv.innerHTML = resultHtml;
+        }
+    </script>
+</body>
+</html>

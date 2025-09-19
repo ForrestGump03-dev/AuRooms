@@ -274,18 +274,32 @@
       button.innerHTML = '<span>🔄 Connessione...</span>';
       button.disabled = true;
       
+      // URL completo per debug
+      const backendUrl = getBackendUrl();
+      const fullUrl = `${backendUrl}/auth/google/start`;
+      console.log('📡 Chiamando URL:', fullUrl);
+      
       // Chiama il backend per ottenere l'URL di autorizzazione Google
-      fetch(`${getBackendUrl()}/auth/google/start`)
+      fetch(fullUrl)
         .then(response => {
+          console.log('📊 Response status:', response.status);
+          console.log('📊 Response headers:', response.headers);
+          
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
           return response.json();
         })
         .then(data => {
+          console.log('✅ Dati ricevuti:', data);
           console.log('✅ URL OAuth ricevuto:', data.auth_url);
           
+          if (!data.auth_url) {
+            throw new Error('URL OAuth mancante nella risposta');
+          }
+          
           // Reindirizza a Google OAuth
+          console.log('🔀 Reindirizzamento a:', data.auth_url);
           window.location.href = data.auth_url;
         })
         .catch(error => {
@@ -295,11 +309,17 @@
           button.innerHTML = originalText;
           button.disabled = false;
           
-          // Mostra errore
-          const errorDiv = document.getElementById('login-error');
-          errorDiv.textContent = getCurrentLanguage() === 'it' ? 
-            'Errore di connessione. Riprova.' : 'Connection error. Please try again.';
-          errorDiv.style.display = 'block';
+          // Mostra errore dettagliato
+          const errorDiv = document.getElementById('login-error') || document.getElementById('register-error');
+          if (errorDiv) {
+            errorDiv.textContent = getCurrentLanguage() === 'it' ? 
+              `Errore di connessione: ${error.message}. Controlla la console per dettagli.` : 
+              `Connection error: ${error.message}. Check console for details.`;
+            errorDiv.style.display = 'block';
+          }
+          
+          // Alert di fallback per debug
+          alert(`Errore OAuth: ${error.message}\n\nURL tentato: ${fullUrl}\n\nVerifica la console del browser per più dettagli.`);
         });
     }
 
