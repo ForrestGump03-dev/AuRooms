@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login Completato - AUROOMS</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container">
+    <section style="max-width: 500px; margin: 4rem auto; padding: 2rem; text-align: center;">
+      <div id="loading" style="display: block;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🔄</div>
+        <h2>Completamento Login...</h2>
+        <p>Stiamo processando il tuo accesso con Google.</p>
+        <div style="margin: 2rem 0;">
+          <div style="width: 100%; height: 4px; background: #e9ecef; border-radius: 2px; overflow: hidden;">
+            <div style="width: 0%; height: 100%; background: #007bff; animation: loading 2s ease-in-out infinite;"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="success" style="display: none;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">✅</div>
+        <h2>Login Completato!</h2>
+        <p>Reindirizzamento in corso...</p>
+      </div>
+
+      <div id="error" style="display: none;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
+        <h2>Errore di Login</h2>
+        <p id="error-message">Si è verificato un errore durante il login.</p>
+        <button onclick="window.location.href='login.html'" style="margin-top: 1rem;">
+          Riprova Login
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <style>
+    @keyframes loading {
+      0% { width: 0%; }
+      50% { width: 70%; }
+      100% { width: 100%; }
+    }
+  </style>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('🔍 Pagina login-success caricata');
+      
+      // Ottieni il token dal parametro URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      const error = urlParams.get('error');
+      
+      console.log('📊 Parametri URL:', { token: token ? 'presente' : 'assente', error });
+      
+      if (error) {
+        console.error('❌ Errore OAuth:', error);
+        showError('Errore durante l\'autenticazione: ' + error);
+        return;
+      }
+      
+      if (!token) {
+        console.error('❌ Token mancante');
+        showError('Token di autenticazione mancante.');
+        return;
+      }
+      
+      console.log('✅ Token ricevuto, processo login...');
+      
+      // Simula elaborazione per 2 secondi
+      setTimeout(() => {
+        try {
+          // Decodifica il payload del JWT per ottenere info utente
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          console.log('👤 Dati utente dal token:', payload);
+          
+          // Crea oggetto utente per il localStorage
+          const user = {
+            id: payload.user_id || payload.sub,
+            email: payload.email,
+            name: payload.name,
+            firstName: payload.given_name || payload.name?.split(' ')[0],
+            lastName: payload.family_name || payload.name?.split(' ').slice(1).join(' '),
+            profilePicture: payload.picture,
+            provider: 'google',
+            token: token
+          };
+          
+          console.log('💾 Salvando utente:', user);
+          
+          // Salva l'utente nel localStorage
+          localStorage.setItem('aurooms_current_user', JSON.stringify(user));
+          localStorage.setItem('aurooms_jwt_token', token);
+          
+          // Mostra successo
+          document.getElementById('loading').style.display = 'none';
+          document.getElementById('success').style.display = 'block';
+          
+          // Reindirizza dopo 2 secondi
+          setTimeout(() => {
+            const pendingBooking = sessionStorage.getItem('pending_booking');
+            console.log('🔀 Reindirizzamento:', pendingBooking ? 'pagamento.html' : 'dashboard.html');
+            
+            if (pendingBooking) {
+              window.location.replace('pagamento.html');
+            } else {
+              window.location.replace('dashboard.html');
+            }
+          }, 2000);
+          
+        } catch (err) {
+          console.error('❌ Errore decodifica token:', err);
+          showError('Errore nella decodifica del token di autenticazione.');
+        }
+      }, 2000);
+    });
+    
+    function showError(message) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('error').style.display = 'block';
+      document.getElementById('error-message').textContent = message;
+    }
+  </script>
+</body>
+</html>
