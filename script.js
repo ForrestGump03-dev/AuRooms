@@ -586,8 +586,3 @@ function handleGoogleCallback() {
     window.location.href = 'login.html';
   }
 }
-  if (window.location.pathname.includes('dashboard') || 
-      window.location.pathname.includes('pagamento')) {
-    window.location.href = 'index.html';
-  }
-}
