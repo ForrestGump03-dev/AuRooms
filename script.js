@@ -528,6 +528,64 @@ function logout() {
   updateAuthUI();
   
   // Redirect to home if on a protected page
+  if (window.location.pathname.includes('dashboard')) {
+    window.location.href = 'index.html';
+  }
+}
+
+// Google OAuth functions
+async function loginWithGoogle() {
+  try {
+    const response = await fetch(`${BACKEND_BASE_URL}/auth/google/start`);
+    const data = await response.json();
+    
+    if (data.auth_url) {
+      // Redirect dell'utente alla pagina di autorizzazione Google
+      window.location.href = data.auth_url;
+    } else {
+      console.error('Errore nel login Google:', data);
+      alert('Errore nel login con Google. Riprova più tardi.');
+    }
+  } catch (error) {
+    console.error('Errore nella richiesta di login Google:', error);
+    alert('Errore nel login con Google. Riprova più tardi.');
+  }
+}
+
+// Funzione per gestire il redirect da Google (da usare in login-success.html)
+function handleGoogleCallback() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  
+  if (token) {
+    // Decodifica il token JWT per ottenere i dati utente
+    try {
+      const tokenParts = token.split('.');
+      const payload = JSON.parse(atob(tokenParts[1]));
+      
+      // Salva i dati utente nel localStorage
+      const userData = {
+        id: payload.sub,
+        email: payload.email,
+        name: payload.name || payload.email,
+        loginMethod: 'google'
+      };
+      
+      localStorage.setItem('aurooms_current_user', JSON.stringify(userData));
+      localStorage.setItem('aurooms_auth_token', token);
+      
+      // Redirect alla dashboard o alla home
+      window.location.href = 'dashboard.html';
+    } catch (error) {
+      console.error('Errore nel parsing del token:', error);
+      alert('Errore nel login. Riprova.');
+      window.location.href = 'login.html';
+    }
+  } else {
+    alert('Login non completato correttamente.');
+    window.location.href = 'login.html';
+  }
+}
   if (window.location.pathname.includes('dashboard') || 
       window.location.pathname.includes('pagamento')) {
     window.location.href = 'index.html';
